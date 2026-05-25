@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>提名 @memecoin_alpha · Trill</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', system-ui, sans-serif; background: #f5efe7; color: #1a1611; }
+    .font-serif { font-family: 'Cormorant Garamond', Georgia, serif; }
+    .coach { cursor: help; color: #9c2516; opacity: 0.6; font-weight: 600; font-size: 0.75rem; }
+    .coach:hover { opacity: 1; }
+    .border-subtle { border-color: #d6cfc4; }
+    .chip { display: inline-flex; padding: 0.5rem 0.875rem; border: 1px solid #d6cfc4; border-radius: 9999px; font-size: 0.75rem; cursor: pointer; color: #6b5e52; transition: all 0.15s; }
+    .chip:hover { color: #1a1611; }
+    .chip.selected { background: #9c2516; color: #f5efe7; border-color: #9c2516; }
+  </style>
+</head>
+<body class="min-h-screen">
+
+  <nav class="border-b border-subtle bg-[#f5efe7]/95 backdrop-blur sticky top-0 z-10">
+    <div class="max-w-5xl mx-auto px-8 py-4 flex items-center justify-between">
+      <div class="flex items-baseline gap-2">
+        <a href="index.html" class="font-serif text-2xl text-[#9c2516] tracking-tight">Trill</a>
+        <span class="text-[10px] uppercase tracking-widest text-[#6b5e52]">指南</span>
+      </div>
+      <div class="flex items-center gap-1 text-sm">
+        <a href="index.html" class="px-3 py-1.5 text-[#6b5e52] hover:text-[#1a1611]">指南</a>
+        <a href="narrative.html" class="px-3 py-1.5 text-[#6b5e52] hover:text-[#1a1611]">叙事</a>
+        <a href="market.html" class="px-3 py-1.5 text-[#6b5e52] hover:text-[#1a1611]">市场</a>
+        <a href="feed-audit.html" class="px-3 py-1.5 text-[#6b5e52] hover:text-[#1a1611]">审计</a>
+        <a href="watchlist.html" class="px-3 py-1.5 text-[#6b5e52] hover:text-[#1a1611]">关注</a>
+        <a href="account.html" class="px-3 py-1.5 text-[#6b5e52] hover:text-[#1a1611]">账户</a>
+        <div class="relative" data-trill-dropdown>
+          <button type="button" data-trill-dropdown-btn class="px-3 py-1.5 text-[#1a1611] font-semibold border-b-2 border-[#9c2516] flex items-center gap-1">更多 <span class="text-[10px]">▼</span></button>
+          <div data-trill-dropdown-menu class="hidden absolute right-0 top-full mt-1 w-56 bg-[#f5efe7] border border-subtle rounded-lg shadow-lg z-20 py-1">
+            <a href="sentinel.html" class="block px-4 py-2 text-sm text-[#1a1611] hover:bg-[#ebe3d4]">Sentinel 路径</a>
+            <a href="trillclaw.html" class="block px-4 py-2 text-sm text-[#1a1611] hover:bg-[#ebe3d4]">TrillClaw 自评</a>
+            <a href="subscribe.html" class="block px-4 py-2 text-sm text-[#1a1611] hover:bg-[#ebe3d4]">定价</a>
+            <div class="border-t border-subtle my-1"></div>
+            <a href="creator-v2.html" class="block px-4 py-2 text-sm text-[#9c2516] font-semibold bg-[#fef4e8]">创作者样例</a>
+            <a href="methodology.html" class="block px-4 py-2 text-sm text-[#1a1611] hover:bg-[#ebe3d4]">评估方法</a>
+            <a href="about.html" class="block px-4 py-2 text-sm text-[#1a1611] hover:bg-[#ebe3d4]">关于 Trill</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>(function(){var w=document.currentScript.parentElement.querySelector('[data-trill-dropdown]');if(!w)return;var b=w.querySelector('[data-trill-dropdown-btn]'),m=w.querySelector('[data-trill-dropdown-menu]');b.addEventListener('click',function(e){e.stopPropagation();m.classList.toggle('hidden')});document.addEventListener('click',function(e){if(!w.contains(e.target))m.classList.add('hidden')});})();</script>
+  </nav>
+
+  <main class="max-w-3xl mx-auto px-8 py-12">
+
+    <div class="text-xs text-[#6b5e52] mb-6">
+      <a href="index.html" class="hover:text-[#9c2516]">Trill 指南</a>
+      <span class="mx-2">›</span>
+      <a href="creator-unstarred.html" class="hover:text-[#9c2516]">@memecoin_alpha</a>
+      <span class="mx-2">›</span>
+      <span>提名评估</span>
+    </div>
+
+    <header class="mb-8 pb-8 border-b border-subtle">
+      <h1 class="font-serif text-5xl tracking-tight mb-3">提名 Trill 评估</h1>
+      <p class="font-serif italic text-lg text-[#6b5e52]">告诉我们为什么这位创作者值得 Sentinel 评审 — 高质量提名会被优先处理。</p>
+    </header>
+
+    <!-- KOL identity card (readonly) -->
+    <section class="bg-[#ebe3d4] rounded-lg p-6 mb-8 flex items-start gap-4">
+      <div class="w-14 h-14 rounded-full bg-[#6b5e52] flex items-center justify-center text-2xl font-serif font-bold text-[#f5efe7] flex-shrink-0">M</div>
+      <div class="flex-1">
+        <div class="flex items-baseline gap-3 mb-1">
+          <h2 class="font-serif text-2xl tracking-tight">memecoin_alpha</h2>
+          <span class="text-sm text-[#6b5e52]">@memecoin_alpha</span>
+        </div>
+        <p class="text-sm text-[#6b5e52] italic font-serif mb-2">Calling SOL memes since BONK.</p>
+        <div class="flex items-center gap-3 text-[11px] text-[#6b5e52]">
+          <span>X 粉丝 48.3K</span><span>·</span>
+          <span>账号 2 年 3 个月</span><span>·</span>
+          <span class="text-[#9c2516] font-semibold">12 位用户已提名该创作者</span>
+        </div>
+      </div>
+      <a href="creator-unstarred.html" class="text-xs text-[#6b5e52] hover:text-[#1a1611] flex-shrink-0">← 返回 profile</a>
+    </section>
+
+    <!-- Form -->
+    <form class="space-y-7">
+
+      <div>
+        <label class="block text-xs uppercase tracking-widest text-[#6b5e52] font-semibold mb-2">
+          为什么 Trill 应该评估这位创作者? <span class="text-[#9c2516]">*</span>
+        </label>
+        <p class="text-xs text-[#6b5e52] mb-3 italic">至少 50 字符 · 具体的例子有助于 Sentinel 排优先级。</p>
+        <textarea rows="5" placeholder="例:他早期 call 中了 BONK 和 BOME。Solana meme 的 thesis 在 3 个以上周期里都比共识更早。即使错了也会发 post-mortem。值得就 Educational Value + Intellectual Honesty 维度评估。"
+          class="w-full px-4 py-3 border border-subtle bg-[#f5efe7] rounded text-sm leading-relaxed focus:outline-none focus:border-[#9c2516] resize-y"></textarea>
+        <div class="flex justify-between text-[11px] text-[#6b5e52] mt-1">
+          <span>0 / 500</span>
+          <span class="italic">提名理由至少 50 字符</span>
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-xs uppercase tracking-widest text-[#6b5e52] font-semibold mb-2">
+          你与这位创作者的关系 <span class="text-[#9c2516]">*</span>
+        </label>
+        <div class="flex flex-wrap gap-2">
+          <span class="chip selected">我在 X 上 follow 他</span>
+          <span class="chip">我偶尔看过他的内容</span>
+          <span class="chip">我想要一个第三方意见</span>
+          <span class="chip">其他</span>
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-xs uppercase tracking-widest text-[#6b5e52] font-semibold mb-2">
+          值得 review 的具体 call 或 thread <span class="text-[10px] normal-case text-[#6b5e52]">(选填 · 最多 3 个)</span>
+        </label>
+        <div class="space-y-2">
+          <input type="url" placeholder="https://x.com/memecoin_alpha/status/..."
+            class="w-full px-4 py-2.5 border border-subtle bg-[#f5efe7] rounded text-sm focus:outline-none focus:border-[#9c2516]">
+          <input type="url" placeholder="https://x.com/memecoin_alpha/status/..."
+            class="w-full px-4 py-2.5 border border-subtle bg-[#f5efe7] rounded text-sm focus:outline-none focus:border-[#9c2516]">
+          <button type="button" class="text-xs text-[#9c2516] hover:underline">+ 添加另一个 URL</button>
+        </div>
+        <p class="text-[11px] text-[#6b5e52] mt-2 italic">必须是 x.com 或 twitter.com 域名 · 给 Sentinel 一个起点</p>
+      </div>
+
+      <div>
+        <label class="block text-xs uppercase tracking-widest text-[#6b5e52] font-semibold mb-2">
+          你认为他属于的 vertical / 领域 <span class="text-[10px] normal-case text-[#6b5e52]">(选填)</span>
+        </label>
+        <div class="flex flex-wrap gap-2">
+          <span class="chip">DeFi</span>
+          <span class="chip">Macro</span>
+          <span class="chip">AI</span>
+          <span class="chip selected">Memes</span>
+          <span class="chip">RWA</span>
+          <span class="chip">DePIN</span>
+          <span class="chip">其他</span>
+        </div>
+      </div>
+
+      <div class="text-xs text-[#6b5e52] italic bg-[#ebe3d4]/60 rounded p-3 border-l-2 border-subtle">
+        ℹ 当前提交身份:<strong class="text-[#1a1611]">@vincent_taiwan</strong>(已登录)· 每月对同一创作者只能提名 1 次 · 提交后可在 <a href="account.html#nominations" class="text-[#9c2516] underline">账户</a> 中跟踪状态。
+      </div>
+
+      <div class="flex items-center gap-3 pt-2">
+        <a href="creator-unstarred.html" class="px-5 py-2.5 border border-subtle text-[#1a1611] text-sm rounded">取消</a>
+        <a href="nominate-submitted.html" class="px-6 py-2.5 bg-[#9c2516] text-[#f5efe7] text-sm font-semibold rounded">提交提名 →</a>
+      </div>
+    </form>
+
+  </main>
+
+  <footer class="border-t border-subtle py-8 mt-12">
+    <div class="max-w-5xl mx-auto px-8 text-xs text-[#6b5e52] text-center">
+      Trill 指南 · Sentinel 策划 · 每季度复评
+    </div>
+  </footer>
+
+</body>
+</html>

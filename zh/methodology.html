@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trill 评估方法</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', system-ui, sans-serif; background: #f5efe7; color: #1a1611; }
+    .font-serif { font-family: 'Cormorant Garamond', Georgia, serif; }
+    .border-subtle { border-color: #d6cfc4; }
+    .coach { cursor: help; color: #9c2516; opacity: 0.6; font-weight: 600; font-size: 0.75rem; }
+    .coach:hover { opacity: 1; }
+  </style>
+</head>
+<body class="min-h-screen">
+
+  <nav class="border-b border-subtle bg-[#f5efe7]/95 backdrop-blur sticky top-0 z-10">
+    <div class="max-w-5xl mx-auto px-8 py-4 flex items-center justify-between">
+      <div class="flex items-baseline gap-2">
+        <a href="index.html" class="font-serif text-2xl text-[#9c2516] tracking-tight">Trill</a>
+        <span class="text-[10px] uppercase tracking-widest text-[#6b5e52]">指南</span>
+      </div>
+      <div class="flex items-center gap-1 text-sm">
+        <a href="index.html" class="px-3 py-1.5 text-[#6b5e52] hover:text-[#1a1611]">指南</a>
+        <a href="narrative.html" class="px-3 py-1.5 text-[#6b5e52] hover:text-[#1a1611]">叙事</a>
+        <a href="market.html" class="px-3 py-1.5 text-[#6b5e52] hover:text-[#1a1611]">市场</a>
+        <a href="feed-audit.html" class="px-3 py-1.5 text-[#6b5e52] hover:text-[#1a1611]">审计</a>
+        <a href="watchlist.html" class="px-3 py-1.5 text-[#6b5e52] hover:text-[#1a1611]">关注</a>
+        <a href="account.html" class="px-3 py-1.5 text-[#6b5e52] hover:text-[#1a1611]">账户</a>
+        <div class="relative" data-trill-dropdown>
+          <button type="button" data-trill-dropdown-btn class="px-3 py-1.5 text-[#1a1611] font-semibold border-b-2 border-[#9c2516] flex items-center gap-1">更多 <span class="text-[10px]">▼</span></button>
+          <div data-trill-dropdown-menu class="hidden absolute right-0 top-full mt-1 w-56 bg-[#f5efe7] border border-subtle rounded-lg shadow-lg z-20 py-1">
+            <a href="sentinel.html" class="block px-4 py-2 text-sm text-[#1a1611] hover:bg-[#ebe3d4]">Sentinel 路径</a>
+            <a href="trillclaw.html" class="block px-4 py-2 text-sm text-[#1a1611] hover:bg-[#ebe3d4]">TrillClaw 自评</a>
+            <a href="subscribe.html" class="block px-4 py-2 text-sm text-[#1a1611] hover:bg-[#ebe3d4]">定价</a>
+            <div class="border-t border-subtle my-1"></div>
+            <a href="creator-v2.html" class="block px-4 py-2 text-sm text-[#1a1611] hover:bg-[#ebe3d4]">创作者样例</a>
+            <a href="methodology.html" class="block px-4 py-2 text-sm text-[#9c2516] font-semibold bg-[#fef4e8]">评估方法</a>
+            <a href="about.html" class="block px-4 py-2 text-sm text-[#1a1611] hover:bg-[#ebe3d4]">关于 Trill</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>(function(){var w=document.currentScript.parentElement.querySelector('[data-trill-dropdown]');if(!w)return;var b=w.querySelector('[data-trill-dropdown-btn]'),m=w.querySelector('[data-trill-dropdown-menu]');b.addEventListener('click',function(e){e.stopPropagation();m.classList.toggle('hidden')});document.addEventListener('click',function(e){if(!w.contains(e.target))m.classList.add('hidden')});})();</script>
+  </nav>
+
+  <main class="max-w-3xl mx-auto px-8 py-12">
+
+    <header class="mb-10 pb-10 border-b border-subtle">
+      <p class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold mb-3">评估方法</p>
+      <h1 class="font-serif text-5xl tracking-tight mb-3">Trill 如何评估</h1>
+      <p class="font-serif italic text-lg text-[#6b5e52]">每一颗 Star、每一个 Distinction、每一次 Re-rating 背后的严谨方法。</p>
+    </header>
+
+    <section class="mb-12">
+      <h2 class="font-serif text-3xl tracking-tight mb-4">90 / 10 构成</h2>
+      <p class="text-sm leading-relaxed text-[#1a1611] mb-5">
+        每个 Trill 评级由两层组成:
+      </p>
+
+      <div class="grid grid-cols-2 gap-5">
+        <div class="bg-[#ebe3d4] rounded-lg p-6">
+          <div class="font-serif text-5xl text-[#9c2516] mb-2">90<span class="text-2xl">%</span></div>
+          <div class="text-[10px] uppercase tracking-widest text-[#6b5e52] mb-3 font-semibold">算法</div>
+          <p class="text-sm leading-relaxed">对每个公开 call 的量化测量:已 resolved 仓位的 accuracy、推理深度、自我修正中的 intellectual honesty,以及另外 4 个维度 — 全部基于跨时间段的 on-record 行为。</p>
+        </div>
+        <div class="bg-[#fef4e8] border border-[#9c2516] rounded-lg p-6">
+          <div class="font-serif text-5xl text-[#9c2516] mb-2">10<span class="text-2xl">%</span></div>
+          <div class="text-[10px] uppercase tracking-widest text-[#9c2516] mb-3 font-semibold">Sentinel 评审</div>
+          <p class="text-sm leading-relaxed">来自匿名 + 已 stake + 经审核的 inspector 的人为判断。他们 review 边界 case、补算法漏掉的部分、贡献 "Community Confidence" 维度。</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="mb-12">
+      <h2 class="font-serif text-3xl tracking-tight mb-4">7 个维度</h2>
+      <p class="text-sm leading-relaxed text-[#1a1611] mb-6">
+        每个被评估的创作者在 7 个不同维度上被评。我们从不公开数字分数 — 只有定性 tier(Distinguished / Strong / Standard / Developing)。
+      </p>
+
+      <div class="space-y-4">
+        <div class="flex gap-5 border-b border-subtle pb-4">
+          <div class="font-serif text-2xl text-[#9c2516] w-8 flex-shrink-0">①</div>
+          <div>
+            <div class="font-semibold text-sm mb-1">Analytical Depth(分析深度)</div>
+            <p class="text-xs text-[#6b5e52]">推理的深度与实质。多框架、有证据,不是表面 take。</p>
+          </div>
+        </div>
+        <div class="flex gap-5 border-b border-subtle pb-4">
+          <div class="font-serif text-2xl text-[#9c2516] w-8 flex-shrink-0">②</div>
+          <div>
+            <div class="font-semibold text-sm mb-1">Intellectual Honesty(智识诚实)</div>
+            <p class="text-xs text-[#6b5e52]">愿意自我修正、承认错误、依新证据更新观点。跟 double-down 行为相反。</p>
+          </div>
+        </div>
+        <div class="flex gap-5 border-b border-subtle pb-4">
+          <div class="font-serif text-2xl text-[#9c2516] w-8 flex-shrink-0">③</div>
+          <div>
+            <div class="font-semibold text-sm mb-1">Accuracy Discipline(准确性)</div>
+            <p class="text-xs text-[#6b5e52]">跨时间段的 call 校准度。基于 resolved 仓位,分 3 个子项:已 resolved call 的 accuracy、resolved 数量、跨周期一致性。</p>
+          </div>
+        </div>
+        <div class="flex gap-5 border-b border-subtle pb-4">
+          <div class="font-serif text-2xl text-[#9c2516] w-8 flex-shrink-0">④</div>
+          <div>
+            <div class="font-semibold text-sm mb-1">Educational Value(教育价值)</div>
+            <p class="text-xs text-[#6b5e52]">帮别人学习的能力。explainer、primer、教学深度。</p>
+          </div>
+        </div>
+        <div class="flex gap-5 border-b border-subtle pb-4">
+          <div class="font-serif text-2xl text-[#9c2516] w-8 flex-shrink-0">⑤</div>
+          <div>
+            <div class="font-semibold text-sm mb-1">Community Confidence(社区信心)</div>
+            <p class="text-xs text-[#6b5e52]">Sentinel inspector 的定性判读。10% 的人为判断层。</p>
+          </div>
+        </div>
+        <div class="flex gap-5 border-b border-subtle pb-4">
+          <div class="font-serif text-2xl text-[#9c2516] w-8 flex-shrink-0">⑥</div>
+          <div>
+            <div class="font-semibold text-sm mb-1">Entertainment(娱乐性)</div>
+            <p class="text-xs text-[#6b5e52]">engagement 质量。能抓住注意力又不靠噪音。把 substance 跟 spectacle 区分开。</p>
+          </div>
+        </div>
+        <div class="flex gap-5">
+          <div class="font-serif text-2xl text-[#9c2516] w-8 flex-shrink-0">⑦</div>
+          <div>
+            <div class="font-semibold text-sm mb-1">Community Care(社区关怀)</div>
+            <p class="text-xs text-[#6b5e52]">对受众负责任的程度。不 shill、不 exit-pump、不剥削。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="mb-12">
+      <h2 class="font-serif text-3xl tracking-tight mb-4">Star tier 阈值</h2>
+      <p class="text-sm leading-relaxed text-[#1a1611] mb-6">
+        7 维度合成一个整体 designation — 1 到 5 Stars。分布刻意 mirror 米其林的稀缺感:多数被评估的创作者落在 3★,高 tier 留给跨维度都优秀的少数。
+      </p>
+
+      <div class="bg-[#ebe3d4] rounded-lg p-6">
+        <div class="space-y-3 text-sm">
+          <div class="flex items-center justify-between border-b border-subtle pb-2">
+            <span class="font-mono text-[#9c2516]">★★★★★</span>
+            <span class="text-[#6b5e52]">综合 ≥ 0.75 · 跨多维度卓越</span>
+          </div>
+          <div class="flex items-center justify-between border-b border-subtle pb-2">
+            <span class="font-mono"><span class="text-[#9c2516]">★★★★</span><span class="text-[#d6cfc4]">★</span></span>
+            <span class="text-[#6b5e52]">0.60 – 0.75 · 稳定强</span>
+          </div>
+          <div class="flex items-center justify-between border-b border-subtle pb-2">
+            <span class="font-mono"><span class="text-[#9c2516]">★★★</span><span class="text-[#d6cfc4]">★★</span></span>
+            <span class="text-[#6b5e52]">0.45 – 0.60 · 在其领域可靠的信号源</span>
+          </div>
+          <div class="flex items-center justify-between border-b border-subtle pb-2">
+            <span class="font-mono"><span class="text-[#9c2516]">★★</span><span class="text-[#d6cfc4]">★★★</span></span>
+            <span class="text-[#6b5e52]">0.30 – 0.45 · 已 listed,但有明显短板</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <span class="font-mono"><span class="text-[#9c2516]">★</span><span class="text-[#d6cfc4]">★★★★</span></span>
+            <span class="text-[#6b5e52]">&lt; 0.30 · 低于指南标准</span>
+          </div>
+        </div>
+        <p class="text-[11px] text-[#6b5e52] italic mt-4 pt-3 border-t border-subtle">
+          底层综合分对读者完全不公开。只显示 Stars。
+        </p>
+      </div>
+    </section>
+
+    <section class="mb-12">
+      <h2 class="font-serif text-3xl tracking-tight mb-4">Distinctions(单维度卓越)</h2>
+      <p class="text-sm leading-relaxed text-[#1a1611] mb-5">
+        创作者可以在某个具体维度上获得 <strong>Distinguished</strong> 标记,**与他整体 Star tier 无关** — 类比米其林的 Special Awards。一个 3★ 创作者可以在 Educational Value 上 Distinguished,即使其他维度都是 Standard。
+      </p>
+      <p class="text-sm leading-relaxed text-[#1a1611]">
+        这件事很重要,因为它让读者能找到 <em>解决自己具体问题的那个声音</em>。想找 DeFi 领域诚实自我修正的人?筛 "Distinguished in Intellectual Honesty" — 这时 Star tier 反而次要。
+      </p>
+    </section>
+
+    <section class="mb-12">
+      <h2 class="font-serif text-3xl tracking-tight mb-4">Sentinel — 评审员体系</h2>
+      <p class="text-sm leading-relaxed text-[#1a1611] mb-5">
+        Sentinel 是 Trill 的匿名 + 经审核 + 已 stake 的人工 reviewer — 类比米其林 inspector。通过双门流程加入:
+      </p>
+
+      <div class="space-y-3">
+        <div class="border-l-4 border-[#9c2516] pl-5 py-2">
+          <div class="text-[10px] uppercase tracking-widest text-[#9c2516] mb-1 font-semibold">Gate 1 · TrillClaw 自评</div>
+          <p class="text-sm">30 题自评 quiz,识别 archetype + fit Tier。任何人都能做,病毒入口。</p>
+        </div>
+        <div class="border-l-4 border-[#9c2516] pl-5 py-2">
+          <div class="text-[10px] uppercase tracking-widest text-[#9c2516] mb-1 font-semibold">Gate 2 · Engagement 信号</div>
+          <p class="text-sm">真实使用 Trill 的行为 — watchlist 持有时长、profile 深读、call 跟踪、audit 刷新。必须过 80% 阈值。</p>
+        </div>
+        <div class="border-l-4 border-[#9c2516] pl-5 py-2">
+          <div class="text-[10px] uppercase tracking-widest text-[#9c2516] mb-1 font-semibold">激活 · Stake $TRILL</div>
+          <p class="text-sm">按 tier 折扣 stake 锁定 inspector 角色。奖励倍率 + 获得评估 tooling 权限。</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="mb-12">
+      <h2 class="font-serif text-3xl tracking-tight mb-4">Re-rating 周期</h2>
+      <p class="text-sm leading-relaxed text-[#1a1611] mb-4">
+        指南里的每个创作者都 <strong>每季度</strong> 重新评级一次。Star 升降都在每个 profile 上公开显示 — "Re-rated 2026 Q1 ↑ from 3★"。这件事很重要:Trill 评级永远不是冻结的,评级变动的公开记录就是这个机构的 accountability。
+      </p>
+      <p class="text-sm leading-relaxed text-[#1a1611]">
+        重大变动触发 Watchlist alert 推送给 follower。从指南移除会带原因公告。
+      </p>
+    </section>
+
+    <section class="mb-12">
+      <h2 class="font-serif text-3xl tracking-tight mb-4">我们不会做的事</h2>
+
+      <div class="space-y-3">
+        <div class="bg-[#ebe3d4] rounded p-4">
+          <div class="font-semibold text-sm mb-1">❌ 公开数字分数</div>
+          <p class="text-xs text-[#6b5e52]">数字会造成假精度,陷入"我比他高 0.03"这种无意义对比。只有 designation。</p>
+        </div>
+        <div class="bg-[#ebe3d4] rounded p-4">
+          <div class="font-semibold text-sm mb-1">❌ 按 mindshare / mention 量排名</div>
+          <p class="text-xs text-[#6b5e52]">Mindshare 奖励"喊得响"。我们按 Sentinel 评估策划,不按谁声音最大。</p>
+        </div>
+        <div class="bg-[#ebe3d4] rounded p-4">
+          <div class="font-semibold text-sm mb-1">❌ 显示 "#1 / #2 / Top 10"</div>
+          <p class="text-xs text-[#6b5e52]">指南是策划名单,不是排行榜。也没有"巴黎米其林第 1 名餐厅"这种东西。</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="pt-10 border-t border-subtle text-center">
+      <p class="text-sm text-[#6b5e52] italic mb-4">对评估方法有疑问?</p>
+      <a href="about.html" class="px-5 py-2.5 border border-[#9c2516] text-[#9c2516] text-sm font-semibold rounded">了解 Trill →</a>
+    </section>
+
+  </main>
+
+  <footer class="border-t border-subtle py-8 mt-12">
+    <div class="max-w-5xl mx-auto px-8 text-xs text-[#6b5e52] text-center">
+      Trill 指南 · Sentinel 策划 · 每季度复评
+    </div>
+  </footer>
+
+</body>
+</html>

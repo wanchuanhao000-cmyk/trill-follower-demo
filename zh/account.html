@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>账户 · Trill</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', system-ui, sans-serif; background: #f5efe7; color: #1a1611; }
+    .font-serif { font-family: 'Cormorant Garamond', Georgia, serif; }
+    .border-subtle { border-color: #d6cfc4; }
+    .coach { cursor: help; color: #9c2516; opacity: 0.6; font-weight: 600; }
+    .coach:hover { opacity: 1; }
+    .ladder-step::after { content: ''; position: absolute; top: 16px; left: 50%; right: -50%; height: 2px; background: #d6cfc4; z-index: 0; }
+    .ladder-step:last-child::after { display: none; }
+  </style>
+</head>
+<body class="min-h-screen">
+
+  <!-- Top nav -->
+  <nav class="border-b border-subtle bg-[#f5efe7]/95 backdrop-blur sticky top-0 z-10">
+    <div class="max-w-5xl mx-auto px-8 py-4 flex items-center justify-between">
+      <div class="flex items-baseline gap-2">
+        <a href="index.html" class="font-serif text-2xl text-[#9c2516] tracking-tight">Trill</a>
+        <span class="text-[10px] uppercase tracking-widest text-[#6b5e52]">指南</span>
+      </div>
+      <div class="flex items-center gap-1 text-sm">
+        <a href="index.html" class="px-3 py-1.5 text-[#6b5e52] hover:text-[#1a1611]">指南</a>
+        <a href="narrative.html" class="px-3 py-1.5 text-[#6b5e52] hover:text-[#1a1611]">叙事</a>
+        <a href="market.html" class="px-3 py-1.5 text-[#6b5e52] hover:text-[#1a1611]">市场</a>
+        <a href="feed-audit.html" class="px-3 py-1.5 text-[#6b5e52] hover:text-[#1a1611]">审计</a>
+        <a href="watchlist.html" class="px-3 py-1.5 text-[#6b5e52] hover:text-[#1a1611]">关注</a>
+        <a href="account.html" class="px-3 py-1.5 text-[#1a1611] font-semibold border-b-2 border-[#9c2516]">账户</a>
+        <div class="relative" data-trill-dropdown>
+          <button type="button" data-trill-dropdown-btn class="px-3 py-1.5 text-[#6b5e52] hover:text-[#1a1611] flex items-center gap-1">更多 <span class="text-[10px]">▼</span></button>
+          <div data-trill-dropdown-menu class="hidden absolute right-0 top-full mt-1 w-56 bg-[#f5efe7] border border-subtle rounded-lg shadow-lg z-20 py-1">
+            <a href="sentinel.html" class="block px-4 py-2 text-sm text-[#1a1611] hover:bg-[#ebe3d4]">Sentinel 路径</a>
+            <a href="trillclaw.html" class="block px-4 py-2 text-sm text-[#1a1611] hover:bg-[#ebe3d4]">TrillClaw 自评</a>
+            <a href="subscribe.html" class="block px-4 py-2 text-sm text-[#1a1611] hover:bg-[#ebe3d4]">定价</a>
+            <div class="border-t border-subtle my-1"></div>
+            <a href="creator-v2.html" class="block px-4 py-2 text-sm text-[#1a1611] hover:bg-[#ebe3d4]">创作者样例</a>
+            <a href="methodology.html" class="block px-4 py-2 text-sm text-[#1a1611] hover:bg-[#ebe3d4]">评估方法</a>
+            <a href="about.html" class="block px-4 py-2 text-sm text-[#1a1611] hover:bg-[#ebe3d4]">关于 Trill</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>(function(){var w=document.currentScript.parentElement.querySelector('[data-trill-dropdown]');if(!w)return;var b=w.querySelector('[data-trill-dropdown-btn]'),m=w.querySelector('[data-trill-dropdown-menu]');b.addEventListener('click',function(e){e.stopPropagation();m.classList.toggle('hidden')});document.addEventListener('click',function(e){if(!w.contains(e.target))m.classList.add('hidden')});})();</script>
+  </nav>
+
+  <main class="max-w-3xl mx-auto px-8 py-12">
+
+    <!-- Hero -->
+    <header class="mb-10 text-center">
+      <h1 class="font-serif text-5xl tracking-tight mb-3">欢迎来到 Trill</h1>
+      <p class="text-[#6b5e52] italic font-serif text-lg">crypto KOL 的米其林指南</p>
+      <p class="text-sm text-[#6b5e52] mt-4 max-w-xl mx-auto leading-relaxed">
+        Trill 是一份策展的指南,聚焦 crypto 圈里可信的声音。创建账户后可以保存你信任的创作者、在他们评级变动时收到提醒,如果你够格 — 还可以加入评审员团队。
+      </p>
+    </header>
+
+    <!-- Sign up card -->
+    <section class="bg-[#ebe3d4] rounded-lg p-8 mb-10">
+      <h2 class="font-serif text-2xl tracking-tight mb-1">创建账户</h2>
+      <p class="text-sm text-[#6b5e52] mb-6">第 1 步 / 共 3 步 · 约 90 秒</p>
+
+      <div class="space-y-4">
+        <div>
+          <label class="block text-xs uppercase tracking-widest text-[#6b5e52] mb-2">邮箱</label>
+          <input type="email" placeholder="you@example.com" class="w-full px-4 py-3 border border-subtle bg-[#f5efe7] rounded text-sm focus:outline-none focus:border-[#9c2516]">
+        </div>
+
+        <div>
+          <label class="block text-xs uppercase tracking-widest text-[#6b5e52] mb-2">昵称 <span class="text-[10px] normal-case text-[#6b5e52]">(对其他 Trill 用户可见)</span></label>
+          <input type="text" placeholder="Vincent" class="w-full px-4 py-3 border border-subtle bg-[#f5efe7] rounded text-sm focus:outline-none focus:border-[#9c2516]">
+        </div>
+
+        <button class="w-full px-5 py-3 bg-[#9c2516] text-[#f5efe7] text-sm font-semibold rounded">
+          创建账户 → 进入第 2 步
+        </button>
+
+        <p class="text-[11px] text-[#6b5e52] text-center">
+          创建账户即代表同意 Trill 的 <a href="#" class="underline">服务条款</a> and <a href="#" class="underline">隐私政策</a>.
+        </p>
+      </div>
+    </section>
+
+    <!-- Step 2: Verification options -->
+    <section class="mb-10">
+      <h2 class="font-serif text-2xl tracking-tight mb-1">第 2 步 · 验证身份</h2>
+      <p class="text-sm text-[#6b5e52] mb-6">
+        至少连接一个外部账户。验证后解锁 <strong>Crypto Feed 审计</strong>,并开始积累 Sentinel 资格的 <strong>互动信号</strong>。
+        <span class="coach text-xs ml-1" title="我们只读取公开的关注列表 / 钱包 / 频道数据。验证可在账户设置中随时撤销。">(?)</span>
+      </p>
+
+      <div class="space-y-3">
+
+        <div class="flex items-center gap-4 border border-subtle rounded-lg p-5 bg-[#f5efe7]">
+          <div class="w-10 h-10 rounded-full bg-[#1a1611] flex items-center justify-center text-[#f5efe7] font-bold text-lg flex-shrink-0">𝕏</div>
+          <div class="flex-1">
+            <div class="font-semibold text-sm mb-0.5">连接 X(Twitter)</div>
+            <p class="text-xs text-[#6b5e52]"><strong>Crypto Feed 审计</strong>必需。Trill 只读你的公开关注列表 — 不发布、不私信。</p>
+          </div>
+          <button class="px-4 py-2 bg-[#9c2516] text-[#f5efe7] text-xs font-semibold rounded flex-shrink-0">连接</button>
+        </div>
+
+        <div class="flex items-center gap-4 border border-subtle rounded-lg p-5 bg-[#f5efe7]">
+          <div class="w-10 h-10 rounded-full bg-[#9c2516] flex items-center justify-center text-[#f5efe7] font-bold flex-shrink-0">⬡</div>
+          <div class="flex-1">
+            <div class="font-semibold text-sm mb-0.5">连接钱包 <span class="text-[10px] text-[#6b5e52] font-normal">· 可选</span></div>
+            <p class="text-xs text-[#6b5e52]">解锁 <strong>持仓审计</strong> + 链上上下文。通过 WalletConnect 支持 EVM + Solana。</p>
+          </div>
+          <button class="px-4 py-2 border border-[#9c2516] text-[#9c2516] text-xs font-semibold rounded flex-shrink-0">连接</button>
+        </div>
+
+        <div class="flex items-center gap-4 border border-subtle rounded-lg p-5 bg-[#f5efe7]">
+          <div class="w-10 h-10 rounded-full bg-[#229ED9] flex items-center justify-center text-[#f5efe7] font-bold flex-shrink-0">✈</div>
+          <div class="flex-1">
+            <div class="font-semibold text-sm mb-0.5">连接 Telegram <span class="text-[10px] text-[#6b5e52] font-normal">· 可选</span></div>
+            <p class="text-xs text-[#6b5e52]">通过 Telegram bot 接收每日 KOL 摘要 + 提醒。免费版:1 个 KOL · Pro Lite:多 KOL 实时。</p>
+          </div>
+          <button class="px-4 py-2 border border-subtle text-[#1a1611] text-xs rounded flex-shrink-0">连接</button>
+        </div>
+
+      </div>
+
+      <p class="text-[11px] text-[#6b5e52] italic mt-4 text-center">
+        暂时跳过 — 你可以稍后连接,但 Crypto Feed 审计在连接 X 前保持锁定。
+      </p>
+    </section>
+
+    <!-- Step 3: Sentinel qualification path preview -->
+    <section class="bg-[#fef4e8] border border-[#9c2516] rounded-lg p-8 mb-10">
+      <div class="flex items-baseline justify-between mb-4">
+        <h2 class="font-serif text-2xl tracking-tight">第 3 步 · 你通往 Sentinel 的路径</h2>
+        <span class="text-[10px] uppercase tracking-widest text-[#9c2516]">可选 · 只有少数人够格</span>
+      </div>
+      <p class="text-sm text-[#1a1611] mb-6 leading-relaxed">
+        大多数 Trill 用户停在注册或连接层 — 这是设计意图。关注列表、提醒、审计才是使用 Trill 的真正理由。<strong>Sentinel</strong> 是想为评估本身做贡献的用户的路径。 <span class="coach text-xs ml-1" title="Sentinel 是 Trill 的匿名、经审核、需质押的评审团 — 类比米其林评审员。他们贡献每位 KOL 评分的 10% 社区信心层。">(?)</span>
+      </p>
+
+      <!-- 5-tier ladder visualization -->
+      <div class="flex items-start gap-2 mb-6">
+        <div class="flex-1 ladder-step relative z-10">
+          <div class="flex justify-center mb-2">
+            <div class="w-8 h-8 rounded-full bg-[#9c2516] flex items-center justify-center text-[#f5efe7] font-semibold text-xs">1</div>
+          </div>
+          <div class="text-center text-[10px] uppercase tracking-widest text-[#1a1611] font-semibold">Anonymous</div>
+          <div class="text-center text-[10px] text-[#6b5e52] mt-1">浏览</div>
+        </div>
+        <div class="flex-1 ladder-step relative z-10">
+          <div class="flex justify-center mb-2">
+            <div class="w-8 h-8 rounded-full bg-[#9c2516] flex items-center justify-center text-[#f5efe7] font-semibold text-xs animate-pulse">2</div>
+          </div>
+          <div class="text-center text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold">Registered</div>
+          <div class="text-center text-[10px] text-[#6b5e52] mt-1">你在这里</div>
+        </div>
+        <div class="flex-1 ladder-step relative z-10">
+          <div class="flex justify-center mb-2">
+            <div class="w-8 h-8 rounded-full border-2 border-[#d6cfc4] bg-[#f5efe7] flex items-center justify-center text-[#6b5e52] font-semibold text-xs">3</div>
+          </div>
+          <div class="text-center text-[10px] uppercase tracking-widest text-[#6b5e52]">Connected</div>
+          <div class="text-center text-[10px] text-[#6b5e52] mt-1">验证 X/钱包/TG</div>
+        </div>
+        <div class="flex-1 ladder-step relative z-10">
+          <div class="flex justify-center mb-2">
+            <div class="w-8 h-8 rounded-full border-2 border-[#d6cfc4] bg-[#f5efe7] flex items-center justify-center text-[#6b5e52] font-semibold text-xs">4</div>
+          </div>
+          <div class="text-center text-[10px] uppercase tracking-widest text-[#6b5e52]">Candidate</div>
+          <div class="text-center text-[10px] text-[#6b5e52] mt-1">通过门 1 + 2</div>
+        </div>
+        <div class="flex-1 ladder-step relative z-10">
+          <div class="flex justify-center mb-2">
+            <div class="w-8 h-8 rounded-full border-2 border-[#d6cfc4] bg-[#f5efe7] flex items-center justify-center text-[#6b5e52] text-xs">🔒</div>
+          </div>
+          <div class="text-center text-[10px] uppercase tracking-widest text-[#6b5e52]">Sentinel</div>
+          <div class="text-center text-[10px] text-[#6b5e52] mt-1">Stake $TRILL</div>
+        </div>
+      </div>
+
+      <div class="bg-[#f5efe7] rounded p-5">
+        <div class="text-[10px] uppercase tracking-widest text-[#6b5e52] mb-3">你的下一步</div>
+        <ol class="space-y-2 text-sm text-[#1a1611]">
+          <li><strong>现在:</strong>做 <a href="trillclaw.html" class="text-[#9c2516] underline">TrillClaw 自评</a>(3 分钟)→ 解锁 archetype + 预留 $TRILL 质押额度</li>
+          <li><strong>后台:</strong>你使用 Trill 时,互动信号会持续积累(持有关注、阅读档案、追踪 call)</li>
+          <li><strong>~6-12 个月:</strong>若信号过 80%,系统会提示你质押激活 Sentinel</li>
+        </ol>
+      </div>
+
+      <div class="flex items-center gap-3 mt-6">
+        <a href="trillclaw.html" class="px-5 py-2.5 bg-[#9c2516] text-[#f5efe7] text-sm font-semibold rounded">做 TrillClaw 自评</a>
+        <button class="px-5 py-2.5 border border-subtle text-[#1a1611] text-sm rounded">跳过 — 我只想浏览</button>
+      </div>
+    </section>
+
+    <!-- Waitlist link (for users not yet registered) -->
+    <section class="text-center py-10 border-t border-subtle">
+      <h3 class="font-serif text-xl tracking-tight mb-2">还不想注册?</h3>
+      <p class="text-sm text-[#6b5e52] mb-4">加入上线等候名单 — 前 100 名用户能提前预览 Trill 100 reveal。</p>
+      <button class="px-5 py-2.5 border border-[#9c2516] text-[#9c2516] text-sm font-semibold rounded">加入等候名单</button>
+    </section>
+
+    <!-- Divider for signed-in account management view (demo only) -->
+    <section class="my-12 pt-12 border-t-2 border-[#9c2516]/30">
+      <div class="text-center mb-10">
+        <span class="text-[10px] uppercase tracking-widest text-[#9c2516] bg-[#fef4e8] px-3 py-1 rounded-full font-semibold">已登录账户视图</span>
+        <p class="text-sm text-[#6b5e52] mt-3 italic">以下:已登录用户在账户页看到的内容</p>
+      </div>
+    </section>
+
+    <!-- Connections management -->
+    <section class="mb-10">
+      <h2 class="font-serif text-2xl tracking-tight mb-1">我的连接</h2>
+      <p class="text-sm text-[#6b5e52] mb-6">与你 Trill 身份绑定的外部账户。随时可撤销。</p>
+
+      <div class="space-y-3">
+        <div class="flex items-center gap-4 border border-subtle rounded-lg p-4 bg-[#f5efe7]">
+          <div class="w-10 h-10 rounded-full bg-[#1a1611] flex items-center justify-center text-[#f5efe7] font-bold text-lg flex-shrink-0">𝕏</div>
+          <div class="flex-1">
+            <div class="font-semibold text-sm">X (Twitter) · <span class="text-[#9c2516]">@vincent_taiwan</span></div>
+            <p class="text-xs text-[#6b5e52]">2026-04-01 连接 · 2 小时前刷新 · Crypto Feed Audit 已解锁</p>
+          </div>
+          <button class="px-3 py-1.5 text-xs text-[#9c2516] hover:underline flex-shrink-0">断开连接</button>
+        </div>
+
+        <div class="flex items-center gap-4 border border-subtle rounded-lg p-4 bg-[#f5efe7]">
+          <div class="w-10 h-10 rounded-full bg-[#9c2516] flex items-center justify-center text-[#f5efe7] font-bold flex-shrink-0">⬡</div>
+          <div class="flex-1">
+            <div class="font-semibold text-sm">钱包 · <span class="font-mono text-xs text-[#6b5e52]">0x7a3F...8B21</span></div>
+            <p class="text-xs text-[#6b5e52]">2026-04-05 连接 · Holdings overlap + 链上 context 已解锁</p>
+          </div>
+          <button class="px-3 py-1.5 text-xs text-[#9c2516] hover:underline flex-shrink-0">断开连接</button>
+        </div>
+
+        <div class="flex items-center gap-4 border border-subtle rounded-lg p-4 bg-[#f5efe7]">
+          <div class="w-10 h-10 rounded-full bg-[#229ED9] flex items-center justify-center text-[#f5efe7] font-bold flex-shrink-0">✈</div>
+          <div class="flex-1">
+            <div class="font-semibold text-sm">Telegram · <span class="text-[#9c2516]">@vincent_tg</span></div>
+            <p class="text-xs text-[#6b5e52]">2026-04-12 连接 · 1 个 KOL 每日摘要已启用</p>
+          </div>
+          <button class="px-3 py-1.5 text-xs text-[#9c2516] hover:underline flex-shrink-0">断开连接</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- My Nominations -->
+    <section id="nominations" class="mb-10 pt-10 border-t border-subtle">
+      <div class="flex items-baseline justify-between mb-1">
+        <h2 class="font-serif text-2xl tracking-tight">我的提名</h2>
+        <span class="text-[10px] uppercase tracking-widest text-[#6b5e52]">3 个活跃 · 1 已接受 · 1 已拒绝</span>
+      </div>
+      <p class="text-sm text-[#6b5e52] mb-6">你提名给 Trill 评估的 KOL。Sentinel 14 天内 review。</p>
+
+      <div class="space-y-3">
+
+        <div class="border border-subtle rounded-lg p-4 flex items-center gap-4">
+          <div class="w-9 h-9 rounded-full bg-[#6b5e52] flex items-center justify-center text-sm font-bold text-[#f5efe7] flex-shrink-0">M</div>
+          <div class="flex-1">
+            <div class="flex items-center gap-2 mb-0.5">
+              <span class="font-semibold text-sm">@memecoin_alpha</span>
+              <span class="text-[10px] font-mono text-[#6b5e52]">NOM-A47K2D</span>
+            </div>
+            <p class="text-[11px] text-[#6b5e52]">2026-05-25 提交 · 0 天前</p>
+          </div>
+          <span class="px-2.5 py-1 bg-[#ebe3d4] text-[#6b5e52] text-[10px] font-semibold rounded uppercase tracking-widest">待处理</span>
+        </div>
+
+        <div class="border border-subtle rounded-lg p-4 flex items-center gap-4">
+          <div class="w-9 h-9 rounded-full bg-[#6b5e52] flex items-center justify-center text-sm font-bold text-[#f5efe7] flex-shrink-0">B</div>
+          <div class="flex-1">
+            <div class="flex items-center gap-2 mb-0.5">
+              <span class="font-semibold text-sm">@bigbrainAI</span>
+              <span class="text-[10px] font-mono text-[#6b5e52]">NOM-9X2P7M</span>
+            </div>
+            <p class="text-[11px] text-[#6b5e52]">2026-05-18 提交 · Sentinel review 中 · 还剩 7 天</p>
+          </div>
+          <span class="px-2.5 py-1 bg-[#fef4e8] text-[#9c2516] text-[10px] font-semibold rounded uppercase tracking-widest">Review 中</span>
+        </div>
+
+        <div class="border-2 border-[#9c2516] rounded-lg p-4 flex items-center gap-4 bg-[#fef4e8]">
+          <div class="w-9 h-9 rounded-full bg-[#9c2516] flex items-center justify-center text-sm font-bold text-[#f5efe7] flex-shrink-0">D</div>
+          <div class="flex-1">
+            <div class="flex items-center gap-2 mb-0.5">
+              <span class="font-semibold text-sm">@defiwhisperer</span>
+              <span class="text-[10px] font-mono text-[#6b5e52]">NOM-3K8H1N</span>
+            </div>
+            <p class="text-[11px] text-[#6b5e52]">2026-05-10 接受 · 现已 3★ 列入指南</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="px-2.5 py-1 bg-[#9c2516] text-[#f5efe7] text-[10px] font-semibold rounded uppercase tracking-widest">已接受</span>
+            <a href="creator-v2.html" class="text-xs text-[#9c2516] underline">查看 profile →</a>
+          </div>
+        </div>
+
+        <div class="border border-subtle rounded-lg p-4 flex items-center gap-4 opacity-70">
+          <div class="w-9 h-9 rounded-full bg-[#6b5e52] flex items-center justify-center text-sm font-bold text-[#f5efe7] flex-shrink-0">P</div>
+          <div class="flex-1">
+            <div class="flex items-center gap-2 mb-0.5">
+              <span class="font-semibold text-sm">@pumpchaser99</span>
+              <span class="text-[10px] font-mono text-[#6b5e52]">NOM-1M4F7G</span>
+            </div>
+            <p class="text-[11px] text-[#6b5e52]">2026-05-02 拒绝 · 原因:track record 不足以评估</p>
+          </div>
+          <span class="px-2.5 py-1 bg-[#ebe3d4] text-[#6b5e52] text-[10px] font-semibold rounded uppercase tracking-widest">已拒绝</span>
+        </div>
+
+      </div>
+
+      <p class="text-[11px] text-[#6b5e52] italic mt-4 text-center">
+        💡 活跃提名计入 Sentinel engagement 信号 · 当前 68% / 需达 80%
+      </p>
+    </section>
+
+    <!-- Subscription -->
+    <section class="mb-10 pt-10 border-t border-subtle">
+      <div class="flex items-baseline justify-between mb-1">
+        <h2 class="font-serif text-2xl tracking-tight">订阅</h2>
+        <a href="subscribe.html" class="text-xs text-[#9c2516] hover:underline">对比方案 →</a>
+      </div>
+      <p class="text-sm text-[#6b5e52] mb-6">你当前的 Trill 方案与账单。</p>
+
+      <div class="bg-[#ebe3d4] rounded-lg p-6 mb-4">
+        <div class="flex items-baseline justify-between mb-3">
+          <div>
+            <div class="text-[10px] uppercase tracking-widest text-[#6b5e52] mb-1">当前方案</div>
+            <div class="font-serif text-2xl tracking-tight">免费 · The Guide</div>
+          </div>
+          <a href="subscribe.html" class="px-4 py-2 bg-[#9c2516] text-[#f5efe7] text-sm font-semibold rounded">升级 Pro Lite</a>
+        </div>
+
+        <div class="grid grid-cols-3 gap-4 pt-4 border-t border-subtle text-sm">
+          <div>
+            <div class="text-[10px] uppercase tracking-widest text-[#6b5e52] mb-1">账单</div>
+            <div>$0 / 月</div>
+          </div>
+          <div>
+            <div class="text-[10px] uppercase tracking-widest text-[#6b5e52] mb-1">注册时间</div>
+            <div>2026-04-01</div>
+          </div>
+          <div>
+            <div class="text-[10px] uppercase tracking-widest text-[#6b5e52] mb-1">Points 余额</div>
+            <div class="font-mono text-[#9c2516]">1,247 pts</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-[#fef4e8] border border-[#9c2516] rounded-lg p-5 flex items-start gap-3">
+        <span class="text-2xl">💡</span>
+        <div class="flex-1">
+          <p class="text-sm text-[#1a1611] leading-relaxed">
+            <strong>你本月已 12 次使用 Pro Lite 功能</strong>(锁定:全量 call history、多 KOL TG bot、Holdings tab)。
+            $9/月 升级 Pro Lite 即可解锁全部 + 2× Points。
+          </p>
+        </div>
+        <a href="subscribe.html" class="px-4 py-2 bg-[#9c2516] text-[#f5efe7] text-xs font-semibold rounded whitespace-nowrap">查看方案</a>
+      </div>
+    </section>
+
+    <!-- Sentinel progress (mini) -->
+    <section class="mb-10 pt-10 border-t border-subtle">
+      <div class="flex items-baseline justify-between mb-1">
+        <h2 class="font-serif text-2xl tracking-tight">Sentinel 进度</h2>
+        <a href="sentinel.html" class="text-xs text-[#9c2516] hover:underline">查看完整路径 →</a>
+      </div>
+      <p class="text-sm text-[#6b5e52] mb-5">你在 Sentinel 评审路径上的当前位置。</p>
+
+      <div class="border border-subtle rounded-lg p-5">
+        <div class="flex items-center justify-between mb-3">
+          <div>
+            <div class="text-[10px] uppercase tracking-widest text-[#9c2516] mb-1">当前 tier</div>
+            <div class="font-semibold">Candidate · Gate 2 进行中</div>
+          </div>
+          <div class="text-right">
+            <div class="text-[10px] uppercase tracking-widest text-[#6b5e52] mb-1">Gate 2 进度</div>
+            <div class="font-mono text-[#9c2516] font-semibold">68% / 80%</div>
+          </div>
+        </div>
+        <div class="h-2 bg-[#ebe3d4] rounded-full overflow-hidden mb-3">
+          <div class="h-full bg-[#9c2516]" style="width:68%"></div>
+        </div>
+        <p class="text-[11px] text-[#6b5e52] italic">
+          Gate 1 ✓ TrillClaw 已完成 · Archetype: The Macro Analyst · B 档 · 预留 2,500 $TRILL
+        </p>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="border-t border-subtle py-8 mt-10">
+    <div class="max-w-5xl mx-auto px-8 text-xs text-[#6b5e52] text-center">
+      Trill · crypto KOL 的米其林指南 · Curated by Sentinels
+    </div>
+  </footer>
+
+</body>
+</html>

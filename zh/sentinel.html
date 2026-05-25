@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>你的 Trill 旅程</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', system-ui, sans-serif; background: #f5efe7; color: #1a1611; }
+    .font-serif { font-family: 'Cormorant Garamond', Georgia, serif; }
+    .star-filled { color: #9c2516; }
+    .star-empty { color: #d6cfc4; }
+    .coach { cursor: help; color: #9c2516; opacity: 0.6; font-weight: 600; font-size: 0.75rem; }
+    .coach:hover { opacity: 1; }
+    .border-subtle { border-color: #d6cfc4; }
+  </style>
+</head>
+<body class="min-h-screen">
+
+  <nav class="border-b border-subtle bg-[#f5efe7]/95 backdrop-blur sticky top-0 z-10">
+    <div class="max-w-5xl mx-auto px-8 py-4 flex items-center justify-between">
+      <div class="flex items-baseline gap-2">
+        <a href="index.html" class="font-serif text-2xl text-[#9c2516] tracking-tight">Trill</a>
+        <span class="text-[10px] uppercase tracking-widest text-[#6b5e52]">指南</span>
+      </div>
+      <div class="flex items-center gap-1 text-sm">
+        <a href="index.html" class="px-3 py-1.5 text-[#6b5e52] hover:text-[#1a1611]">指南</a>
+        <a href="narrative.html" class="px-3 py-1.5 text-[#6b5e52] hover:text-[#1a1611]">叙事</a>
+        <a href="market.html" class="px-3 py-1.5 text-[#6b5e52] hover:text-[#1a1611]">市场</a>
+        <a href="feed-audit.html" class="px-3 py-1.5 text-[#6b5e52] hover:text-[#1a1611]">审计</a>
+        <a href="watchlist.html" class="px-3 py-1.5 text-[#6b5e52] hover:text-[#1a1611]">关注</a>
+        <a href="account.html" class="px-3 py-1.5 text-[#6b5e52] hover:text-[#1a1611]">账户</a>
+        <div class="relative" data-trill-dropdown>
+          <button type="button" data-trill-dropdown-btn class="px-3 py-1.5 text-[#1a1611] font-semibold border-b-2 border-[#9c2516] flex items-center gap-1">更多 <span class="text-[10px]">▼</span></button>
+          <div data-trill-dropdown-menu class="hidden absolute right-0 top-full mt-1 w-56 bg-[#f5efe7] border border-subtle rounded-lg shadow-lg z-20 py-1">
+            <a href="sentinel.html" class="block px-4 py-2 text-sm text-[#9c2516] font-semibold bg-[#fef4e8]">Sentinel 路径</a>
+            <a href="trillclaw.html" class="block px-4 py-2 text-sm text-[#1a1611] hover:bg-[#ebe3d4]">TrillClaw 自评</a>
+            <a href="subscribe.html" class="block px-4 py-2 text-sm text-[#1a1611] hover:bg-[#ebe3d4]">定价</a>
+            <div class="border-t border-subtle my-1"></div>
+            <a href="creator-v2.html" class="block px-4 py-2 text-sm text-[#1a1611] hover:bg-[#ebe3d4]">创作者样例</a>
+            <a href="methodology.html" class="block px-4 py-2 text-sm text-[#1a1611] hover:bg-[#ebe3d4]">评估方法</a>
+            <a href="about.html" class="block px-4 py-2 text-sm text-[#1a1611] hover:bg-[#ebe3d4]">关于 Trill</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>(function(){var w=document.currentScript.parentElement.querySelector('[data-trill-dropdown]');if(!w)return;var b=w.querySelector('[data-trill-dropdown-btn]'),m=w.querySelector('[data-trill-dropdown-menu]');b.addEventListener('click',function(e){e.stopPropagation();m.classList.toggle('hidden')});document.addEventListener('click',function(e){if(!w.contains(e.target))m.classList.add('hidden')});})();</script>
+  </nav>
+
+  <main class="max-w-5xl mx-auto px-8 py-12">
+
+    <header class="mb-10 pb-10 border-b border-subtle">
+      <h1 class="font-serif text-5xl tracking-tight mb-3">你的 Trill 旅程</h1>
+      <p class="font-serif italic text-lg text-[#6b5e52]">从浏览米其林指南到成为评审员 — 5 个层级,你不需要爬过适合你的那一层。</p>
+    </header>
+
+    <!-- Ladder -->
+    <section class="bg-[#ebe3d4] rounded-lg p-8 mb-10">
+      <div class="flex items-start gap-2 mb-2">
+        <div class="flex-1 text-center">
+          <div class="w-12 h-12 mx-auto mb-3 rounded-full bg-[#9c2516] flex items-center justify-center text-[#f5efe7] font-semibold">✓</div>
+          <div class="text-[10px] uppercase tracking-widest font-semibold">匿名</div>
+          <div class="text-[10px] text-[#6b5e52] mt-1">已浏览指南</div>
+        </div>
+        <div class="flex-1 text-center">
+          <div class="w-12 h-12 mx-auto mb-3 rounded-full bg-[#9c2516] flex items-center justify-center text-[#f5efe7] font-semibold">✓</div>
+          <div class="text-[10px] uppercase tracking-widest font-semibold">已注册</div>
+          <div class="text-[10px] text-[#6b5e52] mt-1">关注列表 + 提醒</div>
+        </div>
+        <div class="flex-1 text-center">
+          <div class="w-12 h-12 mx-auto mb-3 rounded-full bg-[#9c2516] flex items-center justify-center text-[#f5efe7] font-semibold">✓</div>
+          <div class="text-[10px] uppercase tracking-widest font-semibold">已连接</div>
+          <div class="text-[10px] text-[#6b5e52] mt-1">X + 钱包已连接</div>
+        </div>
+        <div class="flex-1 text-center">
+          <div class="w-12 h-12 mx-auto mb-3 rounded-full bg-[#9c2516] flex items-center justify-center text-[#f5efe7] text-xs font-bold animate-pulse">YOU</div>
+          <div class="text-[10px] uppercase tracking-widest font-semibold text-[#9c2516]">候选人</div>
+          <div class="text-[10px] text-[#6b5e52] mt-1">门 2 · 67%</div>
+        </div>
+        <div class="flex-1 text-center">
+          <div class="w-12 h-12 mx-auto mb-3 rounded-full border-2 border-subtle bg-[#f5efe7] flex items-center justify-center text-[#6b5e52]">🔒</div>
+          <div class="text-[10px] uppercase tracking-widest text-[#6b5e52]">Sentinel</div>
+          <div class="text-[10px] text-[#6b5e52] mt-1">质押 $TRILL</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Gates -->
+    <div class="grid grid-cols-2 gap-6 mb-10">
+
+      <div class="border border-subtle rounded-lg p-6">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold">门 1 · 已完成</span>
+          <span class="text-[10px] text-[#6b5e52]">2026-05-08</span>
+        </div>
+        <h3 class="font-serif text-2xl tracking-tight mb-1">TrillClaw 自评</h3>
+        <p class="text-xs text-[#6b5e52] mb-5">人人可做 · 自报 · 漏斗顶端的 viral hook <span class="coach" title="30 题自评,3 分钟完成。把你归入 archetype 和等级(S/A/B/C)。预留你的 $TRILL 质押额度。">(?)</span></p>
+
+        <div class="bg-[#fef4e8] border border-[#9c2516] rounded p-5 mb-5">
+          <div class="text-[10px] uppercase tracking-widest text-[#9c2516] mb-2">你的结果</div>
+          <div class="font-serif text-2xl mb-1">Macro 分析师</div>
+          <div class="text-sm text-[#9c2516] font-semibold mb-3">B 级 · 流动性周期阅读者</div>
+          <p class="text-xs italic text-[#6b5e52]">
+            "你以 regime 思考,而非 ticker。你习惯多季度持仓,对流动性拐点有很强的直觉。"
+          </p>
+        </div>
+
+        <div class="flex items-center justify-between text-sm">
+          <span class="text-[#6b5e52]">预留额度</span>
+          <span class="font-mono font-semibold text-[#9c2516]">2,500 $TRILL</span>
+        </div>
+
+        <a href="trillclaw.html" class="block mt-4 pt-4 border-t border-subtle text-xs text-[#9c2516] hover:underline">→ 重做 TrillClaw 自评</a>
+      </div>
+
+      <div class="border border-subtle rounded-lg p-6">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold">门 2 · 进行中</span>
+          <span class="text-[10px] text-[#6b5e52]">创作者侧信号</span>
+        </div>
+        <h3 class="font-serif text-2xl tracking-tight mb-1">互动信号</h3>
+        <p class="text-xs text-[#6b5e52] mb-5">Trill 上的真实行为 — 真正决定 Sentinel 资格的门 <span class="coach" title="我们看你在 Trill 上的真实使用 — 你保存了什么、读了什么、是否追踪 resolution。这能过滤掉作弊的自评。">(?)</span></p>
+
+        <div class="mb-5">
+          <div class="flex items-center justify-between text-sm mb-2">
+            <span class="text-[#6b5e52]">资格</span>
+            <span class="font-mono"><strong>67%</strong> <span class="text-[#6b5e52]">/ 80%</span></span>
+          </div>
+          <div class="h-3 bg-[#ebe3d4] rounded-full overflow-hidden">
+            <div class="h-full bg-gradient-to-r from-[#9c2516]/60 to-[#9c2516]" style="width:67%"></div>
+          </div>
+        </div>
+
+        <div class="space-y-2 text-xs">
+          <div class="text-[10px] uppercase tracking-widest text-[#6b5e52] mb-2">信号来源</div>
+          <div class="flex items-center justify-between"><span class="text-[#6b5e52]">关注列表持有 30+ 天</span><span class="text-[#9c2516] font-mono">12 位 KOL ✓</span></div>
+          <div class="flex items-center justify-between"><span class="text-[#6b5e52]">创作者档案深度阅读</span><span class="text-[#9c2516] font-mono">28 ✓</span></div>
+          <div class="flex items-center justify-between"><span class="text-[#6b5e52]">Call 追踪到 resolution</span><span class="text-[#9c2516] font-mono">14 ✓</span></div>
+          <div class="flex items-center justify-between"><span class="text-[#6b5e52]">Crypto Feed 审计已刷新</span><span class="text-[#9c2516] font-mono">每周 ✓</span></div>
+          <div class="flex items-center justify-between"><span class="text-[#6b5e52]">账户年龄</span><span class="text-[#9c2516] font-mono">8 月(需 12)</span></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Stake card -->
+    <section class="bg-[#ebe3d4] rounded-lg p-8 mb-10 border-2 border-dashed border-subtle">
+      <div class="flex items-baseline justify-between mb-3">
+        <span class="text-[10px] uppercase tracking-widest text-[#6b5e52] font-semibold">第 3 步 · 门 2 通过前锁定</span>
+        <span class="text-2xl">🔒</span>
+      </div>
+      <h3 class="font-serif text-3xl tracking-tight mb-3">质押 $TRILL · activate Sentinel seat</h3>
+      <p class="text-sm text-[#1a1611] mb-6 leading-relaxed">
+        门 2 通过后,你的 B 级 <strong>2,500 $TRILL</strong> 额度以等级折扣价质押。<strong>质押是让评审员身份成真的经济承诺</strong> — 类比米其林评审员的签约。
+      </p>
+
+      <div class="grid grid-cols-3 gap-4 mb-5">
+        <div class="bg-[#f5efe7] border border-subtle rounded p-4">
+          <div class="text-[10px] uppercase tracking-widest text-[#6b5e52] mb-1">额度</div>
+          <div class="font-mono text-lg">2,500 $TRILL</div>
+        </div>
+        <div class="bg-[#f5efe7] border border-subtle rounded p-4">
+          <div class="text-[10px] uppercase tracking-widest text-[#6b5e52] mb-1">等级折扣</div>
+          <div class="font-mono text-lg text-[#9c2516]">比市价低 10%</div>
+        </div>
+        <div class="bg-[#f5efe7] border border-subtle rounded p-4">
+          <div class="text-[10px] uppercase tracking-widest text-[#6b5e52] mb-1">奖励倍数</div>
+          <div class="font-mono text-lg text-[#9c2516]">1.5×</div>
+        </div>
+      </div>
+
+      <button class="w-full py-3 bg-[#ebe3d4] text-[#6b5e52] text-sm cursor-not-allowed rounded">🔒 激活 Sentinel 席位 · 门 2 通过后可用(当前 67%)</button>
+
+      <p class="text-[11px] text-[#6b5e52] italic mt-4 text-center">
+        ⚠ 等级质押折扣 + 奖励倍数的法务 review 进行中
+      </p>
+    </section>
+
+    <!-- Pro Lite alt -->
+    <div class="border-l-4 border-[#9c2516] pl-5 py-4 mb-8">
+      <div class="flex items-baseline justify-between mb-1">
+        <h4 class="font-serif text-xl tracking-tight">或者轻度质押换 Pro Lite 数据权益</h4>
+        <span class="text-2xl">💡</span>
+      </div>
+      <p class="text-sm text-[#1a1611] leading-relaxed mb-4">
+        还不想做 Sentinel?质押少量 $TRILL 解锁 <strong>Trill Pro Lite</strong> 权益(全时段 call 历史、多时段趋势、Pro 提醒)+ Points 倍数。无需通过互动门。
+      </p>
+      <a href="subscribe.html" class="text-sm text-[#9c2516] hover:underline">查看 Pro Lite 质押 →</a>
+    </div>
+
+  </main>
+
+  <footer class="border-t border-subtle py-8 mt-10">
+    <div class="max-w-5xl mx-auto px-8 text-xs text-[#6b5e52]">
+      Trill 米其林指南 · 由 Sentinel 评审员策展 · 每季度重新评级
+    </div>
+  </footer>
+
+</body>
+</html>

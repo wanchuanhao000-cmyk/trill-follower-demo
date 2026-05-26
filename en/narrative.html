@@ -15,9 +15,11 @@
     .coach { cursor: help; color: #9c2516; opacity: 0.6; font-weight: 600; font-size: 0.75rem; }
     .coach:hover { opacity: 1; }
     .border-subtle { border-color: #d6cfc4; }
+    body[data-view="free"] .pro-only { display: none !important; }
+    body[data-view="pro"]  .free-only { display: none !important; }
   </style>
 </head>
-<body class="min-h-screen">
+<body class="min-h-screen" data-view="free">
 
   <nav class="border-b border-subtle bg-[#f5efe7]/95 backdrop-blur sticky top-0 z-10">
     <div class="max-w-5xl mx-auto px-8 py-4 flex items-center justify-between">
@@ -49,13 +51,48 @@
     <script>(function(){var w=document.currentScript.parentElement.querySelector('[data-trill-dropdown]');if(!w)return;var b=w.querySelector('[data-trill-dropdown-btn]'),m=w.querySelector('[data-trill-dropdown-menu]');b.addEventListener('click',function(e){e.stopPropagation();m.classList.toggle('hidden')});document.addEventListener('click',function(e){if(!w.contains(e.target))m.classList.add('hidden')});})();</script>
   </nav>
 
+  <!-- Demo view toggle (demo only — not in production) -->
+  <div class="bg-[#ebe3d4] border-b border-subtle">
+    <div class="max-w-5xl mx-auto px-8 py-2 flex items-center justify-between text-xs">
+      <span class="text-[#6b5e52]">Demo · narrative view variant</span>
+      <div class="flex items-center gap-3">
+        <button type="button" data-view-set="free" class="view-btn text-[#9c2516] underline">Free view</button>
+        <span class="text-[#d6cfc4]">/</span>
+        <button type="button" data-view-set="pro" class="view-btn text-[#6b5e52] hover:text-[#1a1611]">Pro Lite view ✨</button>
+      </div>
+    </div>
+  </div>
+
   <main class="max-w-5xl mx-auto px-8 py-12">
 
     <header class="mb-10 pb-10 border-b border-subtle">
-      <h1 class="font-serif text-5xl tracking-tight mb-3">Narrative Tracker</h1>
+      <div class="flex items-baseline justify-between mb-3">
+        <h1 class="font-serif text-5xl tracking-tight">Narrative Tracker</h1>
+        <span class="pro-only inline-flex items-center gap-1.5 px-2.5 py-1 bg-[#9c2516] text-[#f5efe7] text-[10px] uppercase tracking-widest font-semibold rounded">✓ Pro Lite active</span>
+      </div>
       <p class="font-serif italic text-lg text-[#6b5e52] mb-4">Where conviction is rotating · Heat weighted by 3★+ creator discussion, not by mention volume.</p>
-      <p class="text-xs text-[#6b5e52]">7-day rolling · Anonymous sees top-line only · Watchable from Registered tier <span class="coach" title="A narrative is a recurring theme that distinguished creators discuss. Heat is weighted by their Star tier and quality of discussion — not by total mentions, which would let bots influence the ranking.">(?)</span></p>
+      <p class="free-only text-xs text-[#6b5e52]">7-day rolling · Anonymous sees top-line only · Watchable from Registered tier <span class="coach" title="A narrative is a recurring theme that distinguished creators discuss. Heat is weighted by their Star tier and quality of discussion — not by total mentions, which would let bots influence the ranking.">(?)</span></p>
+      <p class="pro-only text-xs text-[#6b5e52]">Multi-timeframe · cross-narrative correlation · historical archive · per-narrative alerts <span class="coach" title="Pro Lite unlocks 4 things: switch between 7d / 30d / 90d / all-time views, see how narratives correlate, browse the archive of past narratives, and configure custom alert thresholds per narrative.">(?)</span></p>
     </header>
+
+    <!-- Pro Lite · timeframe + status tabs (visible only in Pro view) -->
+    <div class="pro-only mb-6 pb-4 border-b border-subtle">
+      <div class="flex items-center justify-between gap-4 flex-wrap">
+        <div class="flex items-center gap-2">
+          <span class="text-[10px] uppercase tracking-widest text-[#6b5e52] mr-2">Timeframe</span>
+          <button class="px-3 py-1 text-xs rounded bg-[#9c2516] text-[#f5efe7]">7d</button>
+          <button class="px-3 py-1 text-xs rounded border border-subtle text-[#6b5e52] hover:text-[#1a1611]">30d</button>
+          <button class="px-3 py-1 text-xs rounded border border-subtle text-[#6b5e52] hover:text-[#1a1611]">90d</button>
+          <button class="px-3 py-1 text-xs rounded border border-subtle text-[#6b5e52] hover:text-[#1a1611]">All-time</button>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-[10px] uppercase tracking-widest text-[#6b5e52] mr-2">Status</span>
+          <button class="px-3 py-1 text-xs rounded-full bg-[#9c2516] text-[#f5efe7]">Active</button>
+          <button class="px-3 py-1 text-xs rounded-full border border-subtle text-[#6b5e52] hover:text-[#1a1611]">Cooling</button>
+          <button class="px-3 py-1 text-xs rounded-full border border-subtle text-[#6b5e52] hover:text-[#1a1611]">Past (archive)</button>
+        </div>
+      </div>
+    </div>
 
     <!-- Filter bar -->
     <div class="flex flex-wrap items-center gap-2 mb-10">
@@ -65,22 +102,38 @@
       <button class="px-3 py-1 text-xs rounded-full border border-subtle text-[#6b5e52] hover:text-[#1a1611]">Macro</button>
       <button class="px-3 py-1 text-xs rounded-full border border-subtle text-[#6b5e52] hover:text-[#1a1611]">AI</button>
       <button class="px-3 py-1 text-xs rounded-full border border-subtle text-[#6b5e52] hover:text-[#1a1611]">Memes</button>
-      <span class="ml-auto text-xs text-[#6b5e52]">Sort: <span class="text-[#1a1611] font-semibold">Heat ↓</span></span>
+      <span class="ml-auto text-xs text-[#6b5e52]">
+        Sort: <span class="text-[#1a1611] font-semibold">Heat ↓</span>
+        <span class="pro-only text-[#9c2516] ml-1">/ Correlated to my watch / Newest</span>
+      </span>
     </div>
 
     <div class="grid grid-cols-3 gap-8">
 
       <div class="col-span-2 space-y-6">
 
+        <!-- Narrative 1 · Restaking risk -->
         <article class="border-t border-subtle pt-6">
           <div class="flex items-start justify-between mb-3">
-            <div>
+            <div class="flex-1">
               <h3 class="font-serif text-2xl tracking-tight mb-1">Restaking risk frameworks</h3>
               <p class="text-xs text-[#6b5e52]">DeFi · Active narrative</p>
             </div>
-            <div class="text-right">
-              <div class="text-[#9c2516] font-mono font-semibold">+42%</div>
-              <p class="text-[10px] text-[#6b5e52]">heat this week</p>
+            <div class="text-right flex items-start gap-3">
+              <!-- Sparkline (pro only) -->
+              <svg class="pro-only" width="80" height="28" viewBox="0 0 80 28">
+                <polyline points="0,22 10,20 20,18 30,17 40,13 50,10 60,8 70,5 80,3" fill="none" stroke="#9c2516" stroke-width="1.5"/>
+                <circle cx="80" cy="3" r="2" fill="#9c2516"/>
+              </svg>
+              <div>
+                <div class="text-[#9c2516] font-mono font-semibold">+42%</div>
+                <p class="text-[10px] text-[#6b5e52]">heat this week</p>
+                <!-- Multi-timeframe (pro only) -->
+                <div class="pro-only mt-2 space-y-0.5 text-[10px] font-mono text-[#6b5e52]">
+                  <div>+118% <span class="text-[#d6cfc4]">/ 30d</span></div>
+                  <div>+340% <span class="text-[#d6cfc4]">/ all-time</span></div>
+                </div>
+              </div>
             </div>
           </div>
           <p class="text-sm text-[#1a1611] mb-4 leading-relaxed font-serif italic">
@@ -104,24 +157,42 @@
             </div>
             <span class="text-[10px] text-[#6b5e52]">+3 more</span>
           </div>
+          <!-- Related narratives (pro only) -->
+          <div class="pro-only mb-3 text-xs">
+            <span class="text-[#6b5e52]">🔗 Correlated narratives:</span>
+            <a href="#" class="text-[#9c2516] hover:underline ml-1">Slashing infra (0.83)</a>
+            <span class="text-[#d6cfc4]">·</span>
+            <a href="#" class="text-[#9c2516] hover:underline ml-1">ETH staking yields (0.71)</a>
+          </div>
           <div class="flex items-center justify-between pt-3 border-t border-subtle">
             <p class="text-xs text-[#9c2516]">⚡ Top 4 voices are not in your follow graph yet</p>
             <a href="#" class="text-xs text-[#9c2516] hover:underline">Explore narrative →</a>
           </div>
         </article>
 
+        <!-- Narrative 2 · Solana validators -->
         <article class="border-t border-subtle pt-6">
           <div class="flex items-start justify-between mb-3">
-            <div>
+            <div class="flex-1">
               <div class="flex items-center gap-2 mb-1">
                 <h3 class="font-serif text-2xl tracking-tight">Solana validator economics</h3>
                 <span class="text-[10px] px-2 py-0.5 bg-[#fef4e8] text-[#9c2516] rounded uppercase tracking-widest">In watchlist</span>
               </div>
               <p class="text-xs text-[#6b5e52]">DeFi · Active</p>
             </div>
-            <div class="text-right">
-              <div class="text-[#6b5e52] font-mono font-semibold">steady</div>
-              <p class="text-[10px] text-[#6b5e52]">heat this week</p>
+            <div class="text-right flex items-start gap-3">
+              <svg class="pro-only" width="80" height="28" viewBox="0 0 80 28">
+                <polyline points="0,15 10,16 20,14 30,15 40,15 50,14 60,16 70,15 80,15" fill="none" stroke="#6b5e52" stroke-width="1.5"/>
+                <circle cx="80" cy="15" r="2" fill="#6b5e52"/>
+              </svg>
+              <div>
+                <div class="text-[#6b5e52] font-mono font-semibold">steady</div>
+                <p class="text-[10px] text-[#6b5e52]">heat this week</p>
+                <div class="pro-only mt-2 space-y-0.5 text-[10px] font-mono text-[#6b5e52]">
+                  <div>+4% <span class="text-[#d6cfc4]">/ 30d</span></div>
+                  <div>+22% <span class="text-[#d6cfc4]">/ all-time</span></div>
+                </div>
+              </div>
             </div>
           </div>
           <p class="text-sm text-[#1a1611] mb-4 leading-relaxed font-serif italic">
@@ -135,21 +206,38 @@
             </div>
             <span class="text-[10px] text-[#6b5e52]">+6 more</span>
           </div>
+          <div class="pro-only mb-3 text-xs">
+            <span class="text-[#6b5e52]">🔗 Correlated narratives:</span>
+            <a href="#" class="text-[#9c2516] hover:underline ml-1">MEV-Burn (0.68)</a>
+            <span class="text-[#d6cfc4]">·</span>
+            <a href="#" class="text-[#9c2516] hover:underline ml-1">Liquid staking tokens (0.62)</a>
+          </div>
           <div class="flex items-center justify-between pt-3 border-t border-subtle">
             <p class="text-xs text-[#9c2516]">✓ 3 voices in your follow graph · catch up</p>
             <a href="#" class="text-xs text-[#9c2516] hover:underline">Explore →</a>
           </div>
         </article>
 
+        <!-- Narrative 3 · MEV-Burn -->
         <article class="border-t border-subtle pt-6">
           <div class="flex items-start justify-between mb-3">
-            <div>
+            <div class="flex-1">
               <h3 class="font-serif text-2xl tracking-tight mb-1">MEV-Burn mechanics</h3>
               <p class="text-xs text-[#6b5e52]">DeFi · Technical</p>
             </div>
-            <div class="text-right">
-              <div class="text-[#9c2516] font-mono font-semibold">+28%</div>
-              <p class="text-[10px] text-[#6b5e52]">heat this week</p>
+            <div class="text-right flex items-start gap-3">
+              <svg class="pro-only" width="80" height="28" viewBox="0 0 80 28">
+                <polyline points="0,20 10,19 20,18 30,17 40,15 50,13 60,12 70,10 80,9" fill="none" stroke="#9c2516" stroke-width="1.5"/>
+                <circle cx="80" cy="9" r="2" fill="#9c2516"/>
+              </svg>
+              <div>
+                <div class="text-[#9c2516] font-mono font-semibold">+28%</div>
+                <p class="text-[10px] text-[#6b5e52]">heat this week</p>
+                <div class="pro-only mt-2 space-y-0.5 text-[10px] font-mono text-[#6b5e52]">
+                  <div>+72% <span class="text-[#d6cfc4]">/ 30d</span></div>
+                  <div>+155% <span class="text-[#d6cfc4]">/ all-time</span></div>
+                </div>
+              </div>
             </div>
           </div>
           <p class="text-sm text-[#1a1611] mb-4 leading-relaxed font-serif italic">
@@ -162,10 +250,45 @@
             </div>
             <span class="text-[10px] text-[#6b5e52]">+2 more</span>
           </div>
+          <div class="pro-only mb-3 text-xs">
+            <span class="text-[#6b5e52]">🔗 Correlated narratives:</span>
+            <a href="#" class="text-[#9c2516] hover:underline ml-1">Solana validators (0.68)</a>
+            <span class="text-[#d6cfc4]">·</span>
+            <a href="#" class="text-[#9c2516] hover:underline ml-1">L1 fee markets (0.59)</a>
+          </div>
           <div class="flex items-center justify-between pt-3 border-t border-subtle">
             <p class="text-xs text-[#9c2516]">⚡ You follow 1/3 — catch up on other angles</p>
             <a href="#" class="text-xs text-[#9c2516] hover:underline">Explore →</a>
           </div>
+        </article>
+
+        <!-- Pro Lite · "Past narratives" preview (archive) -->
+        <article class="pro-only border-t border-subtle pt-6 opacity-70">
+          <div class="flex items-start justify-between mb-3">
+            <div class="flex-1">
+              <div class="flex items-center gap-2 mb-1">
+                <h3 class="font-serif text-2xl tracking-tight">Inscriptions summer</h3>
+                <span class="text-[10px] px-2 py-0.5 bg-[#ebe3d4] text-[#6b5e52] rounded uppercase tracking-widest">Past · archived</span>
+              </div>
+              <p class="text-xs text-[#6b5e52]">Memes · Faded 2024 Q4</p>
+            </div>
+            <div class="text-right flex items-start gap-3">
+              <svg width="80" height="28" viewBox="0 0 80 28">
+                <polyline points="0,20 10,8 20,3 30,5 40,10 50,15 60,20 70,23 80,25" fill="none" stroke="#6b5e52" stroke-width="1.5"/>
+              </svg>
+              <div>
+                <div class="text-[#6b5e52] font-mono font-semibold">-91%</div>
+                <p class="text-[10px] text-[#6b5e52]">since peak</p>
+                <div class="mt-2 space-y-0.5 text-[10px] font-mono text-[#6b5e52]">
+                  <div>peak 2024-04</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <p class="text-sm text-[#1a1611] mb-2 leading-relaxed font-serif italic">
+            A retired narrative from the 2024 Q1-Q2 cycle. Browse Pro Lite's archive to study how narratives form, peak, and fade — useful for spotting the same pattern early next time.
+          </p>
+          <a href="#" class="text-xs text-[#9c2516] hover:underline">View 47 past narratives →</a>
         </article>
 
       </div>
@@ -173,17 +296,50 @@
       <!-- Right sidebar -->
       <div class="col-span-1">
         <div class="sticky top-24">
-          <div class="text-[10px] uppercase tracking-widest text-[#9c2516] mb-3">My narrative watch</div>
 
-          <div class="space-y-2.5 mb-6">
+          <!-- Watch list header — limit differs Free vs Pro -->
+          <div class="flex items-baseline justify-between mb-3">
+            <div class="text-[10px] uppercase tracking-widest text-[#9c2516]">My narrative watch</div>
+            <span class="free-only text-[10px] text-[#6b5e52]">3 / 5</span>
+            <span class="pro-only text-[10px] text-[#6b5e52]">3 · unlimited</span>
+          </div>
+
+          <!-- Free version of watch list -->
+          <div class="free-only space-y-2.5 mb-6">
             <div class="flex items-center justify-between border-b border-subtle pb-2 text-sm"><span class="text-[#9c2516]">Solana validators</span><span class="text-[10px] text-[#6b5e52]">3 voices</span></div>
             <div class="flex items-center justify-between border-b border-subtle pb-2 text-sm"><span>DeFi liquidity</span><span class="text-[10px] text-[#6b5e52]">2 voices</span></div>
             <div class="flex items-center justify-between text-sm"><span>Cross-chain bridging</span><span class="text-[10px] text-[#6b5e52]">1 voice</span></div>
           </div>
 
+          <!-- Pro Lite version of watch list (with ⚙ per item) -->
+          <div class="pro-only space-y-2.5 mb-6">
+            <div class="flex items-center justify-between border-b border-subtle pb-2 text-sm">
+              <span class="text-[#9c2516]">Solana validators</span>
+              <div class="flex items-center gap-2">
+                <span class="text-[10px] text-[#6b5e52]">3 voices</span>
+                <button title="Configure alert" class="text-[#6b5e52] hover:text-[#9c2516]">⚙</button>
+              </div>
+            </div>
+            <div class="flex items-center justify-between border-b border-subtle pb-2 text-sm">
+              <span>DeFi liquidity</span>
+              <div class="flex items-center gap-2">
+                <span class="text-[10px] text-[#6b5e52]">2 voices</span>
+                <button title="Configure alert" class="text-[#6b5e52] hover:text-[#9c2516]">⚙</button>
+              </div>
+            </div>
+            <div class="flex items-center justify-between text-sm">
+              <span>Cross-chain bridging</span>
+              <div class="flex items-center gap-2">
+                <span class="text-[10px] text-[#6b5e52]">1 voice</span>
+                <button title="Configure alert" class="text-[#6b5e52] hover:text-[#9c2516]">⚙</button>
+              </div>
+            </div>
+          </div>
+
           <button class="w-full py-2 text-xs border border-subtle text-[#6b5e52] hover:text-[#1a1611] rounded mb-6">+ Watch a narrative</button>
 
-          <div class="pt-5 border-t border-subtle">
+          <!-- Free version: Pro Lite paywall -->
+          <div class="free-only pt-5 border-t border-subtle">
             <div class="text-[10px] uppercase tracking-widest text-[#9c2516] mb-2">Pro Lite unlocks</div>
             <ul class="text-xs text-[#6b5e52] space-y-1.5 mb-4">
               <li>· Multi-timeframe heat trends</li>
@@ -193,6 +349,33 @@
             </ul>
             <a href="subscribe.html" class="block text-center w-full py-2.5 bg-[#9c2516] text-[#f5efe7] text-xs font-semibold rounded">Upgrade to Pro Lite</a>
           </div>
+
+          <!-- Pro version: status + per-narrative alert popover preview -->
+          <div class="pro-only pt-5 border-t border-subtle">
+            <div class="text-[10px] uppercase tracking-widest text-[#9c2516] mb-2">Active subscription</div>
+            <div class="bg-[#fef4e8] border border-[#9c2516] rounded p-3 mb-4">
+              <div class="flex items-center justify-between text-xs mb-1">
+                <span class="font-semibold">Pro Lite</span>
+                <span class="text-[#6b5e52]">since 2026-04-20</span>
+              </div>
+              <p class="text-[11px] text-[#6b5e52] leading-snug">All 4 unlocks active · 2× Points multiplier on actions</p>
+            </div>
+
+            <div class="text-[10px] uppercase tracking-widest text-[#6b5e52] mb-2">Per-narrative alert (preview)</div>
+            <div class="border border-subtle rounded p-3 text-xs">
+              <div class="text-[#1a1611] mb-2 font-semibold">⚙ Solana validators</div>
+              <div class="space-y-1.5 text-[#6b5e52]">
+                <div>○ +50% heat in 7 days</div>
+                <div class="text-[#9c2516] font-semibold">● Any new 4★+ KOL joins</div>
+                <div>○ Heat drops -30% (cooling)</div>
+              </div>
+              <div class="flex items-center justify-between mt-3 pt-2 border-t border-subtle">
+                <span class="text-[10px] text-[#6b5e52]">Frequency</span>
+                <span class="text-[10px] font-semibold text-[#9c2516]">Real-time</span>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
 
@@ -205,6 +388,22 @@
       The Trill Guide · Curated by Sentinels · Re-rated quarterly
     </div>
   </footer>
+
+  <script>
+    document.querySelectorAll('[data-view-set]').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var v = btn.dataset.viewSet;
+        document.body.dataset.view = v;
+        document.querySelectorAll('[data-view-set]').forEach(function(b){
+          if (b.dataset.viewSet === v) {
+            b.className = 'view-btn text-[#9c2516] underline';
+          } else {
+            b.className = 'view-btn text-[#6b5e52] hover:text-[#1a1611]';
+          }
+        });
+      });
+    });
+  </script>
 
 </body>
 </html>

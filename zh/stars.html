@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trill Stars · The Trill Guide</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', system-ui, sans-serif; background: #f5efe7; color: #1a1611; }
+    .font-serif { font-family: 'Cormorant Garamond', Georgia, serif; }
+    .border-subtle { border-color: #d6cfc4; }
+    .star-filled { color: #9c2516; }
+    .star-empty { color: #d6cfc4; }
+    .card { transition: transform 0.18s ease, box-shadow 0.18s ease; }
+    .card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(156, 37, 22, 0.08); }
+  </style>
+</head>
+<body class="min-h-screen">
+
+  <nav class="border-b border-subtle bg-[#f5efe7]/95 backdrop-blur sticky top-0 z-10">
+    <div class="max-w-6xl mx-auto px-8 py-4 flex items-center justify-between">
+      <div class="flex items-baseline gap-2">
+        <a href="index.html" class="font-serif text-2xl text-[#9c2516] tracking-tight">Trill</a>
+        <span class="text-[10px] uppercase tracking-widest text-[#6b5e52]">指南</span>
+      </div>
+      <div class="flex items-center gap-1 text-sm">
+        <a href="index.html" class="px-3 py-1.5 text-[#6b5e52] hover:text-[#1a1611]">首页</a>
+        <a href="stars.html" class="px-3 py-1.5 text-[#1a1611] font-semibold border-b-2 border-[#9c2516]">Trill Stars</a>
+        <a href="guides.html" class="px-3 py-1.5 text-[#6b5e52] hover:text-[#1a1611]">Trill 指南</a>
+        <a href="dimensions.html" class="px-3 py-1.5 text-[#6b5e52] hover:text-[#1a1611]">维度</a>
+        <a href="feed-audit.html" class="px-3 py-1.5 text-[#6b5e52] hover:text-[#1a1611]">审计</a>
+        <a href="account.html" class="px-3 py-1.5 text-[#6b5e52] hover:text-[#1a1611]">账户</a>
+        <div class="relative" data-trill-dropdown>
+          <button type="button" data-trill-dropdown-btn class="px-3 py-1.5 text-[#6b5e52] hover:text-[#1a1611] flex items-center gap-1">更多 <span class="text-[10px]">▼</span></button>
+          <div data-trill-dropdown-menu class="hidden absolute right-0 top-full mt-1 w-56 bg-[#f5efe7] border border-subtle rounded-lg shadow-lg z-20 py-1">
+            <a href="sentinel.html" class="block px-4 py-2 text-sm text-[#1a1611] hover:bg-[#ebe3d4]">Sentinel 路径</a>
+            <a href="trillclaw.html" class="block px-4 py-2 text-sm text-[#1a1611] hover:bg-[#ebe3d4]">TrillClaw 自评</a>
+            <a href="subscribe.html" class="block px-4 py-2 text-sm text-[#1a1611] hover:bg-[#ebe3d4]">定价</a>
+            <div class="border-t border-subtle my-1"></div>
+            <a href="methodology.html" class="block px-4 py-2 text-sm text-[#1a1611] hover:bg-[#ebe3d4]">评估方法</a>
+            <a href="about.html" class="block px-4 py-2 text-sm text-[#1a1611] hover:bg-[#ebe3d4]">关于 Trill</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>(function(){var w=document.currentScript.parentElement.querySelector('[data-trill-dropdown]');if(!w)return;var b=w.querySelector('[data-trill-dropdown-btn]'),m=w.querySelector('[data-trill-dropdown-menu]');b.addEventListener('click',function(e){e.stopPropagation();m.classList.toggle('hidden')});document.addEventListener('click',function(e){if(!w.contains(e.target))m.classList.add('hidden')});})();</script>
+  </nav>
+
+  <main class="max-w-6xl mx-auto px-8 py-12">
+
+    <header class="mb-10 pb-8 border-b border-subtle">
+      <p class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold mb-2">Trill Stars</p>
+      <h1 class="font-serif text-5xl tracking-tight mb-3">已评 Star 的 Crypto 声音</h1>
+      <p class="font-serif italic text-lg text-[#6b5e52] max-w-3xl">Every creator listed here has earned at least one Trill Star — awarded by Sentinels after evaluation across six dimensions and multiple market cycles.</p>
+    </header>
+
+    <!-- Search + counts -->
+    <div class="bg-[#f5efe7] border border-subtle rounded-lg px-5 py-3 flex items-center gap-3 shadow-sm mb-6">
+      <svg class="w-5 h-5 text-[#6b5e52]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+      <input type="text" placeholder="按名称、handle、thesis 搜索创作者..." class="flex-1 bg-transparent text-[#1a1611] focus:outline-none text-sm placeholder-[#6b5e52]">
+    </div>
+
+    <!-- Filters -->
+    <div class="border border-subtle rounded-lg p-5 bg-[#ebe3d4] mb-8">
+      <div class="flex flex-wrap items-center gap-2 mb-3">
+        <span class="text-[10px] uppercase tracking-widest text-[#6b5e52] mr-2 font-semibold">Star 等级</span>
+        <button class="px-3 py-1 text-xs rounded-full bg-[#9c2516] text-[#f5efe7]">全部 Star</button>
+        <button class="px-3 py-1 text-xs rounded-full border border-subtle text-[#6b5e52] hover:text-[#1a1611] bg-[#f5efe7]"><span class="font-mono">★★★</span> 三星</button>
+        <button class="px-3 py-1 text-xs rounded-full border border-subtle text-[#6b5e52] hover:text-[#1a1611] bg-[#f5efe7]"><span class="font-mono">★★</span> 二星</button>
+        <button class="px-3 py-1 text-xs rounded-full border border-subtle text-[#6b5e52] hover:text-[#1a1611] bg-[#f5efe7]"><span class="font-mono">★</span> 一星</button>
+        <button class="px-3 py-1 text-xs rounded-full border border-subtle text-[#6b5e52] hover:text-[#1a1611] bg-[#f5efe7]">推荐</button>
+      </div>
+      <div class="flex flex-wrap items-center gap-2 mb-3">
+        <span class="text-[10px] uppercase tracking-widest text-[#6b5e52] mr-2 font-semibold">领域</span>
+        <button class="px-3 py-1 text-xs rounded-full border border-subtle text-[#6b5e52] hover:text-[#1a1611] bg-[#f5efe7]">DeFi</button>
+        <button class="px-3 py-1 text-xs rounded-full border border-subtle text-[#6b5e52] hover:text-[#1a1611] bg-[#f5efe7]">Macro</button>
+        <button class="px-3 py-1 text-xs rounded-full border border-subtle text-[#6b5e52] hover:text-[#1a1611] bg-[#f5efe7]">AI</button>
+        <button class="px-3 py-1 text-xs rounded-full border border-subtle text-[#6b5e52] hover:text-[#1a1611] bg-[#f5efe7]">Memes</button>
+        <button class="px-3 py-1 text-xs rounded-full border border-subtle text-[#6b5e52] hover:text-[#1a1611] bg-[#f5efe7]">RWAs</button>
+        <button class="px-3 py-1 text-xs rounded-full border border-subtle text-[#6b5e52] hover:text-[#1a1611] bg-[#f5efe7]">DePIN</button>
+      </div>
+      <div class="flex flex-wrap items-center gap-2">
+        <span class="text-[10px] uppercase tracking-widest text-[#6b5e52] mr-2 font-semibold">风格</span>
+        <button class="px-3 py-1 text-xs rounded-full border border-subtle text-[#6b5e52] hover:text-[#1a1611] bg-[#f5efe7]">Thesis-driven</button>
+        <button class="px-3 py-1 text-xs rounded-full border border-subtle text-[#6b5e52] hover:text-[#1a1611] bg-[#f5efe7]">Researcher</button>
+        <button class="px-3 py-1 text-xs rounded-full border border-subtle text-[#6b5e52] hover:text-[#1a1611] bg-[#f5efe7]">Educator</button>
+        <button class="px-3 py-1 text-xs rounded-full border border-subtle text-[#6b5e52] hover:text-[#1a1611] bg-[#f5efe7]">Contrarian</button>
+        <button class="px-3 py-1 text-xs rounded-full border border-subtle text-[#6b5e52] hover:text-[#1a1611] bg-[#f5efe7]">Onchain analyst</button>
+      </div>
+    </div>
+
+    <!-- Count + sort -->
+    <div class="flex items-center justify-between mb-6">
+      <p class="text-sm text-[#6b5e52]"><strong class="text-[#1a1611]">1 - 16</strong> of <strong class="text-[#1a1611]">142</strong> rated creators</p>
+      <div class="flex items-center gap-2 text-xs">
+        <span class="text-[#6b5e52]">排序:</span>
+        <select class="bg-[#f5efe7] border border-subtle rounded px-3 py-1.5">
+          <option>Star 等级 ↓</option>
+          <option>最近复评</option>
+          <option>最新加入</option>
+          <option>字母排序</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Grid of creator cards -->
+    <section class="grid grid-cols-4 gap-5">
+
+      <!-- 3-Star · Cobie -->
+      <a href="creator-v2.html" class="card block border border-subtle rounded-lg p-5 bg-[#f5efe7]">
+        <div class="w-14 h-14 rounded-full bg-[#9c2516] flex items-center justify-center text-2xl font-serif font-bold text-[#f5efe7] mb-3">C</div>
+        <div class="font-mono text-[#9c2516] text-lg mb-1">★★★</div>
+        <h3 class="font-serif text-xl tracking-tight mb-0.5">Cobie</h3>
+        <p class="text-xs text-[#6b5e52] mb-3">@cobie · Macro</p>
+        <p class="text-[11px] text-[#6b5e52] italic leading-snug">"Liquidity cycles, not memes."</p>
+      </a>
+
+      <!-- 3-Star · Hsaka -->
+      <a href="creator-v2.html" class="card block border border-subtle rounded-lg p-5 bg-[#f5efe7]">
+        <div class="w-14 h-14 rounded-full bg-[#9c2516] flex items-center justify-center text-2xl font-serif font-bold text-[#f5efe7] mb-3">H</div>
+        <div class="font-mono text-[#9c2516] text-lg mb-1">★★★</div>
+        <h3 class="font-serif text-xl tracking-tight mb-0.5">Hsaka</h3>
+        <p class="text-xs text-[#6b5e52] mb-3">@hsakatrades · DeFi</p>
+        <p class="text-[11px] text-[#6b5e52] italic leading-snug">"Trades the macro, hates the cope."</p>
+      </a>
+
+      <!-- 3-Star · Vance -->
+      <a href="creator-v2.html" class="card block border border-subtle rounded-lg p-5 bg-[#f5efe7]">
+        <div class="w-14 h-14 rounded-full bg-[#9c2516] flex items-center justify-center text-2xl font-serif font-bold text-[#f5efe7] mb-3">V</div>
+        <div class="font-mono text-[#9c2516] text-lg mb-1">★★★</div>
+        <h3 class="font-serif text-xl tracking-tight mb-0.5">Vance</h3>
+        <p class="text-xs text-[#6b5e52] mb-3">@vance_research · DeFi</p>
+        <p class="text-[11px] text-[#6b5e52] italic leading-snug">"The patient teacher of DeFi mechanics."</p>
+      </a>
+
+      <!-- 3-Star · Tetranode -->
+      <a href="creator-v2.html" class="card block border border-subtle rounded-lg p-5 bg-[#f5efe7]">
+        <div class="w-14 h-14 rounded-full bg-[#9c2516] flex items-center justify-center text-2xl font-serif font-bold text-[#f5efe7] mb-3">T</div>
+        <div class="font-mono text-[#9c2516] text-lg mb-1">★★★</div>
+        <h3 class="font-serif text-xl tracking-tight mb-0.5">Tetranode</h3>
+        <p class="text-xs text-[#6b5e52] mb-3">@tetranode · Onchain</p>
+        <p class="text-[11px] text-[#6b5e52] italic leading-snug">"Reads wallets like literature."</p>
+      </a>
+
+      <!-- 2-Star · CryptoCred -->
+      <a href="creator-v2.html" class="card block border border-subtle rounded-lg p-5 bg-[#f5efe7]">
+        <div class="w-14 h-14 rounded-full bg-[#9c2516] flex items-center justify-center text-2xl font-serif font-bold text-[#f5efe7] mb-3">Cr</div>
+        <div class="font-mono text-lg mb-1"><span class="star-filled">★★</span><span class="star-empty">★</span></div>
+        <h3 class="font-serif text-xl tracking-tight mb-0.5">CryptoCred</h3>
+        <p class="text-xs text-[#6b5e52] mb-3">@cryptocred · DeFi</p>
+        <p class="text-[11px] text-[#6b5e52] italic leading-snug">"The patient teacher newcomers should bookmark first."</p>
+      </a>
+
+      <!-- 2-Star · Ren -->
+      <a href="creator-v2.html" class="card block border border-subtle rounded-lg p-5 bg-[#f5efe7]">
+        <div class="w-14 h-14 rounded-full bg-[#9c2516] flex items-center justify-center text-2xl font-serif font-bold text-[#f5efe7] mb-3">R</div>
+        <div class="font-mono text-lg mb-1"><span class="star-filled">★★</span><span class="star-empty">★</span></div>
+        <h3 class="font-serif text-xl tracking-tight mb-0.5">Ren</h3>
+        <p class="text-xs text-[#6b5e52] mb-3">@ren · DeFi</p>
+        <p class="text-[11px] text-[#6b5e52] italic leading-snug">"Willing to walk back a wrong call publicly."</p>
+      </a>
+
+      <!-- 2-Star · ledger_status -->
+      <a href="creator-v2.html" class="card block border border-subtle rounded-lg p-5 bg-[#f5efe7]">
+        <div class="w-14 h-14 rounded-full bg-[#9c2516] flex items-center justify-center text-2xl font-serif font-bold text-[#f5efe7] mb-3">L</div>
+        <div class="font-mono text-lg mb-1"><span class="star-filled">★★</span><span class="star-empty">★</span></div>
+        <h3 class="font-serif text-xl tracking-tight mb-0.5">ledger_status</h3>
+        <p class="text-xs text-[#6b5e52] mb-3">@ledger_status · Macro</p>
+        <p class="text-[11px] text-[#6b5e52] italic leading-snug">"Substance with a sense of humour."</p>
+      </a>
+
+      <!-- 2-Star · DeFiance Capital -->
+      <a href="creator-v2.html" class="card block border border-subtle rounded-lg p-5 bg-[#f5efe7]">
+        <div class="w-14 h-14 rounded-full bg-[#9c2516] flex items-center justify-center text-2xl font-serif font-bold text-[#f5efe7] mb-3">D</div>
+        <div class="font-mono text-lg mb-1"><span class="star-filled">★★</span><span class="star-empty">★</span></div>
+        <h3 class="font-serif text-xl tracking-tight mb-0.5">DeFi Defiance</h3>
+        <p class="text-xs text-[#6b5e52] mb-3">@arthur_0x · DeFi</p>
+        <p class="text-[11px] text-[#6b5e52] italic leading-snug">"Allocator's perspective, no theatre."</p>
+      </a>
+
+      <!-- 1-Star · Noah -->
+      <a href="creator-v2.html" class="card block border border-subtle rounded-lg p-5 bg-[#f5efe7]">
+        <div class="w-14 h-14 rounded-full bg-[#9c2516] flex items-center justify-center text-2xl font-serif font-bold text-[#f5efe7] mb-3">N</div>
+        <div class="font-mono text-lg mb-1"><span class="star-filled">★</span><span class="star-empty">★★</span></div>
+        <h3 class="font-serif text-xl tracking-tight mb-0.5">Noah</h3>
+        <p class="text-xs text-[#6b5e52] mb-3">@noah_kol · AI</p>
+        <p class="text-[11px] text-[#6b5e52] italic leading-snug">"Underrated writer on AI agent economics."</p>
+      </a>
+
+      <!-- 1-Star · zachxbt -->
+      <a href="creator-v2.html" class="card block border border-subtle rounded-lg p-5 bg-[#f5efe7]">
+        <div class="w-14 h-14 rounded-full bg-[#9c2516] flex items-center justify-center text-2xl font-serif font-bold text-[#f5efe7] mb-3">Z</div>
+        <div class="font-mono text-lg mb-1"><span class="star-filled">★</span><span class="star-empty">★★</span></div>
+        <h3 class="font-serif text-xl tracking-tight mb-0.5">zachxbt</h3>
+        <p class="text-xs text-[#6b5e52] mb-3">@zachxbt · Onchain</p>
+        <p class="text-[11px] text-[#6b5e52] italic leading-snug">"Fraud receipts no one else compiles."</p>
+      </a>
+
+      <!-- 1-Star · MartyParty -->
+      <a href="creator-v2.html" class="card block border border-subtle rounded-lg p-5 bg-[#f5efe7]">
+        <div class="w-14 h-14 rounded-full bg-[#9c2516] flex items-center justify-center text-2xl font-serif font-bold text-[#f5efe7] mb-3">M</div>
+        <div class="font-mono text-lg mb-1"><span class="star-filled">★</span><span class="star-empty">★★</span></div>
+        <h3 class="font-serif text-xl tracking-tight mb-0.5">MartyParty</h3>
+        <p class="text-xs text-[#6b5e52] mb-3">@martypartymusic · Macro</p>
+        <p class="text-[11px] text-[#6b5e52] italic leading-snug">"Liquidity-first thesis, daily updates."</p>
+      </a>
+
+      <!-- 1-Star · Aiden -->
+      <a href="creator-v2.html" class="card block border border-subtle rounded-lg p-5 bg-[#f5efe7]">
+        <div class="w-14 h-14 rounded-full bg-[#9c2516] flex items-center justify-center text-2xl font-serif font-bold text-[#f5efe7] mb-3">A</div>
+        <div class="font-mono text-lg mb-1"><span class="star-filled">★</span><span class="star-empty">★★</span></div>
+        <h3 class="font-serif text-xl tracking-tight mb-0.5">Aiden Rogue</h3>
+        <p class="text-xs text-[#6b5e52] mb-3">@aiden_rogue · DePIN</p>
+        <p class="text-[11px] text-[#6b5e52] italic leading-snug">"Quiet authority on DePIN ecosystem builds."</p>
+      </a>
+
+      <!-- Recommended · @theclearframe -->
+      <a href="creator-v2.html" class="card block border border-subtle rounded-lg p-5 bg-[#f5efe7]">
+        <div class="w-14 h-14 rounded-full bg-[#9c2516] flex items-center justify-center text-2xl font-serif font-bold text-[#f5efe7] mb-3">F</div>
+        <div class="inline-flex items-center px-2 py-0.5 mb-2 bg-[#fef4e8] text-[#9c2516] text-[10px] uppercase tracking-widest font-semibold rounded">Recommended</div>
+        <h3 class="font-serif text-xl tracking-tight mb-0.5">The Clear Frame</h3>
+        <p class="text-xs text-[#6b5e52] mb-3">@theclearframe · AI</p>
+        <p class="text-[11px] text-[#6b5e52] italic leading-snug">"Distinguished in Educational Value, despite low overall."</p>
+      </a>
+
+      <!-- Recommended · ChimpFi -->
+      <a href="creator-v2.html" class="card block border border-subtle rounded-lg p-5 bg-[#f5efe7]">
+        <div class="w-14 h-14 rounded-full bg-[#9c2516] flex items-center justify-center text-2xl font-serif font-bold text-[#f5efe7] mb-3">Ch</div>
+        <div class="inline-flex items-center px-2 py-0.5 mb-2 bg-[#fef4e8] text-[#9c2516] text-[10px] uppercase tracking-widest font-semibold rounded">Recommended</div>
+        <h3 class="font-serif text-xl tracking-tight mb-0.5">ChimpFi</h3>
+        <p class="text-xs text-[#6b5e52] mb-3">@chimpfi · Memes</p>
+        <p class="text-[11px] text-[#6b5e52] italic leading-snug">"Best meme-vertical guide for newcomers."</p>
+      </a>
+
+      <!-- Recommended · onchain_lily -->
+      <a href="creator-v2.html" class="card block border border-subtle rounded-lg p-5 bg-[#f5efe7]">
+        <div class="w-14 h-14 rounded-full bg-[#9c2516] flex items-center justify-center text-2xl font-serif font-bold text-[#f5efe7] mb-3">O</div>
+        <div class="inline-flex items-center px-2 py-0.5 mb-2 bg-[#fef4e8] text-[#9c2516] text-[10px] uppercase tracking-widest font-semibold rounded">Recommended</div>
+        <h3 class="font-serif text-xl tracking-tight mb-0.5">onchain_lily</h3>
+        <p class="text-xs text-[#6b5e52] mb-3">@onchain_lily · Onchain</p>
+        <p class="text-[11px] text-[#6b5e52] italic leading-snug">"Distinguished in Community Care · low ego, high output."</p>
+      </a>
+
+      <!-- Unrated tease (not yet evaluated) -->
+      <a href="creator-unstarred.html" class="card block border border-subtle rounded-lg p-5 bg-[#ebe3d4] opacity-80">
+        <div class="w-14 h-14 rounded-full bg-[#6b5e52] flex items-center justify-center text-2xl font-serif font-bold text-[#f5efe7] mb-3">?</div>
+        <div class="inline-flex items-center px-2 py-0.5 mb-2 border border-[#6b5e52] text-[#6b5e52] text-[10px] uppercase tracking-widest font-semibold rounded">尚未评估</div>
+        <h3 class="font-serif text-xl tracking-tight text-[#6b5e52] mb-0.5">memecoin_alpha</h3>
+        <p class="text-xs text-[#6b5e52] mb-3">@memecoin_alpha · Memes</p>
+        <p class="text-[11px] text-[#6b5e52] italic leading-snug">提名 Trill 评估 →</p>
+      </a>
+
+    </section>
+
+    <!-- Pagination -->
+    <div class="mt-12 flex items-center justify-between">
+      <button class="px-4 py-2 border border-subtle text-[#6b5e52] text-sm rounded">← 上一页</button>
+      <div class="flex items-center gap-1 text-sm">
+        <button class="px-3 py-1.5 bg-[#9c2516] text-[#f5efe7] rounded">1</button>
+        <button class="px-3 py-1.5 hover:bg-[#ebe3d4] rounded">2</button>
+        <button class="px-3 py-1.5 hover:bg-[#ebe3d4] rounded">3</button>
+        <span class="px-2 text-[#6b5e52]">…</span>
+        <button class="px-3 py-1.5 hover:bg-[#ebe3d4] rounded">9</button>
+      </div>
+      <button class="px-4 py-2 border border-subtle text-[#1a1611] text-sm rounded">下一页 →</button>
+    </div>
+
+    <!-- Footer note about evaluation cycle -->
+    <div class="mt-16 bg-[#ebe3d4] rounded-lg p-8 text-center">
+      <p class="text-sm text-[#1a1611] leading-relaxed max-w-2xl mx-auto">
+        <strong>The Trill Guide is re-rated quarterly.</strong> Star tiers move up and down based on each creator's on-record behaviour. Removals are announced with reason. <a href="methodology.html" class="text-[#9c2516] underline">阅读评估方法</a>.
+      </p>
+    </div>
+
+  </main>
+
+  <footer class="border-t border-subtle py-10 mt-12 bg-[#1a1611] text-[#d6cfc4]">
+    <div class="max-w-6xl mx-auto px-8">
+      <div class="grid grid-cols-4 gap-8 mb-8">
+        <div>
+          <div class="flex items-baseline gap-2 mb-4">
+            <span class="font-serif text-2xl text-[#f5efe7] tracking-tight">Trill</span>
+            <span class="text-[10px] uppercase tracking-widest text-[#9c2516]">The Guide</span>
+          </div>
+          <p class="text-xs leading-relaxed">Crypto KOL 的米其林指南。Sentinel 策划。每季度复评。</p>
+        </div>
+        <div>
+          <div class="text-[10px] uppercase tracking-widest text-[#9c2516] mb-3 font-semibold">指南</div>
+          <ul class="text-xs space-y-2">
+            <li><a href="stars.html" class="hover:text-[#f5efe7]">Trill Stars</a></li>
+            <li><a href="dimensions.html" class="hover:text-[#f5efe7]">维度</a></li>
+            <li><a href="guides.html" class="hover:text-[#f5efe7]">指南与杂志</a></li>
+            <li><a href="feed-audit.html" class="hover:text-[#f5efe7]">Crypto Feed 审计</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="text-[10px] uppercase tracking-widest text-[#9c2516] mb-3 font-semibold">关于</div>
+          <ul class="text-xs space-y-2">
+            <li><a href="about.html" class="hover:text-[#f5efe7]">About Trill</a></li>
+            <li><a href="methodology.html" class="hover:text-[#f5efe7]">Methodology</a></li>
+            <li><a href="sentinel.html" class="hover:text-[#f5efe7]">成为 Sentinel</a></li>
+            <li><a href="trillclaw.html" class="hover:text-[#f5efe7]">TrillClaw Quiz</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="text-[10px] uppercase tracking-widest text-[#9c2516] mb-3 font-semibold">账户</div>
+          <ul class="text-xs space-y-2">
+            <li><a href="account.html" class="hover:text-[#f5efe7]">登录 / 注册</a></li>
+            <li><a href="subscribe.html" class="hover:text-[#f5efe7]">定价 / 订阅</a></li>
+            <li><a href="account.html" class="hover:text-[#f5efe7]">我的提名</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="pt-6 border-t border-[#6b5e52]/30 text-[11px] italic">
+        © 2026 Trill 指南 · Sentinel 策划 · 每季度复评 · 一个机构,不是排行榜。
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

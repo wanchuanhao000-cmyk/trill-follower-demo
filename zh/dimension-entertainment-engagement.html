@@ -19,6 +19,123 @@
 </head>
 <body class="min-h-screen">
 
+<!-- TIER-SWITCHER — demo-mode tier switcher (inject right after <body>) -->
+<style>
+  #tier-demo-bar { font-family: 'Inter', system-ui, sans-serif; background:#1a1611; color:#f5efe7; padding:10px 16px; font-size:12px; display:flex; align-items:center; justify-content:space-between; gap:12px; position:relative; z-index:50; border-bottom:1px solid #6b5e52; }
+  #tier-demo-bar .tdb-left { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+  #tier-demo-bar .tdb-tag { font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:#9c2516; font-weight:700; background:#3a1f1a; padding:3px 8px; border-radius:3px; }
+  #tier-demo-bar .tdb-label { color:#d6cfc4; }
+  #tier-demo-bar .tdb-btn { background:#9c2516; color:#f5efe7; padding:5px 12px; border-radius:4px; display:inline-flex; align-items:center; gap:6px; cursor:pointer; border:none; font-size:12px; font-weight:600; }
+  #tier-demo-bar .tdb-btn:hover { background:#7a1d11; }
+  #tier-demo-bar .tdb-hint { font-size:10px; color:#d6cfc4; font-style:italic; }
+  #tier-demo-menu { position:absolute; left:0; top:100%; margin-top:1px; width:300px; background:#1a1611; border:1px solid #6b5e52; border-radius:4px; box-shadow:0 8px 24px rgba(0,0,0,0.4); padding:4px 0; z-index:100; }
+  #tier-demo-menu.hidden { display:none; }
+  #tier-demo-menu button { display:block; width:100%; text-align:left; padding:9px 14px; background:transparent; border:0; color:#f5efe7; cursor:pointer; }
+  #tier-demo-menu button:hover { background:#3a1f1a; }
+  #tier-demo-menu .tdm-title { font-size:12px; font-weight:600; }
+  #tier-demo-menu .tdm-desc { font-size:10px; color:#d6cfc4; margin-top:1px; }
+  #tier-demo-menu .tdm-active { background:#3a1f1a; }
+  #tier-demo-menu .tdm-active::after { content:"✓"; float:right; color:#9c2516; font-weight:700; }
+  /* Tier-locked content overlay */
+  .tier-locked-overlay { position:relative; }
+  .tier-locked-overlay::before { content:""; position:absolute; inset:0; background:linear-gradient(to bottom, rgba(245,239,231,0) 0%, rgba(245,239,231,0.95) 70%, rgba(245,239,231,1) 100%); z-index:5; pointer-events:none; border-radius:inherit; }
+  .tier-locked-cta { position:absolute; bottom:18px; left:50%; transform:translateX(-50%); z-index:6; background:#1a1611; color:#f5efe7; padding:10px 18px; border-radius:6px; font-size:12px; font-weight:600; display:inline-flex; align-items:center; gap:8px; box-shadow:0 4px 14px rgba(0,0,0,0.15); }
+  .tier-locked-cta a { color:#f5efe7; text-decoration:underline; }
+  @media (max-width: 720px) {
+    #tier-demo-bar .tdb-hint { display:none; }
+    #tier-demo-menu { width:260px; }
+  }
+</style>
+
+<div id="tier-demo-bar">
+  <div class="tdb-left">
+    <span class="tdb-tag" data-i18n="demo">Demo</span>
+    <span class="tdb-label" data-i18n="viewing-as">Viewing as:</span>
+    <div style="position:relative;">
+      <button type="button" class="tdb-btn" id="tier-demo-btn">
+        <span id="tier-demo-current">👤 Anonymous</span>
+        <span style="font-size:9px;">▼</span>
+      </button>
+      <div id="tier-demo-menu" class="hidden">
+        <button data-set-tier="anonymous"><div class="tdm-title">👤 <span data-i18n="t-anon">Anonymous</span></div><div class="tdm-desc" data-i18n="t-anon-desc">Not signed in · browsing freely</div></button>
+        <button data-set-tier="registered"><div class="tdm-title">🔓 <span data-i18n="t-reg">Registered</span> · <span data-i18n="free">Free</span></div><div class="tdm-desc" data-i18n="t-reg-desc">Email account · watchlist + basic alerts</div></button>
+        <button data-set-tier="connected"><div class="tdm-title">🔗 <span data-i18n="t-conn">Connected</span> · <span data-i18n="free">Free</span></div><div class="tdm-desc" data-i18n="t-conn-desc">X + wallet linked · Feed Audit unlocked</div></button>
+        <button data-set-tier="pro-lite"><div class="tdm-title">⭐ <span data-i18n="t-prolite">Pro Lite</span> · $9/mo</div><div class="tdm-desc" data-i18n="t-prolite-desc">Full call history · multi-KOL alerts · trends</div></button>
+        <button data-set-tier="pro"><div class="tdm-title">💎 <span data-i18n="t-pro">Pro</span> · $25/mo</div><div class="tdm-desc" data-i18n="t-pro-desc">Trill Indices · DD 报告 · holdings overlap</div></button>
+      </div>
+    </div>
+  </div>
+  <div class="tdb-hint" data-i18n="hint">同一 URL — 不同 tier 看到不同内容</div>
+</div>
+
+<script>
+(function(){
+  var TIERS = ['anonymous','registered','connected','pro-lite','pro'];
+  var LABELS = {
+    en: { anonymous:'👤 Anonymous', registered:'🔓 Registered', connected:'🔗 Connected', 'pro-lite':'⭐ Pro Lite', pro:'💎 Pro' },
+    zh: { anonymous:'👤 未登录', registered:'🔓 已注册', connected:'🔗 已连接', 'pro-lite':'⭐ Pro Lite', pro:'💎 Pro' }
+  };
+  var I18N = {
+    en: { 'demo':'Demo', 'viewing-as':'Viewing as:', 't-anon':'Anonymous', 't-reg':'Registered', 't-conn':'Connected', 't-prolite':'Pro Lite', 't-pro':'Pro', 'free':'Free', 't-anon-desc':'Not signed in · browsing freely', 't-reg-desc':'Email account · watchlist + basic alerts', 't-conn-desc':'X + wallet linked · Feed Audit unlocked', 't-prolite-desc':'Full call history · multi-KOL alerts · trends', 't-pro-desc':'Trill Indices · DD 报告 · holdings overlap', 'hint':'同一 URL — 不同 tier 看到不同内容' },
+    zh: { 'demo':'演示模式', 'viewing-as':'当前视角:', 't-anon':'未登录', 't-reg':'已注册', 't-conn':'已连接', 't-prolite':'Pro Lite', 't-pro':'Pro', 'free':'免费', 't-anon-desc':'未登录 · 自由浏览', 't-reg-desc':'邮箱账号 · watchlist + 基础提醒', 't-conn-desc':'X + 钱包已连接 · Feed Audit 解锁', 't-prolite-desc':'完整 call 历史 · 多 KOL 提醒 · 趋势线', 't-pro-desc':'Trill Indices · DD 报告 · 持仓 overlap', 'hint':'同一 URL — 不同 tier 看到不同内容' }
+  };
+  var lang = (document.documentElement.lang || 'en').toLowerCase().indexOf('zh') === 0 ? 'zh' : 'en';
+  var i18n = I18N[lang]; var labels = LABELS[lang];
+
+  // i18n labels
+  document.querySelectorAll('#tier-demo-bar [data-i18n], #tier-demo-menu [data-i18n]').forEach(function(el){
+    var k = el.getAttribute('data-i18n');
+    if (i18n[k] !== undefined) el.textContent = i18n[k];
+  });
+
+  function applyTier(tier) {
+    if (TIERS.indexOf(tier) < 0) tier = 'anonymous';
+    var cur = TIERS.indexOf(tier);
+    document.documentElement.setAttribute('data-tier', tier);
+    document.getElementById('tier-demo-current').textContent = labels[tier];
+    // min-tier
+    document.querySelectorAll('[data-min-tier]').forEach(function(el){
+      var v = el.getAttribute('data-min-tier');
+      var idx = TIERS.indexOf(v);
+      el.style.display = (cur >= idx) ? '' : 'none';
+    });
+    // max-tier
+    document.querySelectorAll('[data-max-tier]').forEach(function(el){
+      var v = el.getAttribute('data-max-tier');
+      var idx = TIERS.indexOf(v);
+      el.style.display = (cur <= idx) ? '' : 'none';
+    });
+    // only-tier (comma list)
+    document.querySelectorAll('[data-only-tier]').forEach(function(el){
+      var allowed = el.getAttribute('data-only-tier').split(',').map(function(s){return s.trim();});
+      el.style.display = (allowed.indexOf(tier) >= 0) ? '' : 'none';
+    });
+    // mark active
+    document.querySelectorAll('#tier-demo-menu button').forEach(function(b){
+      b.classList.toggle('tdm-active', b.getAttribute('data-set-tier') === tier);
+    });
+  }
+
+  var saved = (typeof localStorage !== 'undefined' && localStorage.getItem('trill-demo-tier')) || 'anonymous';
+  applyTier(saved);
+
+  var btn = document.getElementById('tier-demo-btn');
+  var menu = document.getElementById('tier-demo-menu');
+  btn.addEventListener('click', function(e){ e.stopPropagation(); menu.classList.toggle('hidden'); });
+  document.addEventListener('click', function(){ menu.classList.add('hidden'); });
+  menu.addEventListener('click', function(e){
+    var t = e.target.closest('[data-set-tier]');
+    if (!t) return;
+    var newTier = t.getAttribute('data-set-tier');
+    try { localStorage.setItem('trill-demo-tier', newTier); } catch(_) {}
+    applyTier(newTier);
+    menu.classList.add('hidden');
+  });
+})();
+</script>
+<!-- /TIER-SWITCHER -->
+
+
   <nav class="border-b border-subtle bg-[#f5efe7]/95 backdrop-blur sticky top-0 z-10">
     <div class="max-w-6xl mx-auto px-8 py-4 flex items-center justify-between">
       <div class="flex items-baseline gap-2">
@@ -62,7 +179,7 @@
         <span class="text-5xl">🎭</span>
         <h1 class="font-serif text-5xl tracking-tight">Entertainment & Engagement</h1>
       </div>
-      <p class="font-serif italic text-lg text-[#6b5e52] mb-4">The most fun follows. Substance with personality.</p>
+      <p class="font-serif italic text-lg text-[#6b5e52] mb-4">最有趣的 follow。有实质又有人格。</p>
       <p class="text-sm text-[#1a1611] leading-relaxed max-w-3xl">Engagement quality — does the creator hold attention without resorting to noise? Substance with personality, not theatre. The dimension to filter by when you want a follow that's both worth reading and genuinely fun to read.</p>
     </header>
 
@@ -93,7 +210,7 @@
                 <h4 class="font-serif text-xl tracking-tight">ChimpFi</h4>
                 <span class="inline-flex items-center px-2 py-0.5 bg-[#fef4e8] text-[#9c2516] text-[10px] uppercase tracking-widest font-semibold rounded">Recommended</span>
               </div>
-              <p class="text-xs text-[#6b5e52]">@chimpfi · Memes · <strong class="text-[#1a1611]">Best meme-vertical guide with actual jokes that land</strong></p>
+              <p class="text-xs text-[#6b5e52]">@chimpfi · Memes · <strong class="text-[#1a1611]">Best meme-vertical guide with actual jokes that l与</strong></p>
             </div>
             <div class="text-right">
               <span class="inline-flex items-center px-3 py-1 bg-[#9c2516] text-[#f5efe7] text-xs font-semibold rounded">Distinguished</span>
@@ -148,6 +265,87 @@
       </p>
     </section>
 
+    
+    <!-- TIER-AWARE: dimension extras -->
+
+    <!-- Registered+ — save dimension + your engagement -->
+    <section data-only-tier="registered,connected" class="mb-14 bg-[#fef4e8] border-l-4 border-[#9c2516] rounded-r-lg px-6 py-5 flex items-center justify-between">
+      <div>
+        <p class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold mb-1">你的参与度</p>
+        <p class="text-sm"><strong>你本月在 Entertainment & Engagement 上花了 47 分钟。</strong> 你 watch 的 12 位创作者中有 4 位在这里上榜。</p>
+        <p class="text-[11px] text-[#6b5e52] mt-1">保存维度到 profile,接收每周 tier 变动摘要。</p>
+      </div>
+      <button class="px-4 py-2 bg-[#9c2516] text-[#f5efe7] text-xs font-semibold rounded whitespace-nowrap">♡ 保存维度</button>
+    </section>
+
+    <!-- Pro Lite — full top-N + trend toggle -->
+    <section data-only-tier="pro-lite" class="mb-14 pt-8 border-t border-[#9c2516]/30">
+      <div class="flex items-baseline justify-between mb-5">
+        <div>
+          <p class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold">⭐ Pro Lite</p>
+          <h2 class="font-serif text-3xl tracking-tight">Full ranking · 14 Distinguished + trend lines</h2>
+        </div>
+        <div class="flex gap-2 text-xs">
+          <button class="px-3 py-1.5 bg-[#1a1611] text-[#f5efe7] rounded">90d</button>
+          <button class="px-3 py-1.5 border border-subtle text-[#6b5e52] rounded">6mo</button>
+          <button class="px-3 py-1.5 border border-subtle text-[#6b5e52] rounded">12mo</button>
+        </div>
+      </div>
+      <p class="text-sm text-[#6b5e52] italic mb-5">前 5 之后 — 接下来的 9 位 Distinguished,带 90 天走势线。</p>
+      <div class="grid grid-cols-2 gap-4">
+        <div class="border border-subtle rounded p-4 bg-[#ebe3d4]/40 flex items-center gap-3">
+          <span class="font-mono text-[#6b5e52] text-sm w-6">06</span>
+          <div class="w-9 h-9 rounded-full bg-[#9c2516] flex items-center justify-center text-sm font-serif font-bold text-[#f5efe7]">L</div>
+          <div class="flex-1"><p class="text-sm font-serif">@ledger_status <span class="text-[#9c2516] ml-1">★★★</span></p><p class="text-[10px] text-[#6b5e52]">+0.04 · 30d</p></div>
+          <svg viewBox="0 0 60 24" class="w-14 h-6"><polyline points="0,18 15,16 30,14 45,10 60,8" stroke="#9c2516" stroke-width="1.5" fill="none"/></svg>
+        </div>
+        <div class="border border-subtle rounded p-4 bg-[#ebe3d4]/40 flex items-center gap-3">
+          <span class="font-mono text-[#6b5e52] text-sm w-6">07</span>
+          <div class="w-9 h-9 rounded-full bg-[#9c2516] flex items-center justify-center text-sm font-serif font-bold text-[#f5efe7]">A</div>
+          <div class="flex-1"><p class="text-sm font-serif">@andrew_kang <span class="text-[#9c2516] ml-1">★★</span></p><p class="text-[10px] text-[#6b5e52]">flat · 30d</p></div>
+          <svg viewBox="0 0 60 24" class="w-14 h-6"><polyline points="0,14 15,14 30,14 45,14 60,14" stroke="#6b5e52" stroke-width="1.5" fill="none"/></svg>
+        </div>
+        <div class="border border-subtle rounded p-4 bg-[#ebe3d4]/40 flex items-center gap-3">
+          <span class="font-mono text-[#6b5e52] text-sm w-6">08</span>
+          <div class="w-9 h-9 rounded-full bg-[#9c2516] flex items-center justify-center text-sm font-serif font-bold text-[#f5efe7]">R</div>
+          <div class="flex-1"><p class="text-sm font-serif">@ren <span class="text-[#9c2516] ml-1">★★</span></p><p class="text-[10px] text-[#9c2516]">+0.02 · 30d</p></div>
+          <svg viewBox="0 0 60 24" class="w-14 h-6"><polyline points="0,16 15,15 30,14 45,12 60,10" stroke="#9c2516" stroke-width="1.5" fill="none"/></svg>
+        </div>
+        <div class="border border-subtle rounded p-4 bg-[#ebe3d4]/40 flex items-center gap-3">
+          <span class="font-mono text-[#6b5e52] text-sm w-6">09</span>
+          <div class="w-9 h-9 rounded-full bg-[#6b5e52] flex items-center justify-center text-sm font-serif font-bold text-[#f5efe7]">+</div>
+          <div class="flex-1"><p class="text-sm text-[#6b5e52]">6 位 Distinguished + Strong 等级创作者</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pro — Trill Index basket + Sentinel notes link -->
+    <section data-only-tier="pro" class="mb-14 pt-8 border-t border-[#9c2516]/30">
+      <div class="grid grid-cols-2 gap-6">
+        <div class="bg-[#1a1611] text-[#f5efe7] rounded-lg p-6">
+          <p class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold mb-2">💎 Pro · Index basket</p>
+          <h3 class="font-serif text-2xl tracking-tight mb-1">🎭 Entertainment & Engagement Index</h3>
+          <p class="text-[11px] text-[#d6cfc4] mb-4">由以下声音的 conviction 加权的资产篮: Entertainment & Engagement- Distinguished 创作者</p>
+          <div class="flex items-baseline gap-3 mb-3">
+            <span class="font-mono text-3xl">+5.4%</span>
+            <span class="text-xs text-[#d6cfc4]">7d</span>
+          </div>
+          <svg viewBox="0 0 200 40" class="w-full h-10 mb-3"><polyline points="0,30 25,25 50,28 75,22 100,18 125,20 150,15 175,12 200,8" stroke="#9c2516" stroke-width="2" fill="none"/></svg>
+          <a href="#" class="text-xs text-[#9c2516] hover:underline">查看成分 + 方法论 →</a>
+        </div>
+        <div class="border border-subtle rounded-lg p-6 bg-[#fef4e8]">
+          <p class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold mb-2">💎 Pro · DD 报告</p>
+          <h3 class="font-serif text-xl tracking-tight mb-3">可用报告 — Entertainment & Engagement</h3>
+          <ul class="space-y-2 text-sm">
+            <li class="flex items-center justify-between border-b border-subtle pb-2"><span>Hsaka · Q2 2026</span><a href="#" class="text-xs text-[#9c2516] hover:underline">PDF →</a></li>
+            <li class="flex items-center justify-between border-b border-subtle pb-2"><span>Vance · Q2 2026</span><a href="#" class="text-xs text-[#9c2516] hover:underline">PDF →</a></li>
+            <li class="flex items-center justify-between"><span>Cobie · Q2 2026</span><a href="#" class="text-xs text-[#9c2516] hover:underline">PDF →</a></li>
+          </ul>
+          <p class="text-[10px] text-[#6b5e52] italic mt-3">$49 单份 · Pro 计划包含</p>
+        </div>
+      </div>
+    </section>
+
     <section class="mb-14">
       <h2 class="font-serif text-3xl tracking-tight mb-2">近期报道</h2>
       <p class="text-sm text-[#6b5e52] italic mb-5">Articles and analysis from The Trill Guide on Entertainment & Engagement-distinguished creators.</p>
@@ -157,21 +355,21 @@
             <span class="inline-block self-start text-[10px] uppercase tracking-widest bg-[#9c2516] text-[#f5efe7] px-2 py-1 rounded">Format · Most Fun Follows</span>
             <div>
               <h4 class="font-serif text-xl tracking-tight mb-2 leading-snug">The 8 Crypto Voices Worth Following Even When They're Joking</h4>
-              <p class="text-xs text-[#d6cfc4]">By The Trill Guide · 6 min read</p>
+              <p class="text-xs text-[#d6cfc4]">Trill 指南撰文 · 6 分钟阅读</p>
             </div>
           </a>
           <a href="guide-coming-soon.html" class="card block bg-[#6b5e52] text-[#f5efe7] rounded-lg p-6 h-48 flex flex-col justify-between">
             <span class="inline-block self-start text-[10px] uppercase tracking-widest bg-[#9c2516] text-[#f5efe7] px-2 py-1 rounded">Profile · ledger_status</span>
             <div>
               <h4 class="font-serif text-xl tracking-tight mb-2 leading-snug">Why ledger_status Makes Macro Funny (and Why That Matters)</h4>
-              <p class="text-xs text-[#d6cfc4]">By The Trill Guide · 8 分钟阅读</p>
+              <p class="text-xs text-[#d6cfc4]">Trill 指南撰文 · 8 分钟阅读</p>
             </div>
           </a>
           <a href="guide-coming-soon.html" class="card block bg-[#9c2516] text-[#f5efe7] rounded-lg p-6 h-48 flex flex-col justify-between">
             <span class="inline-block self-start text-[10px] uppercase tracking-widest bg-[#1a1611] text-[#f5efe7] px-2 py-1 rounded">Culture</span>
             <div>
               <h4 class="font-serif text-xl tracking-tight mb-2 leading-snug">Crypto Twitter's Best Threads of Q2 2026</h4>
-              <p class="text-xs text-[#d6cfc4]">By The Trill Guide · 9 min read</p>
+              <p class="text-xs text-[#d6cfc4]">Trill 指南撰文 · 9 min read</p>
             </div>
           </a>
       </div>
@@ -179,7 +377,7 @@
 
     <section class="mb-12">
       <h2 class="font-serif text-3xl tracking-tight mb-2">Trill 驱动洞察</h2>
-      <p class="text-sm text-[#6b5e52] italic mb-5">本维度上只有 Trill 能提供的信号。</p>
+      <p class="text-sm text-[#6b5e52] italic mb-5">这个维度上只有 Trill 能提供的信号。</p>
 
       <div class="grid grid-cols-2 gap-5">
           <div class="border border-subtle rounded-lg p-6 bg-[#ebe3d4]">

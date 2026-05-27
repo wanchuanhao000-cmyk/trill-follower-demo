@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>关注列表 + 提醒</title>
+  <title>Watchlist & Alerts</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -18,6 +18,123 @@
   </style>
 </head>
 <body class="min-h-screen">
+
+<!-- TIER-SWITCHER — demo-mode tier switcher (inject right after <body>) -->
+<style>
+  #tier-demo-bar { font-family: 'Inter', system-ui, sans-serif; background:#1a1611; color:#f5efe7; padding:10px 16px; font-size:12px; display:flex; align-items:center; justify-content:space-between; gap:12px; position:relative; z-index:50; border-bottom:1px solid #6b5e52; }
+  #tier-demo-bar .tdb-left { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+  #tier-demo-bar .tdb-tag { font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:#9c2516; font-weight:700; background:#3a1f1a; padding:3px 8px; border-radius:3px; }
+  #tier-demo-bar .tdb-label { color:#d6cfc4; }
+  #tier-demo-bar .tdb-btn { background:#9c2516; color:#f5efe7; padding:5px 12px; border-radius:4px; display:inline-flex; align-items:center; gap:6px; cursor:pointer; border:none; font-size:12px; font-weight:600; }
+  #tier-demo-bar .tdb-btn:hover { background:#7a1d11; }
+  #tier-demo-bar .tdb-hint { font-size:10px; color:#d6cfc4; font-style:italic; }
+  #tier-demo-menu { position:absolute; left:0; top:100%; margin-top:1px; width:300px; background:#1a1611; border:1px solid #6b5e52; border-radius:4px; box-shadow:0 8px 24px rgba(0,0,0,0.4); padding:4px 0; z-index:100; }
+  #tier-demo-menu.hidden { display:none; }
+  #tier-demo-menu button { display:block; width:100%; text-align:left; padding:9px 14px; background:transparent; border:0; color:#f5efe7; cursor:pointer; }
+  #tier-demo-menu button:hover { background:#3a1f1a; }
+  #tier-demo-menu .tdm-title { font-size:12px; font-weight:600; }
+  #tier-demo-menu .tdm-desc { font-size:10px; color:#d6cfc4; margin-top:1px; }
+  #tier-demo-menu .tdm-active { background:#3a1f1a; }
+  #tier-demo-menu .tdm-active::after { content:"✓"; float:right; color:#9c2516; font-weight:700; }
+  /* Tier-locked content overlay */
+  .tier-locked-overlay { position:relative; }
+  .tier-locked-overlay::before { content:""; position:absolute; inset:0; background:linear-gradient(to bottom, rgba(245,239,231,0) 0%, rgba(245,239,231,0.95) 70%, rgba(245,239,231,1) 100%); z-index:5; pointer-events:none; border-radius:inherit; }
+  .tier-locked-cta { position:absolute; bottom:18px; left:50%; transform:translateX(-50%); z-index:6; background:#1a1611; color:#f5efe7; padding:10px 18px; border-radius:6px; font-size:12px; font-weight:600; display:inline-flex; align-items:center; gap:8px; box-shadow:0 4px 14px rgba(0,0,0,0.15); }
+  .tier-locked-cta a { color:#f5efe7; text-decoration:underline; }
+  @media (max-width: 720px) {
+    #tier-demo-bar .tdb-hint { display:none; }
+    #tier-demo-menu { width:260px; }
+  }
+</style>
+
+<div id="tier-demo-bar">
+  <div class="tdb-left">
+    <span class="tdb-tag" data-i18n="demo">Demo</span>
+    <span class="tdb-label" data-i18n="viewing-as">Viewing as:</span>
+    <div style="position:relative;">
+      <button type="button" class="tdb-btn" id="tier-demo-btn">
+        <span id="tier-demo-current">👤 Anonymous</span>
+        <span style="font-size:9px;">▼</span>
+      </button>
+      <div id="tier-demo-menu" class="hidden">
+        <button data-set-tier="anonymous"><div class="tdm-title">👤 <span data-i18n="t-anon">Anonymous</span></div><div class="tdm-desc" data-i18n="t-anon-desc">Not signed in · browsing freely</div></button>
+        <button data-set-tier="registered"><div class="tdm-title">🔓 <span data-i18n="t-reg">Registered</span> · <span data-i18n="free">Free</span></div><div class="tdm-desc" data-i18n="t-reg-desc">Email account · watchlist + basic alerts</div></button>
+        <button data-set-tier="connected"><div class="tdm-title">🔗 <span data-i18n="t-conn">Connected</span> · <span data-i18n="free">Free</span></div><div class="tdm-desc" data-i18n="t-conn-desc">X + wallet linked · Feed Audit unlocked</div></button>
+        <button data-set-tier="pro-lite"><div class="tdm-title">⭐ <span data-i18n="t-prolite">Pro Lite</span> · $9/mo</div><div class="tdm-desc" data-i18n="t-prolite-desc">Full call history · multi-KOL alerts · trends</div></button>
+        <button data-set-tier="pro"><div class="tdm-title">💎 <span data-i18n="t-pro">Pro</span> · $25/mo</div><div class="tdm-desc" data-i18n="t-pro-desc">Trill Indices · DD 报告 · holdings overlap</div></button>
+      </div>
+    </div>
+  </div>
+  <div class="tdb-hint" data-i18n="hint">同一 URL — 不同 tier 看到不同内容</div>
+</div>
+
+<script>
+(function(){
+  var TIERS = ['anonymous','registered','connected','pro-lite','pro'];
+  var LABELS = {
+    en: { anonymous:'👤 Anonymous', registered:'🔓 Registered', connected:'🔗 Connected', 'pro-lite':'⭐ Pro Lite', pro:'💎 Pro' },
+    zh: { anonymous:'👤 未登录', registered:'🔓 已注册', connected:'🔗 已连接', 'pro-lite':'⭐ Pro Lite', pro:'💎 Pro' }
+  };
+  var I18N = {
+    en: { 'demo':'Demo', 'viewing-as':'Viewing as:', 't-anon':'Anonymous', 't-reg':'Registered', 't-conn':'Connected', 't-prolite':'Pro Lite', 't-pro':'Pro', 'free':'Free', 't-anon-desc':'Not signed in · browsing freely', 't-reg-desc':'Email account · watchlist + basic alerts', 't-conn-desc':'X + wallet linked · Feed Audit unlocked', 't-prolite-desc':'Full call history · multi-KOL alerts · trends', 't-pro-desc':'Trill Indices · DD 报告 · holdings overlap', 'hint':'同一 URL — 不同 tier 看到不同内容' },
+    zh: { 'demo':'演示模式', 'viewing-as':'当前视角:', 't-anon':'未登录', 't-reg':'已注册', 't-conn':'已连接', 't-prolite':'Pro Lite', 't-pro':'Pro', 'free':'免费', 't-anon-desc':'未登录 · 自由浏览', 't-reg-desc':'邮箱账号 · watchlist + 基础提醒', 't-conn-desc':'X + 钱包已连接 · Feed Audit 解锁', 't-prolite-desc':'完整 call 历史 · 多 KOL 提醒 · 趋势线', 't-pro-desc':'Trill Indices · DD 报告 · 持仓 overlap', 'hint':'同一 URL — 不同 tier 看到不同内容' }
+  };
+  var lang = (document.documentElement.lang || 'en').toLowerCase().indexOf('zh') === 0 ? 'zh' : 'en';
+  var i18n = I18N[lang]; var labels = LABELS[lang];
+
+  // i18n labels
+  document.querySelectorAll('#tier-demo-bar [data-i18n], #tier-demo-menu [data-i18n]').forEach(function(el){
+    var k = el.getAttribute('data-i18n');
+    if (i18n[k] !== undefined) el.textContent = i18n[k];
+  });
+
+  function applyTier(tier) {
+    if (TIERS.indexOf(tier) < 0) tier = 'anonymous';
+    var cur = TIERS.indexOf(tier);
+    document.documentElement.setAttribute('data-tier', tier);
+    document.getElementById('tier-demo-current').textContent = labels[tier];
+    // min-tier
+    document.querySelectorAll('[data-min-tier]').forEach(function(el){
+      var v = el.getAttribute('data-min-tier');
+      var idx = TIERS.indexOf(v);
+      el.style.display = (cur >= idx) ? '' : 'none';
+    });
+    // max-tier
+    document.querySelectorAll('[data-max-tier]').forEach(function(el){
+      var v = el.getAttribute('data-max-tier');
+      var idx = TIERS.indexOf(v);
+      el.style.display = (cur <= idx) ? '' : 'none';
+    });
+    // only-tier (comma list)
+    document.querySelectorAll('[data-only-tier]').forEach(function(el){
+      var allowed = el.getAttribute('data-only-tier').split(',').map(function(s){return s.trim();});
+      el.style.display = (allowed.indexOf(tier) >= 0) ? '' : 'none';
+    });
+    // mark active
+    document.querySelectorAll('#tier-demo-menu button').forEach(function(b){
+      b.classList.toggle('tdm-active', b.getAttribute('data-set-tier') === tier);
+    });
+  }
+
+  var saved = (typeof localStorage !== 'undefined' && localStorage.getItem('trill-demo-tier')) || 'anonymous';
+  applyTier(saved);
+
+  var btn = document.getElementById('tier-demo-btn');
+  var menu = document.getElementById('tier-demo-menu');
+  btn.addEventListener('click', function(e){ e.stopPropagation(); menu.classList.toggle('hidden'); });
+  document.addEventListener('click', function(){ menu.classList.add('hidden'); });
+  menu.addEventListener('click', function(e){
+    var t = e.target.closest('[data-set-tier]');
+    if (!t) return;
+    var newTier = t.getAttribute('data-set-tier');
+    try { localStorage.setItem('trill-demo-tier', newTier); } catch(_) {}
+    applyTier(newTier);
+    menu.classList.add('hidden');
+  });
+})();
+</script>
+<!-- /TIER-SWITCHER -->
+
 
   <nav class="border-b border-subtle bg-[#f5efe7]/95 backdrop-blur sticky top-0 z-10">
     <div class="max-w-6xl mx-auto px-8 py-4 flex items-center justify-between">
@@ -39,7 +156,7 @@
             <a href="trillclaw.html" class="block px-4 py-2 text-sm text-[#1a1611] hover:bg-[#ebe3d4]">TrillClaw 自评</a>
             <a href="subscribe.html" class="block px-4 py-2 text-sm text-[#1a1611] hover:bg-[#ebe3d4]">定价</a>
             <div class="border-t border-subtle my-1"></div>
-            <a href="methodology.html" class="block px-4 py-2 text-sm text-[#1a1611] hover:bg-[#ebe3d4]">评估方法</a>
+            <a href="评估方法。html" class="block px-4 py-2 text-sm text-[#1a1611] hover:bg-[#ebe3d4]">评估方法</a>
             <a href="about.html" class="block px-4 py-2 text-sm text-[#1a1611] hover:bg-[#ebe3d4]">关于 Trill</a>
           </div>
         </div>
@@ -50,9 +167,21 @@
 
   <main class="max-w-5xl mx-auto px-8 py-12">
 
+    <!-- TIER-AWARE: Anonymous — sign in required -->
+    <section data-max-tier="anonymous" class="bg-[#1a1611] text-[#f5efe7] rounded-lg p-12 text-center mb-10">
+      <p class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold mb-4">🔒 Watchlist & Alerts</p>
+      <h1 class="font-serif text-4xl tracking-tight mb-4">登录后建立你的 watchlist。</h1>
+      <p class="font-serif italic text-lg text-[#d6cfc4] mb-7 max-w-xl mx-auto">追踪创作者、对 tier 变动设提醒、每日收到变化摘要。免费账号。</p>
+      <a href="account.html" class="inline-block px-6 py-3 bg-[#9c2516] text-[#f5efe7] text-sm font-semibold rounded">创建免费账号</a>
+    </section>
+
+    <div data-min-tier="registered">
+
     <header class="mb-10 pb-10 border-b border-subtle">
-      <h1 class="font-serif text-5xl tracking-tight mb-3">关注列表 + 提醒</h1>
-      <p class="font-serif italic text-lg text-[#6b5e52]">你每天回访的页面 · 你真正关心的事情的"今天有啥新事"feed。</p>
+      <h1 class="font-serif text-5xl tracking-tight mb-3">Watchlist & Alerts</h1>
+      <p class="font-serif italic text-lg text-[#6b5e52]">Your daily return surface · The "what's new" feed for what you actually care about.</p>
+      <p data-only-tier="registered,connected" class="text-xs text-[#9c2516] mt-2 italic">免费版 · 最多 5 位创作者 · 7 天历史 · 仅每日摘要 · <a href="subscribe.html" class="underline">升级 Pro Lite 解锁无限 + 实时</a></p>
+      <p data-min-tier="pro-lite" class="text-xs text-[#9c2516] mt-2 italic">⭐ Pro Lite · 无限创作者 · 全历史 · Telegram 多 KOL 实时</p>
     </header>
 
     <div class="grid grid-cols-3 gap-8 mb-12">
@@ -60,70 +189,70 @@
       <!-- Left: Activity stream -->
       <div class="col-span-2">
         <div class="flex items-baseline justify-between mb-6">
-          <h2 class="font-serif text-2xl tracking-tight">今天来自你关注列表的动态</h2>
-          <span class="text-xs text-[#6b5e52]">距上次访问 14 小时 · 8 个事件</span>
+          <h2 class="font-serif text-2xl tracking-tight">Today's activity from your watchlist</h2>
+          <span class="text-xs text-[#6b5e52]">14h since last visit · 8 events</span>
         </div>
 
         <div class="space-y-5">
 
           <article class="border-l-2 border-[#9c2516] pl-5">
             <div class="flex items-center gap-3 mb-1.5 text-xs">
-              <span class="text-[#6b5e52]">3 小时前</span>
-              <span class="px-2 py-0.5 bg-[#fef4e8] text-[#9c2516] font-semibold rounded text-[10px] uppercase tracking-widest">评级变动</span>
+              <span class="text-[#6b5e52]">3h ago</span>
+              <span class="px-2 py-0.5 bg-[#fef4e8] text-[#9c2516] font-semibold rounded text-[10px] uppercase tracking-widest">Designation move</span>
             </div>
             <p class="text-sm leading-relaxed">
-              <a href="creator-v2.html" class="font-semibold text-[#1a1611] hover:text-[#9c2516]">@ren</a> 从
-              <span class="font-mono text-[#9c2516]">★★★</span> 升至 <span class="font-mono text-[#9c2516]">★★★★</span>。
-              此次重新评级源于一系列公开的自我修正,显著提升了她的 Intellectual Honesty 评分。
+              <a href="creator-v2.html" class="font-semibold text-[#1a1611] hover:text-[#9c2516]">@ren</a> upgraded from
+              <span class="font-mono text-[#9c2516]">★★★</span> to <span class="font-mono text-[#9c2516]">★★★★</span>.
+              The re-rating was driven by a string of public self-corrections that raised her Intellectual Honesty score.
             </p>
           </article>
 
           <article class="border-l-2 border-subtle pl-5">
             <div class="flex items-center gap-3 mb-1.5 text-xs">
-              <span class="text-[#6b5e52]">6 小时前</span>
-              <span class="px-2 py-0.5 bg-[#ebe3d4] text-[#6b5e52] font-semibold rounded text-[10px] uppercase tracking-widest">新 call</span>
+              <span class="text-[#6b5e52]">6h ago</span>
+              <span class="px-2 py-0.5 bg-[#ebe3d4] text-[#6b5e52] font-semibold rounded text-[10px] uppercase tracking-widest">New call</span>
             </div>
             <p class="text-sm leading-relaxed">
-              <a href="creator-v2.html" class="font-semibold text-[#1a1611] hover:text-[#9c2516]">@hsakatrades</a> 发布了一个新的 <strong>SHORT · 高 conviction</strong> call,目标 $EIGEN:
-              <em class="text-[#6b5e52]">"再质押集中是系统性风险。三层叠加..."</em>
+              <a href="creator-v2.html" class="font-semibold text-[#1a1611] hover:text-[#9c2516]">@hsakatrades</a> posted a new <strong>SHORT · High conviction</strong> call on $EIGEN:
+              <em class="text-[#6b5e52]">"Restaking concentration is systemic risk. Three layers stacked..."</em>
             </p>
           </article>
 
           <article class="border-l-2 border-subtle pl-5">
             <div class="flex items-center gap-3 mb-1.5 text-xs">
-              <span class="text-[#6b5e52]">9 小时前</span>
-              <span class="px-2 py-0.5 bg-[#ebe3d4] text-[#6b5e52] font-semibold rounded text-[10px] uppercase tracking-widest">Narrative 热度</span>
+              <span class="text-[#6b5e52]">9h ago</span>
+              <span class="px-2 py-0.5 bg-[#ebe3d4] text-[#6b5e52] font-semibold rounded text-[10px] uppercase tracking-widest">Narrative heat</span>
             </div>
             <p class="text-sm leading-relaxed">
-              Narrative <strong>Restaking 风险框架</strong> 本周热度 <span class="text-[#9c2516] font-mono">+42%</span>。自你上次访问以来,4 位新的杰出声音加入讨论。
+              Narrative <strong>Restaking risk frameworks</strong> heat <span class="text-[#9c2516] font-mono">+42%</span> this week. Four new distinguished voices entered the conversation since you last visited.
             </p>
           </article>
 
           <article class="border-l-2 border-[#9c2516] pl-5">
             <div class="flex items-center gap-3 mb-1.5 text-xs">
-              <span class="text-[#6b5e52]">9 小时前</span>
-              <span class="px-2 py-0.5 bg-[#fef4e8] text-[#9c2516] font-semibold rounded text-[10px] uppercase tracking-widest">资产共识转变</span>
+              <span class="text-[#6b5e52]">9h ago</span>
+              <span class="px-2 py-0.5 bg-[#fef4e8] text-[#9c2516] font-semibold rounded text-[10px] uppercase tracking-widest">Asset consensus shift</span>
             </div>
             <p class="text-sm leading-relaxed">
-              <strong>$EIGEN</strong> 的 cohort 共识正在转向:杰出创作者中 50% 转为 SHORT,一个月前是 30%。过去 30 天 4 位杰出创作者离场。
+              Cohort sentiment on <strong>$EIGEN</strong> is shifting: 50% of distinguished creators are now SHORT, up from 30% a month ago. Four distinguished exits in the last 30 days.
             </p>
           </article>
 
           <article class="border-l-2 border-subtle pl-5">
             <div class="flex items-center gap-3 mb-1.5 text-xs">
-              <span class="text-[#6b5e52]">11 小时前</span>
-              <span class="px-2 py-0.5 bg-[#ebe3d4] text-[#6b5e52] font-semibold rounded text-[10px] uppercase tracking-widest">Call 已 resolve</span>
+              <span class="text-[#6b5e52]">11h ago</span>
+              <span class="px-2 py-0.5 bg-[#ebe3d4] text-[#6b5e52] font-semibold rounded text-[10px] uppercase tracking-widest">Call resolved</span>
             </div>
             <p class="text-sm leading-relaxed">
-              <a href="creator-v2.html" class="font-semibold text-[#1a1611] hover:text-[#9c2516]">@cryptocred</a> 关于 <strong>$USDC 储备审视</strong> 的 call 已 resolve 为 <strong class="text-[#9c2516]">正确</strong>。
+              <a href="creator-v2.html" class="font-semibold text-[#1a1611] hover:text-[#9c2516]">@cryptocred</a>'s call on <strong>$USDC backing review</strong> resolved <strong class="text-[#9c2516]">correct</strong>.
             </p>
           </article>
 
         </div>
 
         <div class="mt-8 pt-5 border-t border-subtle flex items-center justify-between text-xs text-[#6b5e52]">
-          <a href="#" class="hover:text-[#1a1611]">查看完整动态历史 →</a>
-          <span class="italic">免费层:7 天历史 · Pro Lite 解锁全时段</span>
+          <a href="#" class="hover:text-[#1a1611]">View full activity history →</a>
+          <span class="italic">Free tier: 7d history · Pro Lite unlocks all-time</span>
         </div>
       </div>
 
@@ -131,27 +260,27 @@
       <div class="col-span-1 space-y-6">
 
         <div>
-          <div class="text-[10px] uppercase tracking-widest text-[#9c2516] mb-3">关注的创作者 · 12</div>
+          <div class="text-[10px] uppercase tracking-widest text-[#9c2516] mb-3">Watched creators · 12</div>
           <div class="space-y-2.5 text-sm">
             <div class="flex items-center justify-between"><a href="creator-v2.html" class="hover:text-[#9c2516]">@hsakatrades</a><span class="font-mono text-[10px] star-filled">★★★★</span></div>
             <div class="flex items-center justify-between"><a href="creator-v2.html" class="hover:text-[#9c2516]">@cobie</a><span class="font-mono text-[10px] star-filled">★★★★★</span></div>
             <div class="flex items-center justify-between"><a href="creator-v2.html" class="hover:text-[#9c2516]">@cryptocred</a><span class="font-mono text-[10px] star-filled">★★★★</span></div>
             <div class="flex items-center justify-between"><a href="creator-v2.html" class="hover:text-[#9c2516]">@ren</a><span class="font-mono text-[10px] star-filled">★★★★</span></div>
-            <div class="text-[10px] text-[#6b5e52] italic">+ 还有 8 个</div>
+            <div class="text-[10px] text-[#6b5e52] italic">+ 8 more</div>
           </div>
         </div>
 
         <div>
-          <div class="text-[10px] uppercase tracking-widest text-[#9c2516] mb-3">关注的 narrative · 3</div>
+          <div class="text-[10px] uppercase tracking-widest text-[#9c2516] mb-3">Watched narratives · 3</div>
           <div class="space-y-2.5 text-sm">
-            <div class="flex items-center justify-between"><span>Restaking 风险</span><span class="text-xs text-[#9c2516] font-mono">+42%</span></div>
-            <div class="flex items-center justify-between"><span>Solana validators</span><span class="text-xs text-[#6b5e52]">稳定</span></div>
+            <div class="flex items-center justify-between"><span>Restaking risk</span><span class="text-xs text-[#9c2516] font-mono">+42%</span></div>
+            <div class="flex items-center justify-between"><span>Solana validators</span><span class="text-xs text-[#6b5e52]">steady</span></div>
             <div class="flex items-center justify-between"><span>MEV-Burn</span><span class="text-xs text-[#9c2516] font-mono">+28%</span></div>
           </div>
         </div>
 
         <div>
-          <div class="text-[10px] uppercase tracking-widest text-[#9c2516] mb-3">关注的资产 · 3</div>
+          <div class="text-[10px] uppercase tracking-widest text-[#9c2516] mb-3">Watched assets · 3</div>
           <div class="space-y-2.5 text-sm">
             <div class="flex items-center justify-between"><span>$EIGEN</span><span class="text-xs text-[#9c2516] font-mono">SHORT 50%</span></div>
             <div class="flex items-center justify-between"><span>$SOL</span><span class="text-xs text-[#6b5e52] font-mono">LONG 67%</span></div>
@@ -166,23 +295,23 @@
     <div class="grid grid-cols-2 gap-6 pt-10 border-t border-subtle">
 
       <div>
-        <h3 class="font-serif text-xl tracking-tight mb-4">提醒频率</h3>
+        <h3 class="font-serif text-xl tracking-tight mb-4">Alert frequency</h3>
         <div class="space-y-3">
           <div class="flex items-center justify-between text-sm">
-            <span>KOL 评级变动 <span class="coach" title="当关注的 KOL 的 Trill 星级上升或下降时。">(?)</span></span>
-            <select class="bg-[#ebe3d4] border border-subtle rounded px-2 py-1 text-xs"><option>实时</option><option>每日摘要</option><option>每周</option></select>
+            <span>KOL designation moves <span class="coach" title="When a watched KOL's Trill Star goes up or down.">(?)</span></span>
+            <select class="bg-[#ebe3d4] border border-subtle rounded px-2 py-1 text-xs"><option>Real-time</option><option>Daily digest</option><option>每周</option></select>
           </div>
           <div class="flex items-center justify-between text-sm">
-            <span>新 calls <span class="coach" title="关注的 KOL 在 X 发布新的 conviction call 时。">(?)</span></span>
-            <select class="bg-[#ebe3d4] border border-subtle rounded px-2 py-1 text-xs"><option>实时</option><option>每日摘要</option></select>
+            <span>New calls <span class="coach" title="When a watched KOL posts a new conviction call on X.">(?)</span></span>
+            <select class="bg-[#ebe3d4] border border-subtle rounded px-2 py-1 text-xs"><option>Real-time</option><option>Daily digest</option></select>
           </div>
           <div class="flex items-center justify-between text-sm">
-            <span>Narrative 热度 spikes <span class="coach" title="当关注的 narrative 越过热度阈值时。">(?)</span></span>
-            <select class="bg-[#ebe3d4] border border-subtle rounded px-2 py-1 text-xs"><option>每日摘要</option><option>实时</option></select>
+            <span>Narrative heat spikes <span class="coach" title="When a watched narrative crosses a heat threshold.">(?)</span></span>
+            <select class="bg-[#ebe3d4] border border-subtle rounded px-2 py-1 text-xs"><option>Daily digest</option><option>Real-time</option></select>
           </div>
           <div class="flex items-center justify-between text-sm">
-            <span>资产共识反转 <span class="coach" title="当杰出 cohort 对关注的资产立场发生实质转变时。">(?)</span></span>
-            <select class="bg-[#ebe3d4] border border-subtle rounded px-2 py-1 text-xs"><option>实时</option></select>
+            <span>Asset consensus reversals <span class="coach" title="When the distinguished cohort's stance on a watched asset shifts materially.">(?)</span></span>
+            <select class="bg-[#ebe3d4] border border-subtle rounded px-2 py-1 text-xs"><option>Real-time</option></select>
           </div>
         </div>
       </div>
@@ -190,26 +319,28 @@
       <div>
         <div class="flex items-center justify-between mb-4">
           <h3 class="font-serif text-xl tracking-tight">Telegram bot</h3>
-          <span class="text-[10px] uppercase tracking-widest text-[#9c2516]">已连接</span>
+          <span class="text-[10px] uppercase tracking-widest text-[#9c2516]">Connected</span>
         </div>
-        <p class="text-xs text-[#6b5e52] mb-4">@vincent_tg · 已启用 1 个 KOL 每日摘要</p>
+        <p class="text-xs text-[#6b5e52] mb-4">@vincent_tg · 1 KOL daily digest enabled</p>
 
         <ul class="space-y-2 text-sm">
-          <li class="flex items-center gap-2"><span class="text-[#9c2516]">✓</span><span>@hsakatrades 的每日摘要</span></li>
-          <li class="flex items-center gap-2 opacity-50"><span>🔒</span><span>多 KOL 实时推送(Pro Lite)</span></li>
-          <li class="flex items-center gap-2 opacity-50"><span>🔒</span><span>Narrative + 资产提醒(Pro Lite)</span></li>
+          <li class="flex items-center gap-2"><span class="text-[#9c2516]">✓</span><span>Daily digest of @hsakatrades</span></li>
+          <li class="flex items-center gap-2 opacity-50"><span>🔒</span><span>Multi-KOL real-time ping (Pro Lite)</span></li>
+          <li class="flex items-center gap-2 opacity-50"><span>🔒</span><span>Narrative + Asset alerts (Pro Lite)</span></li>
         </ul>
 
-        <a href="subscribe.html" class="block text-center w-full mt-5 py-2.5 bg-[#9c2516] text-[#f5efe7] text-sm font-semibold rounded">升级解锁多 KOL TG bot</a>
+        <a href="subscribe.html" class="block text-center w-full mt-5 py-2.5 bg-[#9c2516] text-[#f5efe7] text-sm font-semibold rounded">Upgrade for multi-KOL TG bot</a>
       </div>
 
     </div>
+
+    </div> <!-- /data-min-tier="registered" -->
 
   </main>
 
   <footer class="border-t border-subtle py-8 mt-10">
     <div class="max-w-5xl mx-auto px-8 text-xs text-[#6b5e52]">
-      Trill 米其林指南 · 由 Sentinel 评审员策展 · 每季度重新评级
+      The Trill Guide · Curated by Sentinels · Re-rated quarterly
     </div>
   </footer>
 

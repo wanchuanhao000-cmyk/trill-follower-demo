@@ -17,6 +17,123 @@
 </head>
 <body class="min-h-screen">
 
+<!-- TIER-SWITCHER — demo-mode tier switcher (inject right after <body>) -->
+<style>
+  #tier-demo-bar { font-family: 'Inter', system-ui, sans-serif; background:#1a1611; color:#f5efe7; padding:10px 16px; font-size:12px; display:flex; align-items:center; justify-content:space-between; gap:12px; position:relative; z-index:50; border-bottom:1px solid #6b5e52; }
+  #tier-demo-bar .tdb-left { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+  #tier-demo-bar .tdb-tag { font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:#9c2516; font-weight:700; background:#3a1f1a; padding:3px 8px; border-radius:3px; }
+  #tier-demo-bar .tdb-label { color:#d6cfc4; }
+  #tier-demo-bar .tdb-btn { background:#9c2516; color:#f5efe7; padding:5px 12px; border-radius:4px; display:inline-flex; align-items:center; gap:6px; cursor:pointer; border:none; font-size:12px; font-weight:600; }
+  #tier-demo-bar .tdb-btn:hover { background:#7a1d11; }
+  #tier-demo-bar .tdb-hint { font-size:10px; color:#d6cfc4; font-style:italic; }
+  #tier-demo-menu { position:absolute; left:0; top:100%; margin-top:1px; width:300px; background:#1a1611; border:1px solid #6b5e52; border-radius:4px; box-shadow:0 8px 24px rgba(0,0,0,0.4); padding:4px 0; z-index:100; }
+  #tier-demo-menu.hidden { display:none; }
+  #tier-demo-menu button { display:block; width:100%; text-align:left; padding:9px 14px; background:transparent; border:0; color:#f5efe7; cursor:pointer; }
+  #tier-demo-menu button:hover { background:#3a1f1a; }
+  #tier-demo-menu .tdm-title { font-size:12px; font-weight:600; }
+  #tier-demo-menu .tdm-desc { font-size:10px; color:#d6cfc4; margin-top:1px; }
+  #tier-demo-menu .tdm-active { background:#3a1f1a; }
+  #tier-demo-menu .tdm-active::after { content:"✓"; float:right; color:#9c2516; font-weight:700; }
+  /* Tier-locked content overlay */
+  .tier-locked-overlay { position:relative; }
+  .tier-locked-overlay::before { content:""; position:absolute; inset:0; background:linear-gradient(to bottom, rgba(245,239,231,0) 0%, rgba(245,239,231,0.95) 70%, rgba(245,239,231,1) 100%); z-index:5; pointer-events:none; border-radius:inherit; }
+  .tier-locked-cta { position:absolute; bottom:18px; left:50%; transform:translateX(-50%); z-index:6; background:#1a1611; color:#f5efe7; padding:10px 18px; border-radius:6px; font-size:12px; font-weight:600; display:inline-flex; align-items:center; gap:8px; box-shadow:0 4px 14px rgba(0,0,0,0.15); }
+  .tier-locked-cta a { color:#f5efe7; text-decoration:underline; }
+  @media (max-width: 720px) {
+    #tier-demo-bar .tdb-hint { display:none; }
+    #tier-demo-menu { width:260px; }
+  }
+</style>
+
+<div id="tier-demo-bar">
+  <div class="tdb-left">
+    <span class="tdb-tag" data-i18n="demo">Demo</span>
+    <span class="tdb-label" data-i18n="viewing-as">Viewing as:</span>
+    <div style="position:relative;">
+      <button type="button" class="tdb-btn" id="tier-demo-btn">
+        <span id="tier-demo-current">👤 Anonymous</span>
+        <span style="font-size:9px;">▼</span>
+      </button>
+      <div id="tier-demo-menu" class="hidden">
+        <button data-set-tier="anonymous"><div class="tdm-title">👤 <span data-i18n="t-anon">Anonymous</span></div><div class="tdm-desc" data-i18n="t-anon-desc">Not signed in · browsing freely</div></button>
+        <button data-set-tier="registered"><div class="tdm-title">🔓 <span data-i18n="t-reg">Registered</span> · <span data-i18n="free">Free</span></div><div class="tdm-desc" data-i18n="t-reg-desc">Email account · watchlist + basic alerts</div></button>
+        <button data-set-tier="connected"><div class="tdm-title">🔗 <span data-i18n="t-conn">Connected</span> · <span data-i18n="free">Free</span></div><div class="tdm-desc" data-i18n="t-conn-desc">X + wallet linked · Feed Audit unlocked</div></button>
+        <button data-set-tier="pro-lite"><div class="tdm-title">⭐ <span data-i18n="t-prolite">Pro Lite</span> · $9/mo</div><div class="tdm-desc" data-i18n="t-prolite-desc">Full call history · multi-KOL alerts · trends</div></button>
+        <button data-set-tier="pro"><div class="tdm-title">💎 <span data-i18n="t-pro">Pro</span> · $25/mo</div><div class="tdm-desc" data-i18n="t-pro-desc">Trill Indices · DD reports · holdings overlap</div></button>
+      </div>
+    </div>
+  </div>
+  <div class="tdb-hint" data-i18n="hint">Same URL — content visibility changes by tier</div>
+</div>
+
+<script>
+(function(){
+  var TIERS = ['anonymous','registered','connected','pro-lite','pro'];
+  var LABELS = {
+    en: { anonymous:'👤 Anonymous', registered:'🔓 Registered', connected:'🔗 Connected', 'pro-lite':'⭐ Pro Lite', pro:'💎 Pro' },
+    zh: { anonymous:'👤 未登录', registered:'🔓 已注册', connected:'🔗 已连接', 'pro-lite':'⭐ Pro Lite', pro:'💎 Pro' }
+  };
+  var I18N = {
+    en: { 'demo':'Demo', 'viewing-as':'Viewing as:', 't-anon':'Anonymous', 't-reg':'Registered', 't-conn':'Connected', 't-prolite':'Pro Lite', 't-pro':'Pro', 'free':'Free', 't-anon-desc':'Not signed in · browsing freely', 't-reg-desc':'Email account · watchlist + basic alerts', 't-conn-desc':'X + wallet linked · Feed Audit unlocked', 't-prolite-desc':'Full call history · multi-KOL alerts · trends', 't-pro-desc':'Trill Indices · DD reports · holdings overlap', 'hint':'Same URL — content visibility changes by tier' },
+    zh: { 'demo':'演示模式', 'viewing-as':'当前视角:', 't-anon':'未登录', 't-reg':'已注册', 't-conn':'已连接', 't-prolite':'Pro Lite', 't-pro':'Pro', 'free':'免费', 't-anon-desc':'未登录 · 自由浏览', 't-reg-desc':'邮箱账号 · watchlist + 基础提醒', 't-conn-desc':'X + 钱包已连接 · Feed Audit 解锁', 't-prolite-desc':'完整 call 历史 · 多 KOL 提醒 · 趋势线', 't-pro-desc':'Trill Indices · DD 报告 · 持仓 overlap', 'hint':'同一 URL — 不同 tier 看到不同内容' }
+  };
+  var lang = (document.documentElement.lang || 'en').toLowerCase().indexOf('zh') === 0 ? 'zh' : 'en';
+  var i18n = I18N[lang]; var labels = LABELS[lang];
+
+  // i18n labels
+  document.querySelectorAll('#tier-demo-bar [data-i18n], #tier-demo-menu [data-i18n]').forEach(function(el){
+    var k = el.getAttribute('data-i18n');
+    if (i18n[k] !== undefined) el.textContent = i18n[k];
+  });
+
+  function applyTier(tier) {
+    if (TIERS.indexOf(tier) < 0) tier = 'anonymous';
+    var cur = TIERS.indexOf(tier);
+    document.documentElement.setAttribute('data-tier', tier);
+    document.getElementById('tier-demo-current').textContent = labels[tier];
+    // min-tier
+    document.querySelectorAll('[data-min-tier]').forEach(function(el){
+      var v = el.getAttribute('data-min-tier');
+      var idx = TIERS.indexOf(v);
+      el.style.display = (cur >= idx) ? '' : 'none';
+    });
+    // max-tier
+    document.querySelectorAll('[data-max-tier]').forEach(function(el){
+      var v = el.getAttribute('data-max-tier');
+      var idx = TIERS.indexOf(v);
+      el.style.display = (cur <= idx) ? '' : 'none';
+    });
+    // only-tier (comma list)
+    document.querySelectorAll('[data-only-tier]').forEach(function(el){
+      var allowed = el.getAttribute('data-only-tier').split(',').map(function(s){return s.trim();});
+      el.style.display = (allowed.indexOf(tier) >= 0) ? '' : 'none';
+    });
+    // mark active
+    document.querySelectorAll('#tier-demo-menu button').forEach(function(b){
+      b.classList.toggle('tdm-active', b.getAttribute('data-set-tier') === tier);
+    });
+  }
+
+  var saved = (typeof localStorage !== 'undefined' && localStorage.getItem('trill-demo-tier')) || 'anonymous';
+  applyTier(saved);
+
+  var btn = document.getElementById('tier-demo-btn');
+  var menu = document.getElementById('tier-demo-menu');
+  btn.addEventListener('click', function(e){ e.stopPropagation(); menu.classList.toggle('hidden'); });
+  document.addEventListener('click', function(){ menu.classList.add('hidden'); });
+  menu.addEventListener('click', function(e){
+    var t = e.target.closest('[data-set-tier]');
+    if (!t) return;
+    var newTier = t.getAttribute('data-set-tier');
+    try { localStorage.setItem('trill-demo-tier', newTier); } catch(_) {}
+    applyTier(newTier);
+    menu.classList.add('hidden');
+  });
+})();
+</script>
+<!-- /TIER-SWITCHER -->
+
+
   <nav class="border-b border-subtle bg-[#f5efe7]/95 backdrop-blur sticky top-0 z-10">
     <div class="max-w-6xl mx-auto px-8 py-4 flex items-center justify-between">
       <div class="flex items-baseline gap-2">
@@ -63,7 +180,74 @@
       <button class="px-3 py-1.5 text-xs rounded-full border border-subtle text-[#6b5e52] hover:text-[#1a1611] bg-[#f5efe7]">Culture & Lore</button>
       <button class="px-3 py-1.5 text-xs rounded-full border border-subtle text-[#6b5e52] hover:text-[#1a1611] bg-[#f5efe7]">By Topic</button>
       <button class="px-3 py-1.5 text-xs rounded-full border border-subtle text-[#6b5e52] hover:text-[#1a1611] bg-[#f5efe7]">By Ecosystem</button>
+      <button data-only-tier="pro-lite,pro" class="px-3 py-1.5 text-xs rounded-full border border-[#9c2516] text-[#9c2516] bg-[#fef4e8]">⭐ Saved (3)</button>
+      <button data-only-tier="pro" class="px-3 py-1.5 text-xs rounded-full border border-[#9c2516] text-[#9c2516] bg-[#fef4e8]">💎 Full archive (147)</button>
     </div>
+
+    <!-- TIER-AWARE: Anonymous teaser to subscribe -->
+    <section data-max-tier="anonymous" class="mb-10 bg-[#ebe3d4] border border-subtle rounded-lg px-6 py-4 flex items-center justify-between">
+      <div>
+        <p class="text-sm"><strong>2 of 4 featured pieces unlock the full read with a free account.</strong></p>
+        <p class="text-[11px] text-[#6b5e52] mt-0.5">Pro Lite ($9/mo) gets new pieces in your inbox + saves + read-later.</p>
+      </div>
+      <a href="account.html" class="px-4 py-2 bg-[#9c2516] text-[#f5efe7] text-xs font-semibold rounded whitespace-nowrap">Create free account</a>
+    </section>
+
+    <!-- TIER-AWARE: Registered+ — recently saved -->
+    <section data-only-tier="registered,connected" class="mb-10">
+      <div class="flex items-baseline justify-between mb-3">
+        <h3 class="font-serif text-xl tracking-tight">Picking up where you left off</h3>
+        <a href="account.html" class="text-xs text-[#9c2516] hover:underline">Open my saved list →</a>
+      </div>
+      <div class="grid grid-cols-3 gap-4">
+        <a href="guide-wallet-voice-split.html" class="card block border border-subtle rounded-lg p-4 bg-[#fef4e8]">
+          <p class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold">Half-read · 4 min left</p>
+          <h4 class="font-serif text-base tracking-tight my-2">The Wallet/Voice Split — $EIGEN</h4>
+        </a>
+        <a href="guide-best-calls-may.html" class="card block border border-subtle rounded-lg p-4 bg-[#fef4e8]">
+          <p class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold">Saved 3 days ago</p>
+          <h4 class="font-serif text-base tracking-tight my-2">Best Calls of May 2026</h4>
+        </a>
+        <div class="border border-dashed border-subtle rounded-lg p-4 text-center flex items-center justify-center text-[#6b5e52] text-xs italic">+ 1 more saved</div>
+      </div>
+    </section>
+
+    <!-- TIER-AWARE: Pro Lite — new this week from your saved authors -->
+    <section data-only-tier="pro-lite" class="mb-10 bg-[#1a1611] text-[#f5efe7] rounded-lg p-5">
+      <div class="flex items-baseline justify-between mb-3">
+        <div>
+          <p class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold">⭐ Pro Lite · Pinged for you</p>
+          <h3 class="font-serif text-xl tracking-tight">3 new this week from dimensions you watch</h3>
+        </div>
+        <a href="account.html" class="text-xs text-[#d6cfc4] hover:text-[#f5efe7]">Manage alerts →</a>
+      </div>
+      <div class="grid grid-cols-3 gap-3">
+        <div class="bg-[#3a1f1a] rounded p-3"><p class="text-[10px] text-[#9c2516] mb-1">Accuracy Discipline</p><p class="text-sm font-serif">May best calls · published yesterday</p></div>
+        <div class="bg-[#3a1f1a] rounded p-3"><p class="text-[10px] text-[#9c2516] mb-1">Analytical Depth</p><p class="text-sm font-serif">Restaking voices update · 3 days ago</p></div>
+        <div class="bg-[#3a1f1a] rounded p-3"><p class="text-[10px] text-[#9c2516] mb-1">Intellectual Honesty</p><p class="text-sm font-serif">Tetranode comeback brief · 5 days ago</p></div>
+      </div>
+    </section>
+
+    <!-- TIER-AWARE: Pro — full archive + data export -->
+    <section data-only-tier="pro" class="mb-10 bg-[#1a1611] text-[#f5efe7] rounded-lg p-6">
+      <div class="grid grid-cols-3 gap-6">
+        <div>
+          <p class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold mb-1">💎 Pro · Archive</p>
+          <h3 class="font-serif text-xl tracking-tight">147 pieces</h3>
+          <p class="text-xs text-[#d6cfc4]">Full archive · since Q1 2026</p>
+        </div>
+        <div>
+          <p class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold mb-1">DD reports</p>
+          <h3 class="font-serif text-xl tracking-tight">22 available</h3>
+          <p class="text-xs text-[#d6cfc4]">22-page Pro deep-dives · all included</p>
+        </div>
+        <div>
+          <p class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold mb-1">Data export</p>
+          <h3 class="font-serif text-xl tracking-tight">CSV / JSON</h3>
+          <p class="text-xs text-[#d6cfc4]">Every resolved-call ledger · Excel-friendly</p>
+        </div>
+      </div>
+    </section>
 
     <!-- Featured article -->
     <section class="mb-12">

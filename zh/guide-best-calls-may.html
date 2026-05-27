@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Best Calls of May 2026 · The Trill Guide</title>
+  <title>2026 年 5 月最佳 Calls · The Trill Guide</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -21,6 +21,123 @@
   </style>
 </head>
 <body class="min-h-screen">
+
+<!-- TIER-SWITCHER — demo-mode tier switcher (inject right after <body>) -->
+<style>
+  #tier-demo-bar { font-family: 'Inter', system-ui, sans-serif; background:#1a1611; color:#f5efe7; padding:10px 16px; font-size:12px; display:flex; align-items:center; justify-content:space-between; gap:12px; position:relative; z-index:50; border-bottom:1px solid #6b5e52; }
+  #tier-demo-bar .tdb-left { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+  #tier-demo-bar .tdb-tag { font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:#9c2516; font-weight:700; background:#3a1f1a; padding:3px 8px; border-radius:3px; }
+  #tier-demo-bar .tdb-label { color:#d6cfc4; }
+  #tier-demo-bar .tdb-btn { background:#9c2516; color:#f5efe7; padding:5px 12px; border-radius:4px; display:inline-flex; align-items:center; gap:6px; cursor:pointer; border:none; font-size:12px; font-weight:600; }
+  #tier-demo-bar .tdb-btn:hover { background:#7a1d11; }
+  #tier-demo-bar .tdb-hint { font-size:10px; color:#d6cfc4; font-style:italic; }
+  #tier-demo-menu { position:absolute; left:0; top:100%; margin-top:1px; width:300px; background:#1a1611; border:1px solid #6b5e52; border-radius:4px; box-shadow:0 8px 24px rgba(0,0,0,0.4); padding:4px 0; z-index:100; }
+  #tier-demo-menu.hidden { display:none; }
+  #tier-demo-menu button { display:block; width:100%; text-align:left; padding:9px 14px; background:transparent; border:0; color:#f5efe7; cursor:pointer; }
+  #tier-demo-menu button:hover { background:#3a1f1a; }
+  #tier-demo-menu .tdm-title { font-size:12px; font-weight:600; }
+  #tier-demo-menu .tdm-desc { font-size:10px; color:#d6cfc4; margin-top:1px; }
+  #tier-demo-menu .tdm-active { background:#3a1f1a; }
+  #tier-demo-menu .tdm-active::after { content:"✓"; float:right; color:#9c2516; font-weight:700; }
+  /* Tier-locked content overlay */
+  .tier-locked-overlay { position:relative; }
+  .tier-locked-overlay::before { content:""; position:absolute; inset:0; background:linear-gradient(to bottom, rgba(245,239,231,0) 0%, rgba(245,239,231,0.95) 70%, rgba(245,239,231,1) 100%); z-index:5; pointer-events:none; border-radius:inherit; }
+  .tier-locked-cta { position:absolute; bottom:18px; left:50%; transform:translateX(-50%); z-index:6; background:#1a1611; color:#f5efe7; padding:10px 18px; border-radius:6px; font-size:12px; font-weight:600; display:inline-flex; align-items:center; gap:8px; box-shadow:0 4px 14px rgba(0,0,0,0.15); }
+  .tier-locked-cta a { color:#f5efe7; text-decoration:underline; }
+  @media (max-width: 720px) {
+    #tier-demo-bar .tdb-hint { display:none; }
+    #tier-demo-menu { width:260px; }
+  }
+</style>
+
+<div id="tier-demo-bar">
+  <div class="tdb-left">
+    <span class="tdb-tag" data-i18n="demo">Demo</span>
+    <span class="tdb-label" data-i18n="viewing-as">Viewing as:</span>
+    <div style="position:relative;">
+      <button type="button" class="tdb-btn" id="tier-demo-btn">
+        <span id="tier-demo-current">👤 Anonymous</span>
+        <span style="font-size:9px;">▼</span>
+      </button>
+      <div id="tier-demo-menu" class="hidden">
+        <button data-set-tier="anonymous"><div class="tdm-title">👤 <span data-i18n="t-anon">Anonymous</span></div><div class="tdm-desc" data-i18n="t-anon-desc">Not signed in · browsing freely</div></button>
+        <button data-set-tier="registered"><div class="tdm-title">🔓 <span data-i18n="t-reg">Registered</span> · <span data-i18n="free">Free</span></div><div class="tdm-desc" data-i18n="t-reg-desc">Email account · watchlist + basic alerts</div></button>
+        <button data-set-tier="connected"><div class="tdm-title">🔗 <span data-i18n="t-conn">Connected</span> · <span data-i18n="free">Free</span></div><div class="tdm-desc" data-i18n="t-conn-desc">X + wallet linked · Feed Audit unlocked</div></button>
+        <button data-set-tier="pro-lite"><div class="tdm-title">⭐ <span data-i18n="t-prolite">Pro Lite</span> · $9/mo</div><div class="tdm-desc" data-i18n="t-prolite-desc">Full call history · multi-KOL alerts · trends</div></button>
+        <button data-set-tier="pro"><div class="tdm-title">💎 <span data-i18n="t-pro">Pro</span> · $25/mo</div><div class="tdm-desc" data-i18n="t-pro-desc">Trill Indices · DD 报告 · holdings overlap</div></button>
+      </div>
+    </div>
+  </div>
+  <div class="tdb-hint" data-i18n="hint">同一 URL — 不同 tier 看到不同内容</div>
+</div>
+
+<script>
+(function(){
+  var TIERS = ['anonymous','registered','connected','pro-lite','pro'];
+  var LABELS = {
+    en: { anonymous:'👤 Anonymous', registered:'🔓 Registered', connected:'🔗 Connected', 'pro-lite':'⭐ Pro Lite', pro:'💎 Pro' },
+    zh: { anonymous:'👤 未登录', registered:'🔓 已注册', connected:'🔗 已连接', 'pro-lite':'⭐ Pro Lite', pro:'💎 Pro' }
+  };
+  var I18N = {
+    en: { 'demo':'Demo', 'viewing-as':'Viewing as:', 't-anon':'Anonymous', 't-reg':'Registered', 't-conn':'Connected', 't-prolite':'Pro Lite', 't-pro':'Pro', 'free':'Free', 't-anon-desc':'Not signed in · browsing freely', 't-reg-desc':'Email account · watchlist + basic alerts', 't-conn-desc':'X + wallet linked · Feed Audit unlocked', 't-prolite-desc':'Full call history · multi-KOL alerts · trends', 't-pro-desc':'Trill Indices · DD 报告 · holdings overlap', 'hint':'同一 URL — 不同 tier 看到不同内容' },
+    zh: { 'demo':'演示模式', 'viewing-as':'当前视角:', 't-anon':'未登录', 't-reg':'已注册', 't-conn':'已连接', 't-prolite':'Pro Lite', 't-pro':'Pro', 'free':'免费', 't-anon-desc':'未登录 · 自由浏览', 't-reg-desc':'邮箱账号 · watchlist + 基础提醒', 't-conn-desc':'X + 钱包已连接 · Feed Audit 解锁', 't-prolite-desc':'完整 call 历史 · 多 KOL 提醒 · 趋势线', 't-pro-desc':'Trill Indices · DD 报告 · 持仓 overlap', 'hint':'同一 URL — 不同 tier 看到不同内容' }
+  };
+  var lang = (document.documentElement.lang || 'en').toLowerCase().indexOf('zh') === 0 ? 'zh' : 'en';
+  var i18n = I18N[lang]; var labels = LABELS[lang];
+
+  // i18n labels
+  document.querySelectorAll('#tier-demo-bar [data-i18n], #tier-demo-menu [data-i18n]').forEach(function(el){
+    var k = el.getAttribute('data-i18n');
+    if (i18n[k] !== undefined) el.textContent = i18n[k];
+  });
+
+  function applyTier(tier) {
+    if (TIERS.indexOf(tier) < 0) tier = 'anonymous';
+    var cur = TIERS.indexOf(tier);
+    document.documentElement.setAttribute('data-tier', tier);
+    document.getElementById('tier-demo-current').textContent = labels[tier];
+    // min-tier
+    document.querySelectorAll('[data-min-tier]').forEach(function(el){
+      var v = el.getAttribute('data-min-tier');
+      var idx = TIERS.indexOf(v);
+      el.style.display = (cur >= idx) ? '' : 'none';
+    });
+    // max-tier
+    document.querySelectorAll('[data-max-tier]').forEach(function(el){
+      var v = el.getAttribute('data-max-tier');
+      var idx = TIERS.indexOf(v);
+      el.style.display = (cur <= idx) ? '' : 'none';
+    });
+    // only-tier (comma list)
+    document.querySelectorAll('[data-only-tier]').forEach(function(el){
+      var allowed = el.getAttribute('data-only-tier').split(',').map(function(s){return s.trim();});
+      el.style.display = (allowed.indexOf(tier) >= 0) ? '' : 'none';
+    });
+    // mark active
+    document.querySelectorAll('#tier-demo-menu button').forEach(function(b){
+      b.classList.toggle('tdm-active', b.getAttribute('data-set-tier') === tier);
+    });
+  }
+
+  var saved = (typeof localStorage !== 'undefined' && localStorage.getItem('trill-demo-tier')) || 'anonymous';
+  applyTier(saved);
+
+  var btn = document.getElementById('tier-demo-btn');
+  var menu = document.getElementById('tier-demo-menu');
+  btn.addEventListener('click', function(e){ e.stopPropagation(); menu.classList.toggle('hidden'); });
+  document.addEventListener('click', function(){ menu.classList.add('hidden'); });
+  menu.addEventListener('click', function(e){
+    var t = e.target.closest('[data-set-tier]');
+    if (!t) return;
+    var newTier = t.getAttribute('data-set-tier');
+    try { localStorage.setItem('trill-demo-tier', newTier); } catch(_) {}
+    applyTier(newTier);
+    menu.classList.add('hidden');
+  });
+})();
+</script>
+<!-- /TIER-SWITCHER -->
+
 
   <nav class="border-b border-subtle bg-[#f5efe7]/95 backdrop-blur sticky top-0 z-10">
     <div class="max-w-6xl mx-auto px-8 py-4 flex items-center justify-between">
@@ -58,14 +175,14 @@
       <span class="mx-2">›</span>
       <a href="guides.html" class="hover:text-[#9c2516]">Trill 指南</a>
       <span class="mx-2">›</span>
-      <span>Best Calls · May 2026</span>
+      <span>最佳 Calls · 2026 年 5 月</span>
     </div>
 
     <article>
 
       <header class="mb-10 pb-8 border-b border-subtle">
-        <span class="pill bg-[#9c2516] text-[#f5efe7] mb-4">洞察 · 每月</span>
-        <h1 class="font-serif text-5xl tracking-tight leading-tight mb-4 mt-3">2026 年 5 月最佳 Calls — 有 receipt、有排名、已 resolved</h1>
+        <span class="pill bg-[#9c2516] text-[#f5efe7] mb-4">Insight · 每月</span>
+        <h1 class="font-serif text-5xl tracking-tight leading-tight mb-4 mt-3">2026 年 5 月最佳 Calls — Receipted, Ranked, Resolved</h1>
         <p class="font-serif italic text-xl text-[#6b5e52] leading-snug mb-5">每个 call 都是公开记录,面对 counter-take,现已 resolved。本月最 distinguished 的 5 个。</p>
         <div class="flex items-center gap-4 text-xs text-[#6b5e52]">
           <span>撰文:<strong class="text-[#1a1611]">Trill 指南编辑部</strong></span>
@@ -78,7 +195,7 @@
 
       <section class="prose-trill">
 
-        <p class="text-lg leading-relaxed text-[#1a1611]"><strong>Guide 上的"最佳 call"不是截图。</strong> It's a public, dated thesis posted before consensus formed, defended against a visible counter-take, and resolved by an outcome the market itself rendered. Five of those happened in May. Here they are, in the order our Receipts ledger ranks them.</p>
+        <p class="text-lg leading-relaxed text-[#1a1611]"><strong>Guide 上的"最佳 call"不是截图。</strong> It's a public, dated thesis posted before consensus formed, defended against a visible counter-take, and resolved by an outcome the market itself rendered. Five of those happened in May. Here they are, in the order our Receipts(Trill 收据) ledger ranks them.</p>
 
         <p>Methodology refresher: every entry below cites the call timestamp, the counter-take it stood against, the resolution event, and the dimension it strengthened on the creator's record. Anything we can't verify, we don't publish.</p>
 
@@ -111,6 +228,20 @@
         </div>
 
         <p>The Guide weights "did not victory-lap" the same way it weights "called early." Intellectual Honesty isn't only about admitting being wrong — it's about not extracting social rent when right.</p>
+
+        <!-- Paywall — Anonymous only -->
+        <div data-max-tier="anonymous" class="not-prose my-10">
+          <div class="bg-[#1a1611] text-[#f5efe7] rounded-lg p-8 text-center">
+            <p class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold mb-3">还有 3 个 call · 仅会员可读</p>
+            <h3 class="font-serif text-2xl tracking-tight mb-3">免费账号即可阅读其余部分。</h3>
+            <p class="text-sm text-[#d6cfc4] mb-5 max-w-xl mx-auto leading-relaxed">Three more distinguished calls this month, plus the "没上榜的" criteria and the source ledger. Free account · no card.</p>
+            <a href="account.html" class="inline-block px-6 py-3 bg-[#9c2516] text-[#f5efe7] text-sm font-semibold rounded">创建免费账号</a>
+            <p class="text-[11px] text-[#d6cfc4] italic mt-3">已注册?<a href="account.html" class="underline">登录</a></p>
+          </div>
+        </div>
+
+        <!-- Members-only: rest of the article -->
+        <div data-min-tier="registered">
 
         <h2>③ Vance — Restaking primer accuracy clause</h2>
 
@@ -157,11 +288,25 @@
 
         <p>A reminder of what the Guide does not count as a "best call":</p>
 
-        <p>① <strong>Anything posted after the fact.</strong> If the trade is up and the post is fresh, it's not a call.<br/>② <strong>Predictions without a counter-take.</strong> "BTC up" is not a thesis if nobody disagrees.<br/>③ <strong>Anything we cannot resolve.</strong> Open positions stay in Receipts but don't enter Best Calls until rendered.<br/>④ <strong>Calls promoted by a paid distribution stack.</strong> Distribution doesn't strengthen a record. The call has to stand on its own.</p>
+        <p>① <strong>Anything posted after the fact.</strong> If the trade is up and the post is fresh, it's not a call.<br/>② <strong>Predictions without a counter-take.</strong> "BTC up" is not a thesis if nobody disagrees.<br/>③ <strong>Anything we cannot resolve.</strong> Open positions stay in Receipts(Trill 收据) but don't enter Best Calls until rendered.<br/>④ <strong>Calls promoted by a paid distribution stack.</strong> Distribution doesn't strengthen a record. The call has to stand on its own.</p>
 
         <h2>在原始语境里读这些</h2>
 
-        <p>Each call above is on its creator's profile under the <strong>Receipts</strong> tab — with the original timestamp, the counter-takes, the resolution event, and the dimension impact. Open any creator card to see the full record. The Best Calls list is editorial curation; the Receipts ledger is the source.</p>
+        <p>Each call above is on its creator's profile under the <strong>Receipts(Trill 收据)</strong> tab — with the original timestamp, the counter-takes, the resolution event, and the dimension impact. Open any creator card to see the full record. The Best Calls list is editorial curation; the Receipts(Trill 收据) ledger is the source.</p>
+
+        </div> <!-- /members-only -->
+
+        <!-- Pro-only data export -->
+        <div data-min-tier="pro" class="not-prose my-10">
+          <div class="bg-[#1a1611] text-[#f5efe7] rounded-lg p-6 flex items-center justify-between">
+            <div>
+              <p class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold mb-1">💎 Pro · 数据导出</p>
+              <h4 class="font-serif text-xl tracking-tight">下载 2026 年 5 月 resolved-call 账本</h4>
+              <p class="text-xs text-[#d6cfc4]">CSV · 本月全部 17 个 resolved call · 时间戳、counter-take、resolution event、维度影响</p>
+            </div>
+            <a href="#" class="px-5 py-3 bg-[#9c2516] text-[#f5efe7] text-sm font-semibold rounded whitespace-nowrap">导出 CSV</a>
+          </div>
+        </div>
 
       </section>
 
@@ -169,13 +314,13 @@
         <h2 class="font-serif text-2xl tracking-tight mb-4">报道继续</h2>
         <div class="grid grid-cols-2 gap-5">
           <a href="guide-wallet-voice-split.html" class="card block border border-subtle rounded-lg p-5 bg-[#ebe3d4]">
-            <p class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold mb-1">洞察 · 每周固定</p>
-            <h3 class="font-serif text-lg tracking-tight mb-2">The Wallet/Voice Split — $EIGEN</h3>
+            <p class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold mb-1">Insight · 每周 anchor</p>
+            <h3 class="font-serif text-lg tracking-tight mb-2">钱包 vs 声量 split — $EIGEN</h3>
             <p class="text-sm text-[#6b5e52] leading-snug">Four Three-Stars are quietly long. Where the on-record voice diverges from the on-chain bet.</p>
           </a>
           <a href="guide-coming-soon.html" class="card block border border-subtle rounded-lg p-5 bg-[#ebe3d4]">
-            <p class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold mb-1">Insight · Weekly</p>
-            <h3 class="font-serif text-lg tracking-tight mb-2">The Movers — Week of May 27</h3>
+            <p class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold mb-1">Insight · 每周</p>
+            <h3 class="font-serif text-lg tracking-tight mb-2">榜单变动 — Week of May 27</h3>
             <p class="text-sm text-[#6b5e52] leading-snug">Biggest tier shifts this week — who jumped, who fell, with the reasons.</p>
           </a>
         </div>
@@ -193,7 +338,7 @@
           <span class="text-[10px] uppercase tracking-widest">The Guide</span>
         </div>
         <div class="flex gap-5 text-xs">
-          <a href="评估方法。html" class="hover:text-[#9c2516]">评估方法</a>
+          <a href="评估方法。html" class="hover:text-[#9c2516]">Methodology</a>
           <a href="about.html" class="hover:text-[#9c2516]">关于</a>
           <a href="subscribe.html" class="hover:text-[#9c2516]">订阅</a>
         </div>

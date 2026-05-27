@@ -21,6 +21,123 @@
 </head>
 <body class="min-h-screen">
 
+<!-- TIER-SWITCHER — demo-mode tier switcher (inject right after <body>) -->
+<style>
+  #tier-demo-bar { font-family: 'Inter', system-ui, sans-serif; background:#1a1611; color:#f5efe7; padding:10px 16px; font-size:12px; display:flex; align-items:center; justify-content:space-between; gap:12px; position:relative; z-index:50; border-bottom:1px solid #6b5e52; }
+  #tier-demo-bar .tdb-left { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+  #tier-demo-bar .tdb-tag { font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:#9c2516; font-weight:700; background:#3a1f1a; padding:3px 8px; border-radius:3px; }
+  #tier-demo-bar .tdb-label { color:#d6cfc4; }
+  #tier-demo-bar .tdb-btn { background:#9c2516; color:#f5efe7; padding:5px 12px; border-radius:4px; display:inline-flex; align-items:center; gap:6px; cursor:pointer; border:none; font-size:12px; font-weight:600; }
+  #tier-demo-bar .tdb-btn:hover { background:#7a1d11; }
+  #tier-demo-bar .tdb-hint { font-size:10px; color:#d6cfc4; font-style:italic; }
+  #tier-demo-menu { position:absolute; left:0; top:100%; margin-top:1px; width:300px; background:#1a1611; border:1px solid #6b5e52; border-radius:4px; box-shadow:0 8px 24px rgba(0,0,0,0.4); padding:4px 0; z-index:100; }
+  #tier-demo-menu.hidden { display:none; }
+  #tier-demo-menu button { display:block; width:100%; text-align:left; padding:9px 14px; background:transparent; border:0; color:#f5efe7; cursor:pointer; }
+  #tier-demo-menu button:hover { background:#3a1f1a; }
+  #tier-demo-menu .tdm-title { font-size:12px; font-weight:600; }
+  #tier-demo-menu .tdm-desc { font-size:10px; color:#d6cfc4; margin-top:1px; }
+  #tier-demo-menu .tdm-active { background:#3a1f1a; }
+  #tier-demo-menu .tdm-active::after { content:"✓"; float:right; color:#9c2516; font-weight:700; }
+  /* Tier-locked content overlay */
+  .tier-locked-overlay { position:relative; }
+  .tier-locked-overlay::before { content:""; position:absolute; inset:0; background:linear-gradient(to bottom, rgba(245,239,231,0) 0%, rgba(245,239,231,0.95) 70%, rgba(245,239,231,1) 100%); z-index:5; pointer-events:none; border-radius:inherit; }
+  .tier-locked-cta { position:absolute; bottom:18px; left:50%; transform:translateX(-50%); z-index:6; background:#1a1611; color:#f5efe7; padding:10px 18px; border-radius:6px; font-size:12px; font-weight:600; display:inline-flex; align-items:center; gap:8px; box-shadow:0 4px 14px rgba(0,0,0,0.15); }
+  .tier-locked-cta a { color:#f5efe7; text-decoration:underline; }
+  @media (max-width: 720px) {
+    #tier-demo-bar .tdb-hint { display:none; }
+    #tier-demo-menu { width:260px; }
+  }
+</style>
+
+<div id="tier-demo-bar">
+  <div class="tdb-left">
+    <span class="tdb-tag" data-i18n="demo">Demo</span>
+    <span class="tdb-label" data-i18n="viewing-as">Viewing as:</span>
+    <div style="position:relative;">
+      <button type="button" class="tdb-btn" id="tier-demo-btn">
+        <span id="tier-demo-current">👤 Anonymous</span>
+        <span style="font-size:9px;">▼</span>
+      </button>
+      <div id="tier-demo-menu" class="hidden">
+        <button data-set-tier="anonymous"><div class="tdm-title">👤 <span data-i18n="t-anon">Anonymous</span></div><div class="tdm-desc" data-i18n="t-anon-desc">Not signed in · browsing freely</div></button>
+        <button data-set-tier="registered"><div class="tdm-title">🔓 <span data-i18n="t-reg">Registered</span> · <span data-i18n="free">Free</span></div><div class="tdm-desc" data-i18n="t-reg-desc">Email account · watchlist + basic alerts</div></button>
+        <button data-set-tier="connected"><div class="tdm-title">🔗 <span data-i18n="t-conn">Connected</span> · <span data-i18n="free">Free</span></div><div class="tdm-desc" data-i18n="t-conn-desc">X + wallet linked · Feed Audit unlocked</div></button>
+        <button data-set-tier="pro-lite"><div class="tdm-title">⭐ <span data-i18n="t-prolite">Pro Lite</span> · $9/mo</div><div class="tdm-desc" data-i18n="t-prolite-desc">Full call history · multi-KOL alerts · trends</div></button>
+        <button data-set-tier="pro"><div class="tdm-title">💎 <span data-i18n="t-pro">Pro</span> · $25/mo</div><div class="tdm-desc" data-i18n="t-pro-desc">Trill Indices · DD reports · holdings overlap</div></button>
+      </div>
+    </div>
+  </div>
+  <div class="tdb-hint" data-i18n="hint">Same URL — content visibility changes by tier</div>
+</div>
+
+<script>
+(function(){
+  var TIERS = ['anonymous','registered','connected','pro-lite','pro'];
+  var LABELS = {
+    en: { anonymous:'👤 Anonymous', registered:'🔓 Registered', connected:'🔗 Connected', 'pro-lite':'⭐ Pro Lite', pro:'💎 Pro' },
+    zh: { anonymous:'👤 未登录', registered:'🔓 已注册', connected:'🔗 已连接', 'pro-lite':'⭐ Pro Lite', pro:'💎 Pro' }
+  };
+  var I18N = {
+    en: { 'demo':'Demo', 'viewing-as':'Viewing as:', 't-anon':'Anonymous', 't-reg':'Registered', 't-conn':'Connected', 't-prolite':'Pro Lite', 't-pro':'Pro', 'free':'Free', 't-anon-desc':'Not signed in · browsing freely', 't-reg-desc':'Email account · watchlist + basic alerts', 't-conn-desc':'X + wallet linked · Feed Audit unlocked', 't-prolite-desc':'Full call history · multi-KOL alerts · trends', 't-pro-desc':'Trill Indices · DD reports · holdings overlap', 'hint':'Same URL — content visibility changes by tier' },
+    zh: { 'demo':'演示模式', 'viewing-as':'当前视角:', 't-anon':'未登录', 't-reg':'已注册', 't-conn':'已连接', 't-prolite':'Pro Lite', 't-pro':'Pro', 'free':'免费', 't-anon-desc':'未登录 · 自由浏览', 't-reg-desc':'邮箱账号 · watchlist + 基础提醒', 't-conn-desc':'X + 钱包已连接 · Feed Audit 解锁', 't-prolite-desc':'完整 call 历史 · 多 KOL 提醒 · 趋势线', 't-pro-desc':'Trill Indices · DD 报告 · 持仓 overlap', 'hint':'同一 URL — 不同 tier 看到不同内容' }
+  };
+  var lang = (document.documentElement.lang || 'en').toLowerCase().indexOf('zh') === 0 ? 'zh' : 'en';
+  var i18n = I18N[lang]; var labels = LABELS[lang];
+
+  // i18n labels
+  document.querySelectorAll('#tier-demo-bar [data-i18n], #tier-demo-menu [data-i18n]').forEach(function(el){
+    var k = el.getAttribute('data-i18n');
+    if (i18n[k] !== undefined) el.textContent = i18n[k];
+  });
+
+  function applyTier(tier) {
+    if (TIERS.indexOf(tier) < 0) tier = 'anonymous';
+    var cur = TIERS.indexOf(tier);
+    document.documentElement.setAttribute('data-tier', tier);
+    document.getElementById('tier-demo-current').textContent = labels[tier];
+    // min-tier
+    document.querySelectorAll('[data-min-tier]').forEach(function(el){
+      var v = el.getAttribute('data-min-tier');
+      var idx = TIERS.indexOf(v);
+      el.style.display = (cur >= idx) ? '' : 'none';
+    });
+    // max-tier
+    document.querySelectorAll('[data-max-tier]').forEach(function(el){
+      var v = el.getAttribute('data-max-tier');
+      var idx = TIERS.indexOf(v);
+      el.style.display = (cur <= idx) ? '' : 'none';
+    });
+    // only-tier (comma list)
+    document.querySelectorAll('[data-only-tier]').forEach(function(el){
+      var allowed = el.getAttribute('data-only-tier').split(',').map(function(s){return s.trim();});
+      el.style.display = (allowed.indexOf(tier) >= 0) ? '' : 'none';
+    });
+    // mark active
+    document.querySelectorAll('#tier-demo-menu button').forEach(function(b){
+      b.classList.toggle('tdm-active', b.getAttribute('data-set-tier') === tier);
+    });
+  }
+
+  var saved = (typeof localStorage !== 'undefined' && localStorage.getItem('trill-demo-tier')) || 'anonymous';
+  applyTier(saved);
+
+  var btn = document.getElementById('tier-demo-btn');
+  var menu = document.getElementById('tier-demo-menu');
+  btn.addEventListener('click', function(e){ e.stopPropagation(); menu.classList.toggle('hidden'); });
+  document.addEventListener('click', function(){ menu.classList.add('hidden'); });
+  menu.addEventListener('click', function(e){
+    var t = e.target.closest('[data-set-tier]');
+    if (!t) return;
+    var newTier = t.getAttribute('data-set-tier');
+    try { localStorage.setItem('trill-demo-tier', newTier); } catch(_) {}
+    applyTier(newTier);
+    menu.classList.add('hidden');
+  });
+})();
+</script>
+<!-- /TIER-SWITCHER -->
+
+
   <nav class="border-b border-subtle bg-[#f5efe7]/95 backdrop-blur sticky top-0 z-10">
     <div class="max-w-6xl mx-auto px-8 py-4 flex items-center justify-between">
       <div class="flex items-baseline gap-2">
@@ -80,20 +197,58 @@
 
   <main class="max-w-6xl mx-auto px-8 py-16">
 
-    <!-- Welcome back banner (logged-in state) -->
-    <section class="mb-10 bg-[#fef4e8] border-l-4 border-[#9c2516] rounded-r-lg px-6 py-4 flex items-center justify-between">
+    <!-- TIER-AWARE: Anonymous welcome -->
+    <section data-max-tier="anonymous" class="mb-10 bg-[#ebe3d4] border-l-4 border-[#6b5e52] rounded-r-lg px-6 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <span class="text-2xl">👋</span>
+        <div>
+          <p class="text-sm"><strong>New to the Trill Guide?</strong> Browse 1,247 evaluated creators for free. Sign up to track creators, set alerts, and run a Crypto Feed Audit.</p>
+          <p class="text-[11px] text-[#6b5e52] mt-0.5">Free account · no credit card · 30 seconds</p>
+        </div>
+      </div>
+      <a href="account.html" class="px-4 py-2 bg-[#1a1611] text-[#f5efe7] text-xs font-semibold rounded whitespace-nowrap">Create free account →</a>
+    </section>
+
+    <!-- TIER-AWARE: Registered welcome -->
+    <section data-only-tier="registered,connected" class="mb-10 bg-[#fef4e8] border-l-4 border-[#9c2516] rounded-r-lg px-6 py-4 flex items-center justify-between">
       <div class="flex items-center gap-3">
         <span class="text-2xl">👋</span>
         <div>
           <p class="text-sm"><strong>Welcome back, Vincent.</strong> 3 watched creators have updates · 1 narrative heat shift in your tracked topics.</p>
-          <p class="text-[11px] text-[#6b5e52] mt-0.5">Sign in to see your full activity stream.</p>
+          <p class="text-[11px] text-[#6b5e52] mt-0.5">Free tier · upgrade to Pro Lite for multi-KOL real-time alerts and full call history.</p>
         </div>
       </div>
       <a href="account.html" class="px-4 py-2 bg-[#9c2516] text-[#f5efe7] text-xs font-semibold rounded whitespace-nowrap">Open my Account →</a>
     </section>
 
-    <!-- Audit CTA banner (Max's CTA #2 — moved up to Section 1) -->
-    <section class="mb-16">
+    <!-- TIER-AWARE: Pro Lite / Pro welcome with live activity -->
+    <section data-min-tier="pro-lite" class="mb-10 bg-[#1a1611] text-[#f5efe7] rounded-lg p-6">
+      <div class="flex items-start justify-between gap-6">
+        <div class="flex items-start gap-4 flex-1">
+          <span class="text-3xl">⭐</span>
+          <div class="flex-1">
+            <p class="text-sm mb-2"><strong>Welcome back, Vincent.</strong> <span class="text-[#d6cfc4]">Your Pro Lite digest is ready.</span></p>
+            <div class="grid grid-cols-3 gap-4 mt-3">
+              <div class="border-l-2 border-[#9c2516] pl-3">
+                <p class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold mb-1">Multi-KOL alert</p>
+                <p class="text-xs">@hsakatrades + @vance_research posted on restaking in last 4h · <a href="creator-v2.html" class="underline">view both</a></p>
+              </div>
+              <div class="border-l-2 border-[#9c2516] pl-3">
+                <p class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold mb-1">Trend shift</p>
+                <p class="text-xs">Analytical Depth · 30-day trendline turning up on @cobie (+0.08) · <a href="dimension-analytical-depth.html" class="underline">see trend</a></p>
+              </div>
+              <div class="border-l-2 border-[#9c2516] pl-3">
+                <p class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold mb-1">Call history update</p>
+                <p class="text-xs">3 of your watched creators resolved a call · <a href="account.html" class="underline">view receipts</a></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TIER-AWARE: Audit CTA — Anonymous / Registered (X not connected) -->
+    <section data-max-tier="registered" class="mb-16">
       <div class="bg-[#1a1611] text-[#f5efe7] rounded-lg p-10 grid grid-cols-2 gap-10 items-center">
         <div>
           <p class="text-[10px] uppercase tracking-widest text-[#d6cfc4] mb-3">Personalised audit</p>
@@ -106,6 +261,37 @@
           <div class="font-serif text-6xl mb-3">"</div>
           <p class="font-serif italic text-xl text-[#f5efe7] leading-snug max-w-xs mx-auto">12 of your 23 crypto follows are in The Guide.<br>Here are 5 more worth adding.</p>
           <p class="text-[10px] uppercase tracking-widest text-[#d6cfc4] mt-4">sample audit result</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- TIER-AWARE: Audit CTA — Connected (X linked) -->
+    <section data-min-tier="connected" class="mb-16">
+      <div class="bg-[#1a1611] text-[#f5efe7] rounded-lg p-10 grid grid-cols-2 gap-10 items-center">
+        <div>
+          <p class="text-[10px] uppercase tracking-widest text-[#9c2516] mb-3 font-semibold">Your latest audit · 6 days ago</p>
+          <h2 class="font-serif text-3xl tracking-tight mb-4 leading-snug">12 of your 23 crypto follows are in The Guide. 5 more worth adding.</h2>
+          <div class="grid grid-cols-3 gap-3 mb-5">
+            <div class="bg-[#3a1f1a] rounded p-3"><p class="text-[10px] text-[#d6cfc4]">Coverage</p><p class="font-serif text-2xl">52%</p></div>
+            <div class="bg-[#3a1f1a] rounded p-3"><p class="text-[10px] text-[#d6cfc4]">Avg Star</p><p class="font-serif text-2xl">★★</p></div>
+            <div class="bg-[#3a1f1a] rounded p-3"><p class="text-[10px] text-[#d6cfc4]">To add</p><p class="font-serif text-2xl text-[#9c2516]">5</p></div>
+          </div>
+          <a href="feed-audit.html" class="inline-block px-6 py-3 bg-[#9c2516] text-[#f5efe7] text-sm font-semibold rounded">Open my audit →</a>
+          <a href="feed-audit.html" class="inline-block px-4 py-3 text-[#d6cfc4] text-sm ml-2 hover:text-[#f5efe7]">Re-run audit</a>
+        </div>
+        <div class="space-y-2">
+          <p class="text-[10px] uppercase tracking-widest text-[#9c2516] mb-2 font-semibold">5 recommended for your DeFi + Macro goals</p>
+          <div class="bg-[#3a1f1a] rounded p-3 flex items-center gap-3">
+            <div class="w-8 h-8 rounded-full bg-[#9c2516] flex items-center justify-center text-xs font-serif font-bold">H</div>
+            <div class="flex-1"><p class="text-xs">@hsakatrades · ★★★ · DeFi</p></div>
+          </div>
+          <div class="bg-[#3a1f1a] rounded p-3 flex items-center gap-3">
+            <div class="w-8 h-8 rounded-full bg-[#9c2516] flex items-center justify-center text-xs font-serif font-bold">V</div>
+            <div class="flex-1"><p class="text-xs">@vance_research · ★★★ · DeFi · Educational Value</p></div>
+          </div>
+          <div class="bg-[#3a1f1a] rounded p-3 flex items-center gap-3 opacity-60">
+            <div class="text-xs text-[#d6cfc4]">+ 3 more</div>
+          </div>
         </div>
       </div>
     </section>
@@ -237,6 +423,76 @@
           <p class="text-xs text-[#6b5e52] mb-3">Distinguished · "Substance with a sense of humour"</p>
           <p class="text-[11px] text-[#9c2516]">+14 distinguished voices →</p>
         </a>
+      </div>
+    </section>
+
+    <!-- TIER-AWARE: Pro Lite — your tracked dimension trends -->
+    <section data-only-tier="pro-lite" class="mb-16">
+      <div class="flex items-baseline justify-between mb-6 pb-3 border-b border-[#9c2516]/30">
+        <div>
+          <p class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold">⭐ Pro Lite</p>
+          <h2 class="font-serif text-3xl tracking-tight">Your tracked dimension trends</h2>
+        </div>
+        <a href="dimensions.html" class="text-xs text-[#9c2516] hover:underline">All dimensions →</a>
+      </div>
+      <p class="text-sm text-[#6b5e52] italic mb-6">Multi-timeframe trends for the dimensions you watch. Updated daily.</p>
+      <div class="grid grid-cols-3 gap-6">
+        <div class="border border-subtle rounded-lg p-5 bg-[#ebe3d4]/40">
+          <div class="flex items-baseline justify-between mb-2">
+            <p class="font-serif text-lg">📊 Accuracy Discipline</p>
+            <span class="text-xs text-[#9c2516] font-semibold">+0.04 · 30d</span>
+          </div>
+          <svg viewBox="0 0 200 50" class="w-full h-12 mb-2"><polyline points="0,38 25,35 50,32 75,30 100,28 125,24 150,22 175,18 200,15" stroke="#9c2516" stroke-width="2" fill="none"/></svg>
+          <p class="text-[11px] text-[#6b5e52]">Field-wide accuracy climbed steadily this cycle. @vance_research +9pts.</p>
+        </div>
+        <div class="border border-subtle rounded-lg p-5 bg-[#ebe3d4]/40">
+          <div class="flex items-baseline justify-between mb-2">
+            <p class="font-serif text-lg">🎯 Analytical Depth</p>
+            <span class="text-xs text-[#9c2516] font-semibold">+0.02 · 30d</span>
+          </div>
+          <svg viewBox="0 0 200 50" class="w-full h-12 mb-2"><polyline points="0,30 25,32 50,28 75,32 100,28 125,25 150,28 175,22 200,20" stroke="#9c2516" stroke-width="2" fill="none"/></svg>
+          <p class="text-[11px] text-[#6b5e52]">@hsakatrades up +0.08, @cobie up +0.05.</p>
+        </div>
+        <div class="border border-subtle rounded-lg p-5 bg-[#ebe3d4]/40">
+          <div class="flex items-baseline justify-between mb-2">
+            <p class="font-serif text-lg">🪞 Intellectual Honesty</p>
+            <span class="text-xs text-[#6b5e52] font-semibold">flat · 30d</span>
+          </div>
+          <svg viewBox="0 0 200 50" class="w-full h-12 mb-2"><polyline points="0,28 25,30 50,28 75,29 100,28 125,28 150,29 175,28 200,28" stroke="#6b5e52" stroke-width="2" fill="none"/></svg>
+          <p class="text-[11px] text-[#6b5e52]">No tier moves on this dimension this month.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- TIER-AWARE: Pro — Trill Indices live -->
+    <section data-only-tier="pro" class="mb-16">
+      <div class="flex items-baseline justify-between mb-6 pb-3 border-b border-[#9c2516]/30">
+        <div>
+          <p class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold">💎 Pro · Trill Indices</p>
+          <h2 class="font-serif text-3xl tracking-tight">Live indices · derived from Three-Star conviction</h2>
+        </div>
+        <a href="#" class="text-xs text-[#9c2516] hover:underline">Index methodology →</a>
+      </div>
+      <p class="text-sm text-[#6b5e52] italic mb-6">Trill Indices weight assets by the active conviction of Three-Star creators — disclosed positions, dated public calls, on-chain wallets. Updated hourly.</p>
+      <div class="grid grid-cols-3 gap-6">
+        <div class="border border-[#9c2516] rounded-lg p-5 bg-[#1a1611] text-[#f5efe7]">
+          <p class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold mb-1">TRILL.RESTAKE</p>
+          <h3 class="font-serif text-3xl mb-1">+4.2%</h3>
+          <p class="text-[11px] text-[#d6cfc4] mb-3">7d · 6 constituents · led by EIGEN, ETHFI</p>
+          <svg viewBox="0 0 200 40" class="w-full h-10"><polyline points="0,30 25,25 50,28 75,22 100,18 125,20 150,15 175,12 200,8" stroke="#9c2516" stroke-width="2" fill="none"/></svg>
+        </div>
+        <div class="border border-[#9c2516] rounded-lg p-5 bg-[#1a1611] text-[#f5efe7]">
+          <p class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold mb-1">TRILL.SOL_DEFI</p>
+          <h3 class="font-serif text-3xl mb-1">−1.8%</h3>
+          <p class="text-[11px] text-[#d6cfc4] mb-3">7d · 8 constituents · drag from JTO, KMNO</p>
+          <svg viewBox="0 0 200 40" class="w-full h-10"><polyline points="0,15 25,18 50,20 75,18 100,22 125,25 150,28 175,26 200,32" stroke="#9c2516" stroke-width="2" fill="none"/></svg>
+        </div>
+        <div class="border border-[#9c2516] rounded-lg p-5 bg-[#1a1611] text-[#f5efe7]">
+          <p class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold mb-1">TRILL.AI_AGENTS</p>
+          <h3 class="font-serif text-3xl mb-1">+12.4%</h3>
+          <p class="text-[11px] text-[#d6cfc4] mb-3">7d · 5 constituents · Three-Star conviction rising</p>
+          <svg viewBox="0 0 200 40" class="w-full h-10"><polyline points="0,32 25,30 50,28 75,22 100,18 125,12 150,10 175,8 200,5" stroke="#9c2516" stroke-width="2" fill="none"/></svg>
+        </div>
       </div>
     </section>
 

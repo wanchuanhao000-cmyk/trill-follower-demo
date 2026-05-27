@@ -80,6 +80,36 @@
 
   <main class="max-w-6xl mx-auto px-8 py-16">
 
+    <!-- Welcome back banner (logged-in state) -->
+    <section class="mb-10 bg-[#fef4e8] border-l-4 border-[#9c2516] rounded-r-lg px-6 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <span class="text-2xl">👋</span>
+        <div>
+          <p class="text-sm"><strong>Welcome back, Vincent.</strong> 3 watched creators have updates · 1 narrative heat shift in your tracked topics.</p>
+          <p class="text-[11px] text-[#6b5e52] mt-0.5">Sign in to see your full activity stream.</p>
+        </div>
+      </div>
+      <a href="account.html" class="px-4 py-2 bg-[#9c2516] text-[#f5efe7] text-xs font-semibold rounded whitespace-nowrap">Open my Account →</a>
+    </section>
+
+    <!-- Audit CTA banner (Max's CTA #2 — moved up to Section 1) -->
+    <section class="mb-16">
+      <div class="bg-[#1a1611] text-[#f5efe7] rounded-lg p-10 grid grid-cols-2 gap-10 items-center">
+        <div>
+          <p class="text-[10px] uppercase tracking-widest text-[#d6cfc4] mb-3">Personalised audit</p>
+          <h2 class="font-serif text-3xl tracking-tight mb-4 leading-snug">Connect your X account. We'll tell you who you should be following.</h2>
+          <p class="text-sm text-[#d6cfc4] mb-6 leading-relaxed">Trill scans your crypto follow graph, surfaces how it stacks up against the Guide, and recommends specific voices to add — and to drop — based on the dimensions and goals you care about.</p>
+          <a href="feed-audit.html" class="inline-block px-6 py-3 bg-[#9c2516] text-[#f5efe7] text-sm font-semibold rounded">Run my Crypto Feed Audit →</a>
+          <p class="text-[11px] text-[#d6cfc4] italic mt-3">Read-only · we don't post on your behalf · takes 30 seconds</p>
+        </div>
+        <div class="text-center">
+          <div class="font-serif text-6xl mb-3">"</div>
+          <p class="font-serif italic text-xl text-[#f5efe7] leading-snug max-w-xs mx-auto">12 of your 23 crypto follows are in The Guide.<br>Here are 5 more worth adding.</p>
+          <p class="text-[10px] uppercase tracking-widest text-[#d6cfc4] mt-4">sample audit result</p>
+        </div>
+      </div>
+    </section>
+
     <section class="mb-16">
       <div class="flex items-baseline justify-between mb-6 pb-3 border-b border-subtle">
         <h2 class="font-serif text-3xl tracking-tight">New Three-Star Trill Creators</h2>
@@ -212,32 +242,57 @@
 
     <section class="mb-16">
       <div class="flex items-baseline justify-between mb-6 pb-3 border-b border-subtle">
-        <h2 class="font-serif text-3xl tracking-tight">New from The Trill Guide</h2>
-        <a href="guides.html" class="text-xs text-[#9c2516] hover:underline">See all guides →</a>
+        <h2 class="font-serif text-3xl tracking-tight">From The Trill Guide</h2>
+        <a href="guides.html" class="text-xs text-[#9c2516] hover:underline">See all editorial & insights →</a>
       </div>
-      <p class="text-sm text-[#6b5e52] italic mb-6">Curated lists and editorial coverage of crypto's most credible voices.</p>
+      <p class="text-sm text-[#6b5e52] italic mb-6">Curated lists, editorial coverage, and signals only Trill can surface — drawn from the on-record behaviour of every evaluated creator.</p>
       <div class="grid grid-cols-3 gap-6">
-        <a href="guides.html" class="card block bg-[#1a1611] text-[#f5efe7] rounded-lg p-6 h-56 flex flex-col justify-between">
-          <span class="inline-block self-start text-[10px] uppercase tracking-widest bg-[#9c2516] text-[#f5efe7] px-2 py-1 rounded">Guide · DeFi</span>
+
+        <a href="guide-wallet-voice-split.html" class="card block bg-[#1a1611] text-[#f5efe7] rounded-lg p-6 h-56 flex flex-col justify-between">
+          <span class="inline-block self-start text-[10px] uppercase tracking-widest bg-[#9c2516] text-[#f5efe7] px-2 py-1 rounded">Insight · Weekly anchor</span>
+          <div>
+            <h3 class="font-serif text-2xl tracking-tight mb-2 leading-snug">The Wallet/Voice Split: 4 Three-Stars Quietly Long $EIGEN</h3>
+            <p class="text-xs text-[#d6cfc4]">By The Trill Guide · 8 min read · 2 days ago</p>
+          </div>
+        </a>
+
+        <a href="guide-best-calls-may.html" class="card block bg-[#6b5e52] text-[#f5efe7] rounded-lg p-6 h-56 flex flex-col justify-between">
+          <span class="inline-block self-start text-[10px] uppercase tracking-widest bg-[#9c2516] text-[#f5efe7] px-2 py-1 rounded">Insight · Monthly</span>
+          <div>
+            <h3 class="font-serif text-2xl tracking-tight mb-2 leading-snug">Best Calls of May 2026 — Receipted, Ranked, Resolved</h3>
+            <p class="text-xs text-[#d6cfc4]">By The Trill Guide · 12 min read · yesterday</p>
+          </div>
+        </a>
+
+        <a href="guide-coming-soon.html" class="card block bg-[#9c2516] text-[#f5efe7] rounded-lg p-6 h-56 flex flex-col justify-between">
+          <span class="inline-block self-start text-[10px] uppercase tracking-widest bg-[#1a1611] text-[#f5efe7] px-2 py-1 rounded">Guide · DeFi</span>
           <div>
             <h3 class="font-serif text-2xl tracking-tight mb-2 leading-snug">The 6 Voices Defining the Restaking Conversation</h3>
             <p class="text-xs text-[#d6cfc4]">By The Trill Guide · 8 min read</p>
           </div>
         </a>
-        <a href="guides.html" class="card block bg-[#6b5e52] text-[#f5efe7] rounded-lg p-6 h-56 flex flex-col justify-between">
-          <span class="inline-block self-start text-[10px] uppercase tracking-widest bg-[#9c2516] text-[#f5efe7] px-2 py-1 rounded">Guide · Macro</span>
-          <div>
-            <h3 class="font-serif text-2xl tracking-tight mb-2 leading-snug">Wallet vs Voice: Where Three-Stars Actually Put Their Money</h3>
-            <p class="text-xs text-[#d6cfc4]">By The Trill Guide · 12 min read</p>
-          </div>
+
+        <a href="guide-coming-soon.html" class="card block border border-subtle rounded-lg p-6 bg-[#ebe3d4]">
+          <span class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold">Insight · Weekly</span>
+          <h3 class="font-serif text-xl tracking-tight my-2">The Movers — Week of May 27</h3>
+          <p class="text-sm text-[#1a1611] leading-snug mb-3">"Biggest tier shifts this week — who jumped, who fell, with the reasons. 3 upgrades to ★★★, 1 demotion."</p>
+          <p class="text-[11px] text-[#6b5e52]">Updated weekly</p>
         </a>
-        <a href="guides.html" class="card block bg-[#9c2516] text-[#f5efe7] rounded-lg p-6 h-56 flex flex-col justify-between">
-          <span class="inline-block self-start text-[10px] uppercase tracking-widest bg-[#1a1611] text-[#f5efe7] px-2 py-1 rounded">Guide · Hidden</span>
-          <div>
-            <h3 class="font-serif text-2xl tracking-tight mb-2 leading-snug">Undercover Authorities: 12 Low-Follower, High-Trill Voices</h3>
-            <p class="text-xs text-[#d6cfc4]">By The Trill Guide · 6 min read</p>
-          </div>
+
+        <a href="guide-coming-soon.html" class="card block border border-subtle rounded-lg p-6 bg-[#ebe3d4]">
+          <span class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold">Guide · Hidden</span>
+          <h3 class="font-serif text-xl tracking-tight my-2">Undercover Authorities</h3>
+          <p class="text-sm text-[#1a1611] leading-snug mb-3">"12 low-follower, high-Trill voices worth surfacing — voices doing distinguished work without the audience yet."</p>
+          <p class="text-[11px] text-[#6b5e52]">By The Trill Guide · 6 min read</p>
         </a>
+
+        <a href="guide-coming-soon.html" class="card block border border-subtle rounded-lg p-6 bg-[#ebe3d4]">
+          <span class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold">Insight · Comeback Watch</span>
+          <h3 class="font-serif text-xl tracking-tight my-2">@tetranode's Quiet Vindication</h3>
+          <p class="text-sm text-[#1a1611] leading-snug mb-3">"Got dunked on for the $SOL → $200 call in January. Resolved correct in April. The full timeline."</p>
+          <p class="text-[11px] text-[#6b5e52]">By The Trill Guide · 5 min read</p>
+        </a>
+
       </div>
     </section>
 
@@ -264,88 +319,6 @@
           <p class="text-sm text-[#6b5e52] mb-4 leading-snug">Anonymous, vetted, staked reviewers — Trill's inspectorate. They contribute the human-judgment layer behind every rating.</p>
           <a href="sentinel.html" class="px-4 py-2 bg-[#9c2516] text-[#f5efe7] text-xs font-semibold rounded inline-block">Discover</a>
         </div>
-      </div>
-    </section>
-
-    <section class="mb-16">
-      <div class="flex items-baseline justify-between mb-6 pb-3 border-b border-subtle">
-        <h2 class="font-serif text-3xl tracking-tight">Trill-Powered Insights</h2>
-        <a href="guides.html" class="text-xs text-[#9c2516] hover:underline">Read more insights →</a>
-      </div>
-      <p class="text-sm text-[#6b5e52] italic mb-6">Data and signals only Trill can surface — drawn from the on-record behaviour of every evaluated creator.</p>
-      <div class="grid grid-cols-3 gap-6">
-        <a href="guides.html" class="card block border border-subtle rounded-lg p-6 bg-[#ebe3d4]">
-          <span class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold">Weekly anchor format</span>
-          <h3 class="font-serif text-xl tracking-tight my-2">The Wallet/Voice Split</h3>
-          <p class="text-sm text-[#1a1611] leading-snug mb-3">"Where top KOLs publicly position vs where their wallets actually go." This week: 4 mismatches surfaced on $EIGEN.</p>
-          <p class="text-[11px] text-[#6b5e52]">Updated weekly · 2 days ago</p>
-        </a>
-        <a href="guides.html" class="card block border border-subtle rounded-lg p-6 bg-[#ebe3d4]">
-          <span class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold">Monthly</span>
-          <h3 class="font-serif text-xl tracking-tight my-2">Best Calls of the Month</h3>
-          <p class="text-sm text-[#1a1611] leading-snug mb-3">"5 calls in May that made their community the most money — with timestamps and resolution receipts."</p>
-          <p class="text-[11px] text-[#6b5e52]">May 2026 · published yesterday</p>
-        </a>
-        <a href="guides.html" class="card block border border-subtle rounded-lg p-6 bg-[#ebe3d4]">
-          <span class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold">Weekly</span>
-          <h3 class="font-serif text-xl tracking-tight my-2">The Movers</h3>
-          <p class="text-sm text-[#1a1611] leading-snug mb-3">"Biggest tier shifts this week — who jumped, who fell, with the reasons. 3 upgrades to ★★★, 1 demotion."</p>
-          <p class="text-[11px] text-[#6b5e52]">Week of May 27, 2026</p>
-        </a>
-      </div>
-    </section>
-
-    <section class="mb-16">
-      <div class="bg-[#1a1611] text-[#f5efe7] rounded-lg p-10 grid grid-cols-2 gap-10 items-center">
-        <div>
-          <p class="text-[10px] uppercase tracking-widest text-[#d6cfc4] mb-3">Personalised audit</p>
-          <h2 class="font-serif text-3xl tracking-tight mb-4 leading-snug">Connect your X account. We'll tell you who you should be following.</h2>
-          <p class="text-sm text-[#d6cfc4] mb-6 leading-relaxed">Trill scans your crypto follow graph, surfaces how it stacks up against the Guide, and recommends specific voices to add — and to drop — based on the dimensions you care about.</p>
-          <a href="feed-audit.html" class="inline-block px-6 py-3 bg-[#9c2516] text-[#f5efe7] text-sm font-semibold rounded">Run my Crypto Feed Audit →</a>
-          <p class="text-[11px] text-[#d6cfc4] italic mt-3">Read-only · we don't post on your behalf · takes 30 seconds</p>
-        </div>
-        <div class="text-center">
-          <div class="font-serif text-6xl mb-3">"</div>
-          <p class="font-serif italic text-xl text-[#f5efe7] leading-snug max-w-xs mx-auto">12 of your 23 crypto follows are in The Guide.<br>Here are 5 more worth adding.</p>
-          <p class="text-[10px] uppercase tracking-widest text-[#d6cfc4] mt-4">sample audit result</p>
-        </div>
-      </div>
-    </section>
-
-    <section class="mb-16">
-      <div class="flex items-baseline justify-between mb-6 pb-3 border-b border-subtle">
-        <h2 class="font-serif text-3xl tracking-tight">Trill Selections by Ecosystem</h2>
-      </div>
-      <p class="text-sm text-[#6b5e52] italic mb-6">The most credible voices, by where they spend their time.</p>
-      <div class="grid grid-cols-4 gap-5">
-        <a href="stars.html" class="card block bg-[#9c2516] text-[#f5efe7] rounded-lg p-6 h-44 flex flex-col justify-between">
-          <span class="text-[10px] uppercase tracking-widest text-[#d6cfc4]">22 creators</span>
-          <div>
-            <h3 class="font-serif text-2xl tracking-tight">Ethereum</h3>
-            <p class="text-xs text-[#d6cfc4] italic mt-1">Core DeFi · L2 · Restaking</p>
-          </div>
-        </a>
-        <a href="stars.html" class="card block bg-[#1a1611] text-[#f5efe7] rounded-lg p-6 h-44 flex flex-col justify-between">
-          <span class="text-[10px] uppercase tracking-widest text-[#d6cfc4]">17 creators</span>
-          <div>
-            <h3 class="font-serif text-2xl tracking-tight">Solana</h3>
-            <p class="text-xs text-[#d6cfc4] italic mt-1">Memecoin · DEX · Validator economics</p>
-          </div>
-        </a>
-        <a href="stars.html" class="card block bg-[#6b5e52] text-[#f5efe7] rounded-lg p-6 h-44 flex flex-col justify-between">
-          <span class="text-[10px] uppercase tracking-widest text-[#d6cfc4]">8 creators</span>
-          <div>
-            <h3 class="font-serif text-2xl tracking-tight">Hyperliquid</h3>
-            <p class="text-xs text-[#d6cfc4] italic mt-1">Perps · onchain trading</p>
-          </div>
-        </a>
-        <a href="stars.html" class="card block bg-[#1a1611] text-[#f5efe7] rounded-lg p-6 h-44 flex flex-col justify-between">
-          <span class="text-[10px] uppercase tracking-widest text-[#d6cfc4]">11 creators</span>
-          <div>
-            <h3 class="font-serif text-2xl tracking-tight">Bitcoin · Macro</h3>
-            <p class="text-xs text-[#d6cfc4] italic mt-1">Liquidity · Cycles · Halving</p>
-          </div>
-        </a>
       </div>
     </section>
 

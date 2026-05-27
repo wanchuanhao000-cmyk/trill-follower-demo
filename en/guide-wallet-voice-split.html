@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Wallet/Voice Split — $EIGEN · The Trill Guide</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', system-ui, sans-serif; background: #f5efe7; color: #1a1611; }
+    .font-serif { font-family: 'Cormorant Garamond', Georgia, serif; }
+    .border-subtle { border-color: #d6cfc4; }
+    .star-filled { color: #9c2516; }
+    .star-empty { color: #d6cfc4; }
+    .prose-trill p { margin-bottom: 1.2em; line-height: 1.75; color: #1a1611; font-size: 16px; }
+    .prose-trill h2 { font-family: 'Cormorant Garamond', serif; font-size: 1.85rem; margin-top: 2.2em; margin-bottom: 0.7em; letter-spacing: -0.01em; }
+    .prose-trill h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.35rem; margin-top: 1.8em; margin-bottom: 0.5em; }
+    .prose-trill blockquote { border-left: 3px solid #9c2516; padding-left: 1.2em; margin: 1.5em 0; font-style: italic; color: #6b5e52; font-family: 'Cormorant Garamond', serif; font-size: 1.15rem; }
+    .pill { display: inline-block; font-size: 10px; text-transform: uppercase; letter-spacing: 0.12em; padding: 4px 10px; border-radius: 4px; font-weight: 600; }
+  </style>
+</head>
+<body class="min-h-screen">
+
+  <nav class="border-b border-subtle bg-[#f5efe7]/95 backdrop-blur sticky top-0 z-10">
+    <div class="max-w-6xl mx-auto px-8 py-4 flex items-center justify-between">
+      <div class="flex items-baseline gap-2">
+        <a href="index.html" class="font-serif text-2xl text-[#9c2516] tracking-tight">Trill</a>
+        <span class="text-[10px] uppercase tracking-widest text-[#6b5e52]">The Guide</span>
+      </div>
+      <div class="flex items-center gap-1 text-sm">
+        <a href="index.html" class="px-3 py-1.5 text-[#6b5e52] hover:text-[#1a1611]">Home</a>
+        <a href="stars.html" class="px-3 py-1.5 text-[#6b5e52] hover:text-[#1a1611]">Trill Stars</a>
+        <a href="guides.html" class="px-3 py-1.5 text-[#1a1611] font-semibold border-b-2 border-[#9c2516]">Trill Guide</a>
+        <a href="dimensions.html" class="px-3 py-1.5 text-[#6b5e52] hover:text-[#1a1611]">Dimensions</a>
+        <a href="feed-audit.html" class="px-3 py-1.5 text-[#6b5e52] hover:text-[#1a1611]">Audit</a>
+        <a href="account.html" class="px-3 py-1.5 text-[#6b5e52] hover:text-[#1a1611]">Account</a>
+        <div class="relative" data-trill-dropdown>
+          <button type="button" data-trill-dropdown-btn class="px-3 py-1.5 text-[#6b5e52] hover:text-[#1a1611] flex items-center gap-1">More <span class="text-[10px]">▼</span></button>
+          <div data-trill-dropdown-menu class="hidden absolute right-0 top-full mt-1 w-56 bg-[#f5efe7] border border-subtle rounded-lg shadow-lg z-20 py-1">
+            <a href="sentinel.html" class="block px-4 py-2 text-sm text-[#1a1611] hover:bg-[#ebe3d4]">Sentinel Path</a>
+            <a href="trillclaw.html" class="block px-4 py-2 text-sm text-[#1a1611] hover:bg-[#ebe3d4]">TrillClaw Quiz</a>
+            <a href="subscribe.html" class="block px-4 py-2 text-sm text-[#1a1611] hover:bg-[#ebe3d4]">Pricing</a>
+            <div class="border-t border-subtle my-1"></div>
+            <a href="methodology.html" class="block px-4 py-2 text-sm text-[#1a1611] hover:bg-[#ebe3d4]">Methodology</a>
+            <a href="about.html" class="block px-4 py-2 text-sm text-[#1a1611] hover:bg-[#ebe3d4]">About Trill</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>(function(){var w=document.currentScript.parentElement.querySelector('[data-trill-dropdown]');if(!w)return;var b=w.querySelector('[data-trill-dropdown-btn]'),m=w.querySelector('[data-trill-dropdown-menu]');b.addEventListener('click',function(e){e.stopPropagation();m.classList.toggle('hidden')});document.addEventListener('click',function(e){if(!w.contains(e.target))m.classList.add('hidden')});})();</script>
+  </nav>
+
+  <main class="max-w-3xl mx-auto px-8 py-12">
+
+    <div class="text-xs text-[#6b5e52] mb-6">
+      <a href="index.html" class="hover:text-[#9c2516]">Home</a>
+      <span class="mx-2">›</span>
+      <a href="guides.html" class="hover:text-[#9c2516]">The Trill Guide</a>
+      <span class="mx-2">›</span>
+      <span>Wallet / Voice Split</span>
+    </div>
+
+    <article>
+
+      <header class="mb-10 pb-8 border-b border-subtle">
+        <span class="pill bg-[#9c2516] text-[#f5efe7] mb-4">Insight · Weekly anchor</span>
+        <h1 class="font-serif text-5xl tracking-tight leading-tight mb-4 mt-3">The Wallet/Voice Split: 4 Three-Stars Quietly Long $EIGEN</h1>
+        <p class="font-serif italic text-xl text-[#6b5e52] leading-snug mb-5">Where the on-record narrative diverges from the on-chain position. A weekly look at the most distinguished mismatches surfaced by the Guide.</p>
+        <div class="flex items-center gap-4 text-xs text-[#6b5e52]">
+          <span>By <strong class="text-[#1a1611]">The Trill Guide Editorial</strong></span>
+          <span>·</span>
+          <span>8 min read</span>
+          <span>·</span>
+          <span>Published May 25, 2026</span>
+        </div>
+      </header>
+
+      <section class="prose-trill">
+
+        <p class="text-lg leading-relaxed text-[#1a1611]"><strong>Most KOL leaderboards rank by what people say. The Trill Guide also tracks where they bet.</strong> This week, four of the most distinguished voices in DeFi are publicly cautious or silent on $EIGEN — and quietly long it in their disclosed wallets.</p>
+
+        <p>The Wallet/Voice Split is a weekly anchor in our Pillar 1 coverage: a structural lens only Trill can run, because only Trill ties on-record voice (every call, every disclosure, every framework) to verifiable on-chain behaviour for the entire evaluated set.</p>
+
+        <p>This is not an accusation post. Distinguished creators are allowed to be cautious in public and constructive in private — sometimes that <em>is</em> the conviction. What it isn't is invisible. Here is the week's record.</p>
+
+        <h2>This week's four mismatches</h2>
+
+        <div class="not-prose border border-subtle rounded-lg overflow-hidden my-6">
+          <div class="p-5 border-b border-subtle">
+            <div class="flex items-center gap-4 mb-2">
+              <div class="w-10 h-10 rounded-full bg-[#9c2516] flex items-center justify-center text-[#f5efe7] font-serif font-bold">H</div>
+              <div class="flex-1">
+                <p class="font-serif text-xl tracking-tight">Hsaka <span class="font-mono text-[#9c2516] text-base ml-2">★★★</span></p>
+                <p class="text-[11px] text-[#6b5e52]">@hsakatrades · DeFi · Distinguished in Analytical Depth</p>
+              </div>
+            </div>
+            <p class="text-sm text-[#1a1611] leading-relaxed"><strong class="text-[#9c2516]">Voice:</strong> "Restaking risk concentration thesis" published 11 months ago. No mention of $EIGEN in last 30 days.<br/><strong class="text-[#9c2516]">Wallet:</strong> Accumulated 142,300 $EIGEN over 9 transactions between May 14–22. Cost basis $3.17.</p>
+          </div>
+          <div class="p-5 border-b border-subtle">
+            <div class="flex items-center gap-4 mb-2">
+              <div class="w-10 h-10 rounded-full bg-[#9c2516] flex items-center justify-center text-[#f5efe7] font-serif font-bold">V</div>
+              <div class="flex-1">
+                <p class="font-serif text-xl tracking-tight">Vance <span class="font-mono text-[#9c2516] text-base ml-2">★★★</span></p>
+                <p class="text-[11px] text-[#6b5e52]">@vance_research · DeFi · Distinguished in Educational Value</p>
+              </div>
+            </div>
+            <p class="text-sm text-[#1a1611] leading-relaxed"><strong class="text-[#9c2516]">Voice:</strong> Restaking primer notes "open question" on token accrual. Most recent post (3 days ago) raises governance concerns.<br/><strong class="text-[#9c2516]">Wallet:</strong> Bridge inflow of 88,000 $EIGEN equivalent on May 18. Has not sold.</p>
+          </div>
+          <div class="p-5 border-b border-subtle">
+            <div class="flex items-center gap-4 mb-2">
+              <div class="w-10 h-10 rounded-full bg-[#9c2516] flex items-center justify-center text-[#f5efe7] font-serif font-bold">T</div>
+              <div class="flex-1">
+                <p class="font-serif text-xl tracking-tight">Tetranode <span class="font-mono text-[#9c2516] text-base ml-2">★★★</span></p>
+                <p class="text-[11px] text-[#6b5e52]">@tetranode · Macro · Distinguished in Track Record</p>
+              </div>
+            </div>
+            <p class="text-sm text-[#1a1611] leading-relaxed"><strong class="text-[#9c2516]">Voice:</strong> Public stance is "watching" — no $EIGEN-specific call in last 45 days.<br/><strong class="text-[#9c2516]">Wallet:</strong> One of the top 80 holders by balance. Position predates current cycle but has grown by 22% in May.</p>
+          </div>
+          <div class="p-5">
+            <div class="flex items-center gap-4 mb-2">
+              <div class="w-10 h-10 rounded-full bg-[#9c2516] flex items-center justify-center text-[#f5efe7] font-serif font-bold">C</div>
+              <div class="flex-1">
+                <p class="font-serif text-xl tracking-tight">Cobie <span class="font-mono text-[#9c2516] text-base ml-2">★★★</span></p>
+                <p class="text-[11px] text-[#6b5e52]">@cobie · Macro · Distinguished in Intellectual Honesty</p>
+              </div>
+            </div>
+            <p class="text-sm text-[#1a1611] leading-relaxed"><strong class="text-[#9c2516]">Voice:</strong> "Restaking economics still don't pencil for me" — May 12 podcast clip.<br/><strong class="text-[#9c2516]">Wallet:</strong> Smaller position (~$240k) accumulated quietly via OTC desks per on-chain attribution. Disclosure pending.</p>
+          </div>
+        </div>
+
+        <h2>Why this matters</h2>
+
+        <p>The Trill Guide doesn't moralise about disclosure timing. Distinguished creators have earned the right to a longer reasoning cycle in public than the average reply-guy timeline. But for a follower trying to read the room, knowing that <strong>four of your most trusted voices have opened positions while the conversation stays cool</strong> is information you cannot get from a feed alone.</p>
+
+        <blockquote>"Public conviction lags private conviction by exactly the time it takes to feel sure. The Guide just shows you both clocks."</blockquote>
+
+        <h2>How to read the Wallet/Voice Split</h2>
+
+        <p>Three reading patterns we see repeatedly:</p>
+
+        <p><strong>Pattern A — Quiet accumulation.</strong> The creator is bullish but waiting to be sure before posting. Often the highest signal — distinguished voices don't accumulate carelessly.</p>
+
+        <p><strong>Pattern B — Disagreement with own thesis.</strong> The creator's public stance is cautious; the position contradicts it. Usually means the thesis is updating in real time.</p>
+
+        <p><strong>Pattern C — Hedge or counter-trade.</strong> The creator is publicly long the narrative but their wallet is the opposite. Rare among Three-Star voices; common in lower tiers.</p>
+
+        <p>This week's four mismatches all read as A or B. None look like C.</p>
+
+        <h2>What to do with this</h2>
+
+        <p>Not advice. Coverage. Here's what the Guide suggests as next steps for a curious follower:</p>
+
+        <p>① Open each creator's profile and check their <strong>Receipts</strong> tab — every prior $EIGEN-adjacent call is on record there. <br/>② Set an alert on $EIGEN-related dimension activity so you're notified if these positions <em>do</em> become public.<br/>③ Read the Guide's <a href="guide-coming-soon.html" class="text-[#9c2516] hover:underline">The 6 Voices Defining the Restaking Conversation</a> for context on why restaking is the dimension to watch.</p>
+
+      </section>
+
+      <section class="mt-14 pt-8 border-t border-subtle">
+        <h2 class="font-serif text-2xl tracking-tight mb-4">Coverage continues</h2>
+        <div class="grid grid-cols-2 gap-5">
+          <a href="guide-best-calls-may.html" class="card block border border-subtle rounded-lg p-5 bg-[#ebe3d4]">
+            <p class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold mb-1">Insight · Monthly</p>
+            <h3 class="font-serif text-lg tracking-tight mb-2">Best Calls of May 2026</h3>
+            <p class="text-sm text-[#6b5e52] leading-snug">Receipted, ranked, resolved. The month's most distinguished calls — with proof.</p>
+          </a>
+          <a href="guide-coming-soon.html" class="card block border border-subtle rounded-lg p-5 bg-[#ebe3d4]">
+            <p class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold mb-1">Guide · DeFi</p>
+            <h3 class="font-serif text-lg tracking-tight mb-2">The 6 Voices Defining the Restaking Conversation</h3>
+            <p class="text-sm text-[#6b5e52] leading-snug">If $EIGEN matters, these are the Three-Star voices to read first.</p>
+          </a>
+        </div>
+      </section>
+
+    </article>
+
+  </main>
+
+  <footer class="border-t border-subtle mt-16">
+    <div class="max-w-6xl mx-auto px-8 py-10 text-xs text-[#6b5e52]">
+      <div class="flex items-baseline justify-between mb-4">
+        <div class="flex items-baseline gap-2">
+          <a href="index.html" class="font-serif text-xl text-[#9c2516]">Trill</a>
+          <span class="text-[10px] uppercase tracking-widest">The Guide</span>
+        </div>
+        <div class="flex gap-5 text-xs">
+          <a href="methodology.html" class="hover:text-[#9c2516]">Methodology</a>
+          <a href="about.html" class="hover:text-[#9c2516]">About</a>
+          <a href="subscribe.html" class="hover:text-[#9c2516]">Subscribe</a>
+        </div>
+      </div>
+      <p class="italic">The Trill Guide is editorial coverage of evaluated creators. Nothing here is investment advice.</p>
+    </div>
+  </footer>
+
+</body>
+</html>

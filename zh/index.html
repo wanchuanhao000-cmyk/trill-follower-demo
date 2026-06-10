@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>The Trill Guide — Discover the most credible voices in crypto</title>
+  <title>Trill 指南 — 找到 crypto 里真正值得听的声音</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    body { font-family: 'Inter', system-ui, sans-serif; background: #f5efe7; color: #1a1611; }
-    .font-serif { font-family: 'Cormorant Garamond', Georgia, serif; }
+    body { font-family: 'Inter', 'PingFang SC', system-ui, sans-serif; background: #f5efe7; color: #1a1611; }
+    .font-serif { font-family: 'Cormorant Garamond', 'Noto Serif SC', Georgia, serif; }
     .border-subtle { border-color: #d6cfc4; }
     .coach { cursor: help; color: #9c2516; opacity: 0.6; font-weight: 600; font-size: 0.75rem; }
     .coach:hover { opacity: 1; }
@@ -21,9 +21,9 @@
 </head>
 <body class="min-h-screen">
 
-<!-- TIER-SWITCHER — demo-mode tier switcher (inject right after <body>) -->
+<!-- TIER-SWITCHER -->
 <style>
-  #tier-demo-bar { font-family: 'Inter', system-ui, sans-serif; background:#1a1611; color:#f5efe7; padding:10px 16px; font-size:12px; display:flex; align-items:center; justify-content:space-between; gap:12px; position:relative; z-index:50; border-bottom:1px solid #6b5e52; }
+  #tier-demo-bar { font-family: 'Inter', 'PingFang SC', system-ui, sans-serif; background:#1a1611; color:#f5efe7; padding:10px 16px; font-size:12px; display:flex; align-items:center; justify-content:space-between; gap:12px; position:relative; z-index:50; border-bottom:1px solid #6b5e52; }
   #tier-demo-bar .tdb-left { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
   #tier-demo-bar .tdb-tag { font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:#9c2516; font-weight:700; background:#3a1f1a; padding:3px 8px; border-radius:3px; }
   #tier-demo-bar .tdb-label { color:#d6cfc4; }
@@ -38,11 +38,6 @@
   #tier-demo-menu .tdm-desc { font-size:10px; color:#d6cfc4; margin-top:1px; }
   #tier-demo-menu .tdm-active { background:#3a1f1a; }
   #tier-demo-menu .tdm-active::after { content:"✓"; float:right; color:#9c2516; font-weight:700; }
-  /* Tier-locked content overlay */
-  .tier-locked-overlay { position:relative; }
-  .tier-locked-overlay::before { content:""; position:absolute; inset:0; background:linear-gradient(to bottom, rgba(245,239,231,0) 0%, rgba(245,239,231,0.95) 70%, rgba(245,239,231,1) 100%); z-index:5; pointer-events:none; border-radius:inherit; }
-  .tier-locked-cta { position:absolute; bottom:18px; left:50%; transform:translateX(-50%); z-index:6; background:#1a1611; color:#f5efe7; padding:10px 18px; border-radius:6px; font-size:12px; font-weight:600; display:inline-flex; align-items:center; gap:8px; box-shadow:0 4px 14px rgba(0,0,0,0.15); }
-  .tier-locked-cta a { color:#f5efe7; text-decoration:underline; }
   @media (max-width: 720px) {
     #tier-demo-bar .tdb-hint { display:none; }
     #tier-demo-menu { width:260px; }
@@ -51,76 +46,52 @@
 
 <div id="tier-demo-bar">
   <div class="tdb-left">
-    <span class="tdb-tag" data-i18n="demo">Demo</span>
-    <span class="tdb-label" data-i18n="viewing-as">Viewing as:</span>
+    <span class="tdb-tag">演示模式</span>
+    <span class="tdb-label">当前视角:</span>
     <div style="position:relative;">
       <button type="button" class="tdb-btn" id="tier-demo-btn">
-        <span id="tier-demo-current">👤 Anonymous</span>
+        <span id="tier-demo-current">👤 未登录</span>
         <span style="font-size:9px;">▼</span>
       </button>
       <div id="tier-demo-menu" class="hidden">
-        <button data-set-tier="anonymous"><div class="tdm-title">👤 <span data-i18n="t-anon">Anonymous</span></div><div class="tdm-desc" data-i18n="t-anon-desc">Not signed in · browsing freely</div></button>
-        <button data-set-tier="registered"><div class="tdm-title">🔓 <span data-i18n="t-reg">Registered</span> · <span data-i18n="free">Free</span></div><div class="tdm-desc" data-i18n="t-reg-desc">Email account · watchlist + basic alerts</div></button>
-        <button data-set-tier="connected"><div class="tdm-title">🔗 <span data-i18n="t-conn">Connected</span> · <span data-i18n="free">Free</span></div><div class="tdm-desc" data-i18n="t-conn-desc">X + wallet linked · Feed Audit unlocked</div></button>
-        <button data-set-tier="pro-lite"><div class="tdm-title">⭐ <span data-i18n="t-prolite">Pro Lite</span> · $9/mo</div><div class="tdm-desc" data-i18n="t-prolite-desc">Full call history · multi-KOL alerts · trends</div></button>
-        <button data-set-tier="pro"><div class="tdm-title">💎 <span data-i18n="t-pro">Pro</span> · $25/mo</div><div class="tdm-desc" data-i18n="t-pro-desc">Trill Indices · DD 报告 · holdings overlap</div></button>
+        <button data-set-tier="anonymous"><div class="tdm-title">👤 未登录</div><div class="tdm-desc">未登录 · 自由浏览</div></button>
+        <button data-set-tier="registered"><div class="tdm-title">🔓 已注册 · 免费</div><div class="tdm-desc">邮箱账号 · watchlist + 基础提醒</div></button>
+        <button data-set-tier="connected"><div class="tdm-title">🔗 已连接 · 免费</div><div class="tdm-desc">X + 钱包已连接 · Feed 审计解锁</div></button>
+        <button data-set-tier="pro-lite"><div class="tdm-title">⭐ Pro Lite · $9/月</div><div class="tdm-desc">完整 call 历史 · 多 KOL 提醒 · 趋势线</div></button>
+        <button data-set-tier="pro"><div class="tdm-title">💎 Pro · $25/月</div><div class="tdm-desc">Trill Indices · DD 报告 · 持仓 overlap</div></button>
       </div>
     </div>
   </div>
-  <div class="tdb-hint" data-i18n="hint">同一 URL — 不同 tier 看到不同内容</div>
+  <div class="tdb-hint">同一 URL — 不同 tier 看到不同内容</div>
 </div>
 
 <script>
 (function(){
   var TIERS = ['anonymous','registered','connected','pro-lite','pro'];
-  var LABELS = {
-    en: { anonymous:'👤 Anonymous', registered:'🔓 Registered', connected:'🔗 Connected', 'pro-lite':'⭐ Pro Lite', pro:'💎 Pro' },
-    zh: { anonymous:'👤 未登录', registered:'🔓 已注册', connected:'🔗 已连接', 'pro-lite':'⭐ Pro Lite', pro:'💎 Pro' }
-  };
-  var I18N = {
-    en: { 'demo':'Demo', 'viewing-as':'Viewing as:', 't-anon':'Anonymous', 't-reg':'Registered', 't-conn':'Connected', 't-prolite':'Pro Lite', 't-pro':'Pro', 'free':'Free', 't-anon-desc':'Not signed in · browsing freely', 't-reg-desc':'Email account · watchlist + basic alerts', 't-conn-desc':'X + wallet linked · Feed Audit unlocked', 't-prolite-desc':'Full call history · multi-KOL alerts · trends', 't-pro-desc':'Trill Indices · DD 报告 · holdings overlap', 'hint':'同一 URL — 不同 tier 看到不同内容' },
-    zh: { 'demo':'演示模式', 'viewing-as':'当前视角:', 't-anon':'未登录', 't-reg':'已注册', 't-conn':'已连接', 't-prolite':'Pro Lite', 't-pro':'Pro', 'free':'免费', 't-anon-desc':'未登录 · 自由浏览', 't-reg-desc':'邮箱账号 · watchlist + 基础提醒', 't-conn-desc':'X + 钱包已连接 · Feed Audit 解锁', 't-prolite-desc':'完整 call 历史 · 多 KOL 提醒 · 趋势线', 't-pro-desc':'Trill Indices · DD 报告 · 持仓 overlap', 'hint':'同一 URL — 不同 tier 看到不同内容' }
-  };
-  var lang = (document.documentElement.lang || 'en').toLowerCase().indexOf('zh') === 0 ? 'zh' : 'en';
-  var i18n = I18N[lang]; var labels = LABELS[lang];
-
-  // i18n labels
-  document.querySelectorAll('#tier-demo-bar [data-i18n], #tier-demo-menu [data-i18n]').forEach(function(el){
-    var k = el.getAttribute('data-i18n');
-    if (i18n[k] !== undefined) el.textContent = i18n[k];
-  });
-
+  var LABELS = { anonymous:'👤 未登录', registered:'🔓 已注册', connected:'🔗 已连接', 'pro-lite':'⭐ Pro Lite', pro:'💎 Pro' };
   function applyTier(tier) {
     if (TIERS.indexOf(tier) < 0) tier = 'anonymous';
     var cur = TIERS.indexOf(tier);
     document.documentElement.setAttribute('data-tier', tier);
-    document.getElementById('tier-demo-current').textContent = labels[tier];
-    // min-tier
+    document.getElementById('tier-demo-current').textContent = LABELS[tier];
     document.querySelectorAll('[data-min-tier]').forEach(function(el){
-      var v = el.getAttribute('data-min-tier');
-      var idx = TIERS.indexOf(v);
+      var idx = TIERS.indexOf(el.getAttribute('data-min-tier'));
       el.style.display = (cur >= idx) ? '' : 'none';
     });
-    // max-tier
     document.querySelectorAll('[data-max-tier]').forEach(function(el){
-      var v = el.getAttribute('data-max-tier');
-      var idx = TIERS.indexOf(v);
+      var idx = TIERS.indexOf(el.getAttribute('data-max-tier'));
       el.style.display = (cur <= idx) ? '' : 'none';
     });
-    // only-tier (comma list)
     document.querySelectorAll('[data-only-tier]').forEach(function(el){
       var allowed = el.getAttribute('data-only-tier').split(',').map(function(s){return s.trim();});
       el.style.display = (allowed.indexOf(tier) >= 0) ? '' : 'none';
     });
-    // mark active
     document.querySelectorAll('#tier-demo-menu button').forEach(function(b){
       b.classList.toggle('tdm-active', b.getAttribute('data-set-tier') === tier);
     });
   }
-
   var saved = (typeof localStorage !== 'undefined' && localStorage.getItem('trill-demo-tier')) || 'anonymous';
   applyTier(saved);
-
   var btn = document.getElementById('tier-demo-btn');
   var menu = document.getElementById('tier-demo-menu');
   btn.addEventListener('click', function(e){ e.stopPropagation(); menu.classList.toggle('hidden'); });
@@ -139,27 +110,36 @@
 
 
   <nav class="border-b border-subtle bg-[#f5efe7]/95 backdrop-blur sticky top-0 z-10">
-    <div class="max-w-6xl mx-auto px-8 py-4 flex items-center justify-between">
-      <div class="flex items-baseline gap-2">
+    <div class="max-w-6xl mx-auto px-8 py-3 flex items-center justify-between gap-6">
+      <div class="flex items-baseline gap-2 shrink-0">
         <a href="index.html" class="font-serif text-2xl text-[#9c2516] tracking-tight">Trill</a>
         <span class="text-[10px] uppercase tracking-widest text-[#6b5e52]">指南</span>
       </div>
-      <div class="flex items-center gap-1 text-sm">
-        <a href="index.html" class="px-3 py-1.5 text-[#1a1611] font-semibold border-b-2 border-[#9c2516]">首页</a>
-        <a href="stars.html" class="px-3 py-1.5 text-[#6b5e52] hover:text-[#1a1611]">Trill Stars</a>
-        <a href="guides.html" class="px-3 py-1.5 text-[#6b5e52] hover:text-[#1a1611]">Trill 指南</a>
-        <a href="dimensions.html" class="px-3 py-1.5 text-[#6b5e52] hover:text-[#1a1611]">维度</a>
-        <a href="feed-audit.html" class="px-3 py-1.5 text-[#6b5e52] hover:text-[#1a1611]">审计</a>
-        <a href="account.html" class="px-3 py-1.5 text-[#6b5e52] hover:text-[#1a1611]">账户</a>
+      <div class="flex items-center gap-1 text-sm shrink-0">
+        <a href="index.html" class="px-2.5 py-1.5 text-[#1a1611] font-semibold border-b-2 border-[#9c2516]">首页</a>
+        <a href="stars.html" class="px-2.5 py-1.5 text-[#6b5e52] hover:text-[#1a1611]">星级</a>
+        <a href="dimensions.html" class="px-2.5 py-1.5 text-[#6b5e52] hover:text-[#1a1611]">维度</a>
+        <a href="guides.html" class="px-2.5 py-1.5 text-[#6b5e52] hover:text-[#1a1611]">指南</a>
+        <a href="feed-audit.html" class="px-2.5 py-1.5 text-[#6b5e52] hover:text-[#1a1611]">推荐</a>
+        <a href="about.html" class="px-2.5 py-1.5 text-[#6b5e52] hover:text-[#1a1611]">关于</a>
+      </div>
+      <div class="flex items-center gap-2 flex-1 max-w-xs">
+        <div class="relative flex items-center bg-[#ebe3d4] rounded-md px-3 py-1.5 flex-1">
+          <svg class="w-4 h-4 text-[#6b5e52] mr-2 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          <input type="text" placeholder="搜索创作者、维度、叙事…" class="flex-1 bg-transparent text-xs text-[#1a1611] focus:outline-none placeholder-[#6b5e52] min-w-0">
+        </div>
+      </div>
+      <div class="flex items-center gap-2 shrink-0">
+        <a data-max-tier="anonymous" href="account.html" class="px-2.5 py-1.5 text-sm text-[#6b5e52] hover:text-[#1a1611]">登录</a>
+        <a data-max-tier="anonymous" href="account.html" class="px-3 py-1.5 bg-[#9c2516] text-[#f5efe7] text-xs font-semibold rounded">注册</a>
+        <a data-min-tier="registered" href="account.html" class="px-2.5 py-1.5 text-sm text-[#1a1611] font-semibold border border-[#1a1611] rounded">账户</a>
         <div class="relative" data-trill-dropdown>
-          <button type="button" data-trill-dropdown-btn class="px-3 py-1.5 text-[#6b5e52] hover:text-[#1a1611] flex items-center gap-1">更多 <span class="text-[10px]">▼</span></button>
+          <button type="button" data-trill-dropdown-btn class="px-2.5 py-1.5 text-[#6b5e52] hover:text-[#1a1611] flex items-center gap-1 text-sm">更多 <span class="text-[10px]">▼</span></button>
           <div data-trill-dropdown-menu class="hidden absolute right-0 top-full mt-1 w-56 bg-[#f5efe7] border border-subtle rounded-lg shadow-lg z-20 py-1">
-            <a href="sentinel.html" class="block px-4 py-2 text-sm text-[#1a1611] hover:bg-[#ebe3d4]">Sentinel 路径</a>
             <a href="trillclaw.html" class="block px-4 py-2 text-sm text-[#1a1611] hover:bg-[#ebe3d4]">TrillClaw 自评</a>
             <a href="subscribe.html" class="block px-4 py-2 text-sm text-[#1a1611] hover:bg-[#ebe3d4]">定价</a>
             <div class="border-t border-subtle my-1"></div>
             <a href="评估方法。html" class="block px-4 py-2 text-sm text-[#1a1611] hover:bg-[#ebe3d4]">评估方法</a>
-            <a href="about.html" class="block px-4 py-2 text-sm text-[#1a1611] hover:bg-[#ebe3d4]">关于 Trill</a>
           </div>
         </div>
       </div>
@@ -168,60 +148,221 @@
   </nav>
 
   <header class="bg-[#1a1611] text-[#f5efe7]">
-    <div class="max-w-6xl mx-auto px-8 py-16 grid grid-cols-2 gap-12 items-center">
-      <div>
-        <p class="text-[10px] uppercase tracking-widest text-[#d6cfc4] mb-4">Crypto KOL 的米其林指南</p>
-        <h1 class="font-serif text-5xl tracking-tight mb-4 leading-tight">由 Sentinel 策划的 crypto 最可信声音。</h1>
-        <p class="font-serif italic text-lg text-[#d6cfc4] mb-8">独立、匿名、定期复评的 crypto KOL 评估体系。</p>
-        <div class="relative bg-[#f5efe7] rounded-lg px-5 py-3 flex items-center gap-3 shadow-lg">
-          <svg class="w-5 h-5 text-[#6b5e52]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-          <input type="text" placeholder="搜索创作者、维度、或 narrative..." class="flex-1 bg-transparent text-[#1a1611] focus:outline-none text-sm placeholder-[#6b5e52]">
-          <button class="px-4 py-1.5 bg-[#9c2516] text-[#f5efe7] text-xs font-semibold rounded">搜索</button>
-        </div>
-        <p class="text-[11px] text-[#d6cfc4] mt-3 italic">e.g., <a href="creator-v2.html" class="underline">@hsakatrades</a> · <a href="dimensions.html" class="underline">Analytical Depth</a> · <a href="dimensions.html" class="underline">Most Accurate</a></p>
+    <div class="max-w-4xl mx-auto px-8 py-20 text-center">
+      <p class="text-[10px] uppercase tracking-widest text-[#d6cfc4] mb-5">Crypto KOL 的米其林指南</p>
+      <h1 class="font-serif text-6xl tracking-tight mb-5 leading-tight">在 crypto 里,<br>找到真正值得听的声音。</h1>
+      <p class="font-serif italic text-xl text-[#d6cfc4] mb-10">独立、匿名、定期复评的 crypto KOL 评估体系。</p>
+      <div class="relative bg-[#f5efe7] rounded-lg px-5 py-4 flex items-center gap-3 shadow-lg max-w-2xl mx-auto">
+        <svg class="w-5 h-5 text-[#6b5e52]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+        <input type="text" placeholder="搜索创作者、维度、叙事…" class="flex-1 bg-transparent text-[#1a1611] focus:outline-none text-sm placeholder-[#6b5e52]">
+        <button class="px-5 py-1.5 bg-[#9c2516] text-[#f5efe7] text-xs font-semibold rounded">搜索</button>
       </div>
-      <div class="flex items-center justify-center">
-        <div class="relative w-72 h-72 flex items-center justify-center">
-          <div class="absolute inset-0 rounded-full border-2 border-[#9c2516]/30"></div>
-          <div class="absolute inset-4 rounded-full border border-[#9c2516]/20"></div>
-          <div class="text-center">
-            <div class="font-mono text-[#9c2516] text-7xl tracking-tight">★★★</div>
-            <p class="font-serif italic text-sm text-[#d6cfc4] mt-3">三星 Trill 创作者</p>
-            <p class="font-mono text-2xl text-[#f5efe7] mt-1">42</p>
-            <p class="text-[10px] uppercase tracking-widest text-[#d6cfc4]">/ 共 1,247 位已评估</p>
-          </div>
-        </div>
-      </div>
+      <p class="text-[11px] text-[#d6cfc4] mt-3 italic">试试 <a href="creator-v2.html" class="underline">@hsakatrades</a> · <a href="dimensions.html" class="underline">分析深度</a> · <a href="dimensions.html" class="underline">最准确</a></p>
     </div>
   </header>
 
   <main class="max-w-6xl mx-auto px-8 py-16">
 
-    <!-- TIER-AWARE: Anonymous welcome -->
-    <section data-max-tier="anonymous" class="mb-10 bg-[#ebe3d4] border-l-4 border-[#6b5e52] rounded-r-lg px-6 py-4 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <span class="text-2xl">👋</span>
-        <div>
-          <p class="text-sm"><strong>初次访问 Trill 指南?</strong> 免费浏览 1,247 位已评估创作者。注册后可追踪、设置提醒、运行 Crypto Feed 审计。</p>
-          <p class="text-[11px] text-[#6b5e52] mt-0.5">免费账号 · 无需信用卡 · 30 秒</p>
+    <!-- 1. 全部记录在案 — viral stat block(所有视角都看见)-->
+    <section class="mb-20">
+      <div class="border-t-2 border-b-2 border-[#1a1611] py-14 text-center">
+        <p class="text-[10px] uppercase tracking-[0.3em] text-[#6b5e52] mb-5">全部记录在案</p>
+        <p class="font-mono text-7xl md:text-8xl text-[#1a1611] mb-2 font-bold" style="font-feature-settings:'tnum' 1;letter-spacing:-0.02em;">47,284</p>
+        <p class="font-serif italic text-xl text-[#6b5e52] mb-10">笔市场预测,被一笔笔记下</p>
+        <div class="grid grid-cols-3 max-w-3xl mx-auto border-t border-subtle pt-10 gap-8">
+          <div>
+            <p class="font-mono text-5xl text-[#1a1611] mb-2 font-bold" style="font-feature-settings:'tnum' 1;">31<span class="text-3xl text-[#6b5e52]">%</span></p>
+            <p class="text-xs uppercase tracking-widest text-[#6b5e52]">兑现</p>
+          </div>
+          <div>
+            <p class="font-mono text-5xl text-[#1a1611] mb-2 font-bold" style="font-feature-settings:'tnum' 1;">28<span class="text-3xl text-[#6b5e52]">%</span></p>
+            <p class="text-xs uppercase tracking-widest text-[#6b5e52]">落空</p>
+          </div>
+          <div>
+            <p class="font-mono text-5xl text-[#9c2516] mb-2 font-bold" style="font-feature-settings:'tnum' 1;">11<span class="text-3xl text-[#9c2516]/70">%</span></p>
+            <p class="text-xs uppercase tracking-widest text-[#9c2516]">静静删除</p>
+          </div>
+        </div>
+        <p class="font-serif text-2xl text-[#1a1611] mt-12 leading-snug max-w-2xl mx-auto">
+          Crypto 一直没有过计分板。
+          <span class="block italic text-[#9c2516] mt-1">直到现在。</span>
+        </p>
+
+        <!-- 计分板 · 视觉演绎 · 3 张示例 credibility 卡 -->
+        <div class="mt-14 pt-10 border-t border-subtle">
+          <p class="text-[10px] uppercase tracking-[0.3em] text-[#6b5e52] font-semibold mb-1 text-center">计分板长什么样</p>
+          <p class="font-serif italic text-sm text-[#6b5e52] text-center mb-8">每个创作者 · 每次 call · 每次主动认错 · 都 on record。</p>
+
+          <div class="grid grid-cols-3 gap-5 max-w-5xl mx-auto">
+
+            <!-- 示例卡 1 · Hsaka -->
+            <a href="creator-v2.html" class="card block bg-[#f5efe7] border border-subtle rounded-lg overflow-hidden text-left">
+              <div class="bg-[#1a1611] text-[#f5efe7] px-5 py-3 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <div class="w-9 h-9 rounded-full bg-[#9c2516] flex items-center justify-center text-sm font-serif font-bold">H</div>
+                  <div>
+                    <p class="font-serif text-base tracking-tight leading-tight">Hsaka</p>
+                    <p class="text-[10px] text-[#d6cfc4] font-mono">@hsakatrades</p>
+                  </div>
+                </div>
+                <p class="font-mono text-[#9c2516]">★★★</p>
+              </div>
+              <div class="p-5">
+                <div class="grid grid-cols-3 gap-3 text-center mb-4">
+                  <div>
+                    <p class="font-mono text-2xl text-[#1a1611] font-bold tabular-nums">22</p>
+                    <p class="text-[9px] uppercase tracking-widest text-[#6b5e52] mt-1">已结算 call</p>
+                  </div>
+                  <div>
+                    <p class="font-mono text-2xl text-emerald-700 font-bold tabular-nums">14</p>
+                    <p class="text-[9px] uppercase tracking-widest text-[#6b5e52] mt-1">兑现 · 64%</p>
+                  </div>
+                  <div>
+                    <p class="font-mono text-2xl text-[#9c2516] font-bold tabular-nums">3</p>
+                    <p class="text-[9px] uppercase tracking-widest text-[#6b5e52] mt-1">主动认错</p>
+                  </div>
+                </div>
+                <p class="font-serif italic text-[11px] text-[#6b5e52] text-center leading-snug pt-3 border-t border-subtle">"Restaking 风险集中 · 提前 11 个月"</p>
+              </div>
+            </a>
+
+            <!-- 示例卡 2 · Cobie -->
+            <a href="creator-v2.html" class="card block bg-[#f5efe7] border border-subtle rounded-lg overflow-hidden text-left">
+              <div class="bg-[#1a1611] text-[#f5efe7] px-5 py-3 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <div class="w-9 h-9 rounded-full bg-[#9c2516] flex items-center justify-center text-sm font-serif font-bold">C</div>
+                  <div>
+                    <p class="font-serif text-base tracking-tight leading-tight">Cobie</p>
+                    <p class="text-[10px] text-[#d6cfc4] font-mono">@cobie</p>
+                  </div>
+                </div>
+                <p class="font-mono text-[#9c2516]">★★★</p>
+              </div>
+              <div class="p-5">
+                <div class="grid grid-cols-3 gap-3 text-center mb-4">
+                  <div>
+                    <p class="font-mono text-2xl text-[#1a1611] font-bold tabular-nums">31</p>
+                    <p class="text-[9px] uppercase tracking-widest text-[#6b5e52] mt-1">已结算 call</p>
+                  </div>
+                  <div>
+                    <p class="font-mono text-2xl text-emerald-700 font-bold tabular-nums">19</p>
+                    <p class="text-[9px] uppercase tracking-widest text-[#6b5e52] mt-1">兑现 · 61%</p>
+                  </div>
+                  <div>
+                    <p class="font-mono text-2xl text-[#9c2516] font-bold tabular-nums">7</p>
+                    <p class="text-[9px] uppercase tracking-widest text-[#6b5e52] mt-1">主动认错</p>
+                  </div>
+                </div>
+                <p class="font-serif italic text-[11px] text-[#6b5e52] text-center leading-snug pt-3 border-t border-subtle">"流动性周期 · 不是 meme"</p>
+              </div>
+            </a>
+
+            <!-- 示例卡 3 · 喊得响但悄悄删的账号 · 对比 -->
+            <div class="card bg-[#f5efe7] border border-amber-700/30 rounded-lg overflow-hidden">
+              <div class="bg-amber-900 text-amber-50 px-5 py-3 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <div class="w-9 h-9 rounded-full bg-amber-700 flex items-center justify-center text-sm font-serif font-bold">?</div>
+                  <div>
+                    <p class="font-serif text-base tracking-tight leading-tight italic">[匿名大户]</p>
+                    <p class="text-[10px] text-amber-200 font-mono">姓名 gated · 登录解锁</p>
+                  </div>
+                </div>
+                <p class="font-mono text-amber-300 text-xs">★☆☆</p>
+              </div>
+              <div class="p-5">
+                <div class="grid grid-cols-3 gap-3 text-center mb-4">
+                  <div>
+                    <p class="font-mono text-2xl text-[#1a1611] font-bold tabular-nums">186</p>
+                    <p class="text-[9px] uppercase tracking-widest text-[#6b5e52] mt-1">已结算 call</p>
+                  </div>
+                  <div>
+                    <p class="font-mono text-2xl text-amber-700 font-bold tabular-nums">42</p>
+                    <p class="text-[9px] uppercase tracking-widest text-[#6b5e52] mt-1">兑现 · 23%</p>
+                  </div>
+                  <div>
+                    <p class="font-mono text-2xl text-[#9c2516] font-bold tabular-nums">38</p>
+                    <p class="text-[9px] uppercase tracking-widest text-[#6b5e52] mt-1">悄悄删</p>
+                  </div>
+                </div>
+                <p class="font-serif italic text-[11px] text-amber-700 text-center leading-snug pt-3 border-t border-amber-300">"80 万粉丝 · receipts 说的不一样"</p>
+              </div>
+            </div>
+
+          </div>
+
+          <p class="text-center text-[11px] text-[#6b5e52] italic mt-6">142 位星级 · 581 位推荐 · 其余的没进。<a href="stars.html" class="text-[#9c2516] underline">查看完整指南 →</a></p>
         </div>
       </div>
-      <a href="account.html" class="px-4 py-2 bg-[#1a1611] text-[#f5efe7] text-xs font-semibold rounded whitespace-nowrap">创建免费账号 →</a>
-    </section>
 
-    <!-- TIER-AWARE: Registered welcome -->
-    <section data-only-tier="registered,connected" class="mb-10 bg-[#fef4e8] border-l-4 border-[#9c2516] rounded-r-lg px-6 py-4 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <span class="text-2xl">👋</span>
-        <div>
-          <p class="text-sm"><strong>Vincent,欢迎回来。</strong> 你 watch 的 3 位创作者有更新 · 你追踪的 topic 里有 1 处 narrative 热度变化。</p>
-          <p class="text-[11px] text-[#6b5e52] mt-0.5">免费版 · 升级 Pro Lite 解锁多 KOL 实时提醒和完整 call 历史。</p>
+      <!-- 第二个 beat: Charles 在 Jackson 会上抛的 angle -->
+      <div class="mt-12 pt-12 border-t border-[#1a1611]/20 grid grid-cols-5 gap-10 items-center">
+        <div class="col-span-2 text-center">
+          <p class="font-mono text-7xl md:text-8xl text-[#9c2516] mb-2 font-bold" style="font-feature-settings:'tnum' 1;letter-spacing:-0.02em;">10 个里有 9 个</p>
+          <p class="font-serif italic text-base text-[#6b5e52] leading-snug">我们评估过的 crypto KOL 大户,验证兑现率 <strong class="text-[#1a1611] not-italic">不到 40%</strong>。</p>
+        </div>
+        <div class="col-span-3 pl-10 border-l border-[#1a1611]/20">
+          <p class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold mb-3">那剩下那 10% 是谁?</p>
+          <h3 class="font-serif text-3xl tracking-tight mb-4 leading-tight">另外 <span class="text-[#9c2516]">10%</span> — 我们把他们的名字都写了下来。</h3>
+          <a data-max-tier="anonymous" href="account.html" class="inline-block px-6 py-3 bg-[#1a1611] text-[#f5efe7] text-sm font-semibold rounded">注册查看名单 →</a>
+          <a data-min-tier="registered" href="stars.html" class="inline-block px-6 py-3 bg-[#1a1611] text-[#f5efe7] text-sm font-semibold rounded">看谁拿到三星 →</a>
+          <p data-max-tier="anonymous" class="text-[11px] text-[#6b5e52] italic mt-3">免费账号 · 无需信用卡 · 30 秒</p>
         </div>
       </div>
-      <a href="account.html" class="px-4 py-2 bg-[#9c2516] text-[#f5efe7] text-xs font-semibold rounded whitespace-nowrap">打开我的账户 →</a>
     </section>
 
-    <!-- TIER-AWARE: Pro Lite / Pro welcome with live activity -->
+    <!-- 2. 来自 Trill 指南 — Editorial 上移到第二屏 -->
+    <section class="mb-20">
+      <div class="flex items-baseline justify-between mb-6 pb-3 border-b border-subtle">
+        <div>
+          <h2 class="font-serif text-3xl tracking-tight">来自 Trill 指南</h2>
+          <p class="text-sm text-[#6b5e52] italic mt-1">策划列表与编辑报道 — 只有 Trill 能 surface 的信号,来自每位被评估创作者的可溯行为。</p>
+        </div>
+        <a href="guides.html" class="text-xs text-[#9c2516] hover:underline whitespace-nowrap ml-4">查看全部编辑内容 →</a>
+      </div>
+      <div class="grid grid-cols-3 gap-6">
+        <a href="guide-wallet-voice-split.html" class="card block bg-[#1a1611] text-[#f5efe7] rounded-lg p-6 h-56 flex flex-col justify-between">
+          <span class="inline-block self-start text-[10px] uppercase tracking-widest bg-[#9c2516] text-[#f5efe7] px-2 py-1 rounded">洞察 · 每周锚点</span>
+          <div>
+            <h3 class="font-serif text-2xl tracking-tight mb-2 leading-snug">钱包 vs 声量 · 4 位三星悄悄做多 $EIGEN</h3>
+            <p class="text-xs text-[#d6cfc4]">Trill 指南撰文 · 8 分钟阅读 · 2 天前</p>
+          </div>
+        </a>
+        <a href="guide-best-calls-may.html" class="card block bg-[#6b5e52] text-[#f5efe7] rounded-lg p-6 h-56 flex flex-col justify-between">
+          <span class="inline-block self-start text-[10px] uppercase tracking-widest bg-[#9c2516] text-[#f5efe7] px-2 py-1 rounded">洞察 · 每月</span>
+          <div>
+            <h3 class="font-serif text-2xl tracking-tight mb-2 leading-snug">2026 年 5 月最佳 calls — 有记录、被排名、已结算</h3>
+            <p class="text-xs text-[#d6cfc4]">Trill 指南撰文 · 12 分钟阅读 · 昨天</p>
+          </div>
+        </a>
+        <a href="guide-coming-soon.html" class="card block bg-[#9c2516] text-[#f5efe7] rounded-lg p-6 h-56 flex flex-col justify-between">
+          <span class="inline-block self-start text-[10px] uppercase tracking-widest bg-[#1a1611] text-[#f5efe7] px-2 py-1 rounded">指南 · DeFi</span>
+          <div>
+            <h3 class="font-serif text-2xl tracking-tight mb-2 leading-snug">定义 Restaking 话题的 6 位声音</h3>
+            <p class="text-xs text-[#d6cfc4]">Trill 指南撰文 · 8 分钟阅读</p>
+          </div>
+        </a>
+        <a href="guide-coming-soon.html" class="card block border border-subtle rounded-lg p-6 bg-[#ebe3d4]">
+          <span class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold">洞察 · 每周</span>
+          <h3 class="font-serif text-xl tracking-tight my-2">本周榜单变动 · 5 月 27 日那周</h3>
+          <p class="text-sm text-[#1a1611] leading-snug mb-3">"这周最大的 tier 变化 — 谁升、谁降、原因。3 位升到三星,1 位被降。"</p>
+          <p class="text-[11px] text-[#6b5e52]">每周更新</p>
+        </a>
+        <a href="guide-coming-soon.html" class="card block border border-subtle rounded-lg p-6 bg-[#ebe3d4]">
+          <span class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold">指南 · 被埋没的</span>
+          <h3 class="font-serif text-xl tracking-tight my-2">未被发现的权威</h3>
+          <p class="text-sm text-[#1a1611] leading-snug mb-3">"12 位粉丝少、Trill 评分高的声音 — 做着杰出的工作,但还没有相应的观众。"</p>
+          <p class="text-[11px] text-[#6b5e52]">Trill 指南撰文 · 6 分钟阅读</p>
+        </a>
+        <a href="guide-coming-soon.html" class="card block border border-subtle rounded-lg p-6 bg-[#ebe3d4]">
+          <span class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold">洞察 · 翻盘追踪</span>
+          <h3 class="font-serif text-xl tracking-tight my-2">@tetranode 的安静平反</h3>
+          <p class="text-sm text-[#1a1611] leading-snug mb-3">"1 月被群嘲的 $SOL → $200 call。4 月被结算为正确。完整时间线。"</p>
+          <p class="text-[11px] text-[#6b5e52]">Trill 指南撰文 · 5 分钟阅读</p>
+        </a>
+      </div>
+    </section>
+
+    <!-- TIER-AWARE: Pro Lite / Pro 欢迎 dashboard -->
     <section data-min-tier="pro-lite" class="mb-10 bg-[#1a1611] text-[#f5efe7] rounded-lg p-6">
       <div class="flex items-start justify-between gap-6">
         <div class="flex items-start gap-4 flex-1">
@@ -231,15 +372,15 @@
             <div class="grid grid-cols-3 gap-4 mt-3">
               <div class="border-l-2 border-[#9c2516] pl-3">
                 <p class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold mb-1">多 KOL 提醒</p>
-                <p class="text-xs">@hsakatrades + @vance_research posted on restaking in last 4h · <a href="creator-v2.html" class="underline">view both</a></p>
+                <p class="text-xs">@hsakatrades + @vance_research 过去 4h 都发了 restaking 相关 · <a href="creator-v2.html" class="underline">查看</a></p>
               </div>
               <div class="border-l-2 border-[#9c2516] pl-3">
                 <p class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold mb-1">趋势变化</p>
-                <p class="text-xs">Analytical Depth · 30-day trendline turning up on @cobie (+0.08) · <a href="dimension-analytical-depth.html" class="underline">see trend</a></p>
+                <p class="text-xs">分析深度 · @cobie 30 天趋势线上扬 (+0.08) · <a href="dimension-analytical-depth.html" class="underline">看趋势</a></p>
               </div>
               <div class="border-l-2 border-[#9c2516] pl-3">
                 <p class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold mb-1">Call 历史更新</p>
-                <p class="text-xs">3 of your watched creators resolved a call · <a href="account.html" class="underline">view receipts</a></p>
+                <p class="text-xs">3 位你 watch 的创作者刚结算了 call · <a href="account.html" class="underline">查看 receipts</a></p>
               </div>
             </div>
           </div>
@@ -247,33 +388,33 @@
       </div>
     </section>
 
-    <!-- TIER-AWARE: Audit CTA — Anonymous / Registered (X not connected) -->
+    <!-- TIER-AWARE: 审计 CTA — 未连接 X -->
     <section data-max-tier="registered" class="mb-16">
       <div class="bg-[#1a1611] text-[#f5efe7] rounded-lg p-10 grid grid-cols-2 gap-10 items-center">
         <div>
           <p class="text-[10px] uppercase tracking-widest text-[#d6cfc4] mb-3">个性化审计</p>
           <h2 class="font-serif text-3xl tracking-tight mb-4 leading-snug">连接 X 账号。我们告诉你应该 follow 谁。</h2>
-          <p class="text-sm text-[#d6cfc4] mb-6 leading-relaxed">Trill scans your crypto follow graph, surfaces how it stacks up against the Guide, and recommends specific voices to add — and to drop — based on the dimensions and goals you care about.</p>
+          <p class="text-sm text-[#d6cfc4] mb-6 leading-relaxed">Trill 扫描你的 crypto follow 图谱、对比指南、根据你关心的维度推荐应该加哪些声音、可以去掉哪些。</p>
           <a href="feed-audit.html" class="inline-block px-6 py-3 bg-[#9c2516] text-[#f5efe7] text-sm font-semibold rounded">运行我的 Crypto Feed 审计 →</a>
-          <p class="text-[11px] text-[#d6cfc4] italic mt-3">只读 · 我们不会代你发推 · 30 秒</p>
+          <p class="text-[11px] text-[#d6cfc4] italic mt-3">只读 · 不会代你发推 · 30 秒</p>
         </div>
         <div class="text-center">
           <div class="font-serif text-6xl mb-3">"</div>
-          <p class="font-serif italic text-xl text-[#f5efe7] leading-snug max-w-xs mx-auto">你 follow 的 23 位 crypto KOL 中有 12 位在 Guide 里。<br>这里还有 5 位值得 follow。</p>
+          <p class="font-serif italic text-xl text-[#f5efe7] leading-snug max-w-xs mx-auto">你 follow 的 23 位 crypto KOL 里有 12 位在指南。<br>这里还有 5 位值得加上。</p>
           <p class="text-[10px] uppercase tracking-widest text-[#d6cfc4] mt-4">审计结果示例</p>
         </div>
       </div>
     </section>
 
-    <!-- TIER-AWARE: Audit CTA — Connected (X linked) -->
+    <!-- TIER-AWARE: 审计 CTA — 已连接 X -->
     <section data-min-tier="connected" class="mb-16">
       <div class="bg-[#1a1611] text-[#f5efe7] rounded-lg p-10 grid grid-cols-2 gap-10 items-center">
         <div>
           <p class="text-[10px] uppercase tracking-widest text-[#9c2516] mb-3 font-semibold">你最近一次审计 · 6 天前</p>
-          <h2 class="font-serif text-3xl tracking-tight mb-4 leading-snug">你 follow 的 23 位 crypto KOL 中有 12 位在 Guide 里。还有 5 位值得加入。</h2>
+          <h2 class="font-serif text-3xl tracking-tight mb-4 leading-snug">你 follow 的 23 位 crypto KOL 里有 12 位在指南。还有 5 位值得加上。</h2>
           <div class="grid grid-cols-3 gap-3 mb-5">
             <div class="bg-[#3a1f1a] rounded p-3"><p class="text-[10px] text-[#d6cfc4]">覆盖率</p><p class="font-serif text-2xl">52%</p></div>
-            <div class="bg-[#3a1f1a] rounded p-3"><p class="text-[10px] text-[#d6cfc4]">平均 Star</p><p class="font-serif text-2xl">★★</p></div>
+            <div class="bg-[#3a1f1a] rounded p-3"><p class="text-[10px] text-[#d6cfc4]">平均星级</p><p class="font-serif text-2xl">★★</p></div>
             <div class="bg-[#3a1f1a] rounded p-3"><p class="text-[10px] text-[#d6cfc4]">待加入</p><p class="font-serif text-2xl text-[#9c2516]">5</p></div>
           </div>
           <a href="feed-audit.html" class="inline-block px-6 py-3 bg-[#9c2516] text-[#f5efe7] text-sm font-semibold rounded">打开我的审计 →</a>
@@ -287,7 +428,7 @@
           </div>
           <div class="bg-[#3a1f1a] rounded p-3 flex items-center gap-3">
             <div class="w-8 h-8 rounded-full bg-[#9c2516] flex items-center justify-center text-xs font-serif font-bold">V</div>
-            <div class="flex-1"><p class="text-xs">@vance_research · ★★★ · DeFi · Educational Value</p></div>
+            <div class="flex-1"><p class="text-xs">@vance_research · ★★★ · DeFi · 教育价值</p></div>
           </div>
           <div class="bg-[#3a1f1a] rounded p-3 flex items-center gap-3 opacity-60">
             <div class="text-xs text-[#d6cfc4]">+ 还有 3 位</div>
@@ -296,137 +437,133 @@
       </div>
     </section>
 
-    <section class="mb-16">
-      <div class="flex items-baseline justify-between mb-6 pb-3 border-b border-subtle">
-        <h2 class="font-serif text-3xl tracking-tight">New 三星 Trill 创作者</h2>
-        <a href="stars.html" class="text-xs text-[#9c2516] hover:underline">查看全部 42 位三星创作者 →</a>
+    <!-- 5. 最新晋级三星 -->
+    <section class="mb-20">
+      <div class="flex items-baseline justify-between mb-3 pb-3 border-b border-subtle">
+        <div>
+          <h2 class="font-serif text-3xl tracking-tight">最新晋级三星</h2>
+          <p class="text-sm text-[#6b5e52] italic mt-1">1,247 位被评估的创作者中,目前只有 <strong class="text-[#1a1611] not-italic">42 位</strong>持有三星。本季度刚有两位晋级。</p>
+        </div>
+        <a href="stars.html" class="text-xs text-[#9c2516] hover:underline whitespace-nowrap ml-4">查看全部 42 位 →</a>
       </div>
-      <div class="grid grid-cols-3 gap-6">
+      <div class="grid grid-cols-3 gap-6 mt-6">
         <a href="creator-v2.html" class="card block border border-subtle bg-[#ebe3d4] rounded-lg p-6">
           <div class="flex items-start justify-between mb-4">
             <div class="w-16 h-16 rounded-full bg-[#9c2516] flex items-center justify-center text-2xl font-serif font-bold text-[#f5efe7]">C</div>
-            <span class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold">2026 Q2 新加入</span>
+            <span class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold">新 · 2026 Q2</span>
           </div>
           <div class="font-mono text-[#9c2516] mb-2">★★★</div>
           <h3 class="font-serif text-2xl tracking-tight mb-1">Cobie</h3>
-          <p class="text-xs text-[#6b5e52] mb-3">@cobie · Macro · Thesis-driven</p>
-          <p class="font-serif italic text-sm text-[#1a1611] leading-snug">"A macro thinker for those who read crypto in the language of liquidity cycles, not memes."</p>
+          <p class="text-xs text-[#6b5e52] mb-3">@cobie · 宏观 · 论点驱动</p>
+          <p class="font-serif italic text-sm text-[#1a1611] leading-snug">"为那些把 crypto 读成流动性周期、不是 meme 的人写作的宏观思考者。"</p>
         </a>
         <a href="creator-v2.html" class="card block border border-subtle bg-[#ebe3d4] rounded-lg p-6">
           <div class="flex items-start justify-between mb-4">
             <div class="w-16 h-16 rounded-full bg-[#9c2516] flex items-center justify-center text-2xl font-serif font-bold text-[#f5efe7]">V</div>
-            <span class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold">2026 Q2 新加入</span>
+            <span class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold">新 · 2026 Q2</span>
           </div>
           <div class="font-mono text-[#9c2516] mb-2">★★★</div>
           <h3 class="font-serif text-2xl tracking-tight mb-1">Vance</h3>
-          <p class="text-xs text-[#6b5e52] mb-3">@vance_research · DeFi · Researcher</p>
-          <p class="font-serif italic text-sm text-[#1a1611] leading-snug">"The patient teacher of DeFi mechanics. Explains complex protocols without condescension."</p>
+          <p class="text-xs text-[#6b5e52] mb-3">@vance_research · DeFi · 研究员</p>
+          <p class="font-serif italic text-sm text-[#1a1611] leading-snug">"DeFi 机制最有耐心的老师。能不带居高临下地讲清楚复杂协议。"</p>
         </a>
         <a href="creator-v2.html" class="card block border border-subtle bg-[#ebe3d4] rounded-lg p-6">
           <div class="flex items-start justify-between mb-4">
             <div class="w-16 h-16 rounded-full bg-[#9c2516] flex items-center justify-center text-2xl font-serif font-bold text-[#f5efe7]">T</div>
-            <span class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold">2026 Q2 升级</span>
+            <span class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold">升级 · 2026 Q2</span>
           </div>
           <div class="font-mono text-[#9c2516] mb-2">★★★</div>
           <h3 class="font-serif text-2xl tracking-tight mb-1">Tetranode</h3>
-          <p class="text-xs text-[#6b5e52] mb-3">@tetranode · Onchain · Analyst</p>
-          <p class="font-serif italic text-sm text-[#1a1611] leading-snug">"Reads wallets like literature. Catches flows the market misses."</p>
+          <p class="text-xs text-[#6b5e52] mb-3">@tetranode · 链上 · 分析师</p>
+          <p class="font-serif italic text-sm text-[#1a1611] leading-snug">"读钱包像读文学。能抓到市场漏掉的资金流。"</p>
         </a>
       </div>
     </section>
 
-    <section class="mb-16">
-      <div class="flex items-baseline justify-between mb-6 pb-3 border-b border-subtle">
-        <h2 class="font-serif text-3xl tracking-tight">新加入的创作者</h2>
-        <a href="stars.html" class="text-xs text-[#9c2516] hover:underline">查看全部新加入 →</a>
+    <!-- 6. 刚被认可 — biopic 大图卡 -->
+    <section class="mb-20">
+      <div class="flex items-baseline justify-between mb-3 pb-3 border-b border-subtle">
+        <div>
+          <h2 class="font-serif text-3xl tracking-tight">刚被认可</h2>
+          <p class="text-sm text-[#6b5e52] italic mt-1">Sentinel 本周期刚写入指南的创作者 — 记录新鲜、受众还小,赶在整个 crypto 圈意识到之前。</p>
+        </div>
+        <a href="stars.html" class="text-xs text-[#9c2516] hover:underline whitespace-nowrap ml-4">查看全部新加入 →</a>
       </div>
-      <div class="grid grid-cols-3 gap-6">
+      <div class="grid grid-cols-3 gap-6 mt-6">
         <a href="creator-v2.html" class="card block border border-subtle rounded-lg p-6 bg-[#f5efe7]">
-          <div class="flex items-start justify-between mb-4">
-            <div class="w-16 h-16 rounded-full bg-[#9c2516] flex items-center justify-center text-2xl font-serif font-bold text-[#f5efe7]">H</div>
-            <span class="inline-flex items-center px-2 py-0.5 bg-[#9c2516]/10 text-[#9c2516] text-[10px] uppercase tracking-widest font-semibold rounded">新加入</span>
+          <div class="relative h-32 -mx-6 -mt-6 mb-5 rounded-t-lg overflow-hidden bg-gradient-to-br from-[#9c2516] via-[#7a1d11] to-[#1a1611]">
+            <div class="absolute inset-0 flex items-center justify-center">
+              <div class="w-20 h-20 rounded-full bg-[#f5efe7] flex items-center justify-center text-3xl font-serif font-bold text-[#9c2516] shadow-lg">H</div>
+            </div>
+            <span class="absolute top-3 right-3 inline-flex items-center px-2 py-0.5 bg-[#f5efe7]/95 text-[#9c2516] text-[10px] uppercase tracking-widest font-semibold rounded">刚被认可</span>
           </div>
           <div class="font-mono mb-2"><span class="star-filled">★★</span><span class="star-empty">★</span></div>
           <h3 class="font-serif text-2xl tracking-tight mb-1">Hsaka</h3>
-          <p class="text-xs text-[#6b5e52] mb-3">@hsakatrades · DeFi · Thesis-driven</p>
-          <p class="font-serif italic text-sm text-[#1a1611] leading-snug">"Trades the macro, hates the cope. The counter-narrative voice DeFi has lacked."</p>
+          <p class="text-xs text-[#6b5e52] mb-3">@hsakatrades · DeFi · 论点驱动</p>
+          <p class="font-serif italic text-sm text-[#1a1611] leading-snug">"做宏观,讨厌 cope。DeFi 一直缺的反叙事声音。"</p>
         </a>
         <a href="creator-v2.html" class="card block border border-subtle rounded-lg p-6 bg-[#f5efe7]">
-          <div class="flex items-start justify-between mb-4">
-            <div class="w-16 h-16 rounded-full bg-[#9c2516] flex items-center justify-center text-2xl font-serif font-bold text-[#f5efe7]">R</div>
-            <span class="inline-flex items-center px-2 py-0.5 bg-[#9c2516]/10 text-[#9c2516] text-[10px] uppercase tracking-widest font-semibold rounded">新加入</span>
+          <div class="relative h-32 -mx-6 -mt-6 mb-5 rounded-t-lg overflow-hidden bg-gradient-to-br from-[#1a1611] via-[#3a1f1a] to-[#6b5e52]">
+            <div class="absolute inset-0 flex items-center justify-center">
+              <div class="w-20 h-20 rounded-full bg-[#f5efe7] flex items-center justify-center text-3xl font-serif font-bold text-[#9c2516] shadow-lg">R</div>
+            </div>
+            <span class="absolute top-3 right-3 inline-flex items-center px-2 py-0.5 bg-[#f5efe7]/95 text-[#9c2516] text-[10px] uppercase tracking-widest font-semibold rounded">刚被认可</span>
           </div>
           <div class="font-mono mb-2"><span class="star-filled">★★</span><span class="star-empty">★</span></div>
           <h3 class="font-serif text-2xl tracking-tight mb-1">Ren</h3>
-          <p class="text-xs text-[#6b5e52] mb-3">@ren · DeFi · Contrarian</p>
-          <p class="font-serif italic text-sm text-[#1a1611] leading-snug">"The contrarian's contrarian — willing to publicly walk back a wrong call before anyone notices."</p>
+          <p class="text-xs text-[#6b5e52] mb-3">@ren · DeFi · 反叙事</p>
+          <p class="font-serif italic text-sm text-[#1a1611] leading-snug">"反叙事派里的反叙事派 — 在别人发现之前先公开承认自己错了。"</p>
         </a>
         <a href="creator-v2.html" class="card block border border-subtle rounded-lg p-6 bg-[#f5efe7]">
-          <div class="flex items-start justify-between mb-4">
-            <div class="w-16 h-16 rounded-full bg-[#9c2516] flex items-center justify-center text-2xl font-serif font-bold text-[#f5efe7]">N</div>
-            <span class="inline-flex items-center px-2 py-0.5 bg-[#9c2516]/10 text-[#9c2516] text-[10px] uppercase tracking-widest font-semibold rounded">新加入</span>
+          <div class="relative h-32 -mx-6 -mt-6 mb-5 rounded-t-lg overflow-hidden bg-gradient-to-br from-[#6b5e52] via-[#9c2516] to-[#3a1f1a]">
+            <div class="absolute inset-0 flex items-center justify-center">
+              <div class="w-20 h-20 rounded-full bg-[#f5efe7] flex items-center justify-center text-3xl font-serif font-bold text-[#9c2516] shadow-lg">N</div>
+            </div>
+            <span class="absolute top-3 right-3 inline-flex items-center px-2 py-0.5 bg-[#f5efe7]/95 text-[#9c2516] text-[10px] uppercase tracking-widest font-semibold rounded">刚被认可</span>
           </div>
           <div class="font-mono mb-2"><span class="star-filled">★</span><span class="star-empty">★★</span></div>
           <h3 class="font-serif text-2xl tracking-tight mb-1">Noah</h3>
-          <p class="text-xs text-[#6b5e52] mb-3">@noah_kol · AI · Educator</p>
-          <p class="font-serif italic text-sm text-[#1a1611] leading-snug">"A pedagogically gifted writer on AI agent economics — underrated relative to the depth."</p>
+          <p class="text-xs text-[#6b5e52] mb-3">@noah_kol · AI · 教育者</p>
+          <p class="font-serif italic text-sm text-[#1a1611] leading-snug">"写 AI agent 经济学,有教学天赋 — 相对于深度被严重低估。"</p>
         </a>
       </div>
     </section>
 
-    <section class="mb-16">
-      <div class="flex items-baseline justify-between mb-6 pb-3 border-b border-subtle">
-        <h2 class="font-serif text-3xl tracking-tight">各维度顶尖创作者</h2>
-        <a href="dimensions.html" class="text-xs text-[#9c2516] hover:underline">浏览全部 6 个维度 →</a>
+    <!-- 7. 以此见长 — 只 3 维 -->
+    <section class="mb-20">
+      <div class="flex items-baseline justify-between mb-3 pb-3 border-b border-subtle">
+        <div>
+          <h2 class="font-serif text-3xl tracking-tight">以此见长</h2>
+          <p class="text-sm text-[#6b5e52] italic mt-1">星级之外,每位创作者还在 6 个维度上接受评估。其中三个比其他更重 — 这些是把这三件事做得最好的人。</p>
+        </div>
+        <a href="dimensions.html" class="text-xs text-[#9c2516] hover:underline whitespace-nowrap ml-4">查看全部 6 个维度 →</a>
       </div>
-      <p class="text-sm text-[#6b5e52] italic mb-6">每位 Trill 创作者都在 6 个维度上被评估。找到你真正需要的那种声音。</p>
-      <div class="grid grid-cols-3 gap-5">
-        <a href="dimensions.html#analytical-depth" class="card block border border-subtle rounded-lg p-5 bg-[#fef4e8]">
-          <div class="text-xl mb-2">🎯</div>
-          <div class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold mb-1">Analytical Depth</div>
-          <h3 class="font-serif text-xl tracking-tight mb-2">Hsaka</h3>
-          <p class="text-xs text-[#6b5e52] mb-3">Distinguished · "Trades the macro, hates the cope"</p>
-          <p class="text-[11px] text-[#9c2516]">12 位杰出声音 →</p>
+      <div class="grid grid-cols-3 gap-6 mt-6">
+        <a href="dimension-accuracy-discipline.html" class="card block border border-[#9c2516] bg-[#fef4e8] rounded-lg p-8">
+          <p class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold mb-3">15 位杰出</p>
+          <h3 class="font-serif text-3xl tracking-tight mb-3">准确性纪律</h3>
+          <p class="text-xs text-[#6b5e52] mb-4">平均验证兑现率 · <strong class="text-[#1a1611]">31%</strong></p>
+          <p class="text-sm text-[#1a1611] leading-snug italic mb-4">"大部分 call 不会兑现。这 15 位的 call 真的兑现了。"</p>
+          <p class="text-[11px] text-[#9c2516] font-semibold">榜首: @vance_research · 73% 兑现率 →</p>
         </a>
-        <a href="dimensions.html#intellectual-honesty" class="card block border border-subtle rounded-lg p-5 bg-[#fef4e8]">
-          <div class="text-xl mb-2">🪞</div>
-          <div class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold mb-1">Intellectual Honesty</div>
-          <h3 class="font-serif text-xl tracking-tight mb-2">Cobie</h3>
-          <p class="text-xs text-[#6b5e52] mb-3">Distinguished · Publicly retracts wrong calls</p>
-          <p class="text-[11px] text-[#9c2516]">8 位杰出声音 →</p>
+        <a href="dimension-analytical-depth.html" class="card block border border-[#9c2516] bg-[#fef4e8] rounded-lg p-8">
+          <p class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold mb-3">12 位杰出</p>
+          <h3 class="font-serif text-3xl tracking-tight mb-3">分析深度</h3>
+          <p class="text-xs text-[#6b5e52] mb-4">1,247 位评估对象中 — 只有 <strong class="text-[#1a1611]">12 位</strong></p>
+          <p class="text-sm text-[#1a1611] leading-snug italic mb-4">"展现了别处看不到的原创思考。大多数分析都是回收的。这 12 位不是。"</p>
+          <p class="text-[11px] text-[#9c2516] font-semibold">榜首: @hsakatrades · 宏观论点 →</p>
         </a>
-        <a href="dimensions.html#accuracy-discipline" class="card block border border-subtle rounded-lg p-5 bg-[#fef4e8]">
-          <div class="text-xl mb-2">📊</div>
-          <div class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold mb-1">Accuracy Discipline</div>
-          <h3 class="font-serif text-xl tracking-tight mb-2">Vance</h3>
-          <p class="text-xs text-[#6b5e52] mb-3">Distinguished · 73% resolved-call accuracy</p>
-          <p class="text-[11px] text-[#9c2516]">15 位杰出声音 →</p>
-        </a>
-        <a href="dimensions.html#educational-value" class="card block border border-subtle rounded-lg p-5 bg-[#fef4e8]">
-          <div class="text-xl mb-2">📚</div>
-          <div class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold mb-1">Educational Value</div>
-          <h3 class="font-serif text-xl tracking-tight mb-2">CryptoCred</h3>
-          <p class="text-xs text-[#6b5e52] mb-3">Distinguished · "The teacher newcomers should bookmark"</p>
-          <p class="text-[11px] text-[#9c2516]">11 位杰出声音 →</p>
-        </a>
-        <a href="dimensions.html#community-care" class="card block border border-subtle rounded-lg p-5 bg-[#fef4e8]">
-          <div class="text-xl mb-2">🛡</div>
-          <div class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold mb-1">社区 Care</div>
-          <h3 class="font-serif text-xl tracking-tight mb-2">Ren</h3>
-          <p class="text-xs text-[#6b5e52] mb-3">Distinguished · No shilling, no exit-pumping</p>
-          <p class="text-[11px] text-[#9c2516]">9 位杰出声音 →</p>
-        </a>
-        <a href="dimensions.html#entertainment-engagement" class="card block border border-subtle rounded-lg p-5 bg-[#fef4e8]">
-          <div class="text-xl mb-2">🎭</div>
-          <div class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold mb-1">Entertainment & Engagement</div>
-          <h3 class="font-serif text-xl tracking-tight mb-2">ledger_status</h3>
-          <p class="text-xs text-[#6b5e52] mb-3">Distinguished · "Substance with a sense of humour"</p>
-          <p class="text-[11px] text-[#9c2516]">14 位杰出声音 →</p>
+        <a href="dimension-educational-value.html" class="card block border border-[#9c2516] bg-[#fef4e8] rounded-lg p-8">
+          <p class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold mb-3">11 位杰出</p>
+          <h3 class="font-serif text-3xl tracking-tight mb-3">教育价值</h3>
+          <p class="text-xs text-[#6b5e52] mb-4">读者理解率平均 <strong class="text-[#1a1611]">88%</strong></p>
+          <p class="text-sm text-[#1a1611] leading-snug italic mb-4">"crypto 新人应该收藏的老师。有耐心不带优越感的解释。"</p>
+          <p class="text-[11px] text-[#9c2516] font-semibold">榜首: CryptoCred · DeFi 机制 →</p>
         </a>
       </div>
     </section>
 
-    <!-- TIER-AWARE: Pro Lite — your tracked dimension trends -->
+    <!-- TIER-AWARE: Pro Lite — 维度趋势 -->
     <section data-only-tier="pro-lite" class="mb-16">
       <div class="flex items-baseline justify-between mb-6 pb-3 border-b border-[#9c2516]/30">
         <div>
@@ -439,15 +576,15 @@
       <div class="grid grid-cols-3 gap-6">
         <div class="border border-subtle rounded-lg p-5 bg-[#ebe3d4]/40">
           <div class="flex items-baseline justify-between mb-2">
-            <p class="font-serif text-lg">📊 Accuracy Discipline</p>
+            <p class="font-serif text-lg">📊 准确性纪律</p>
             <span class="text-xs text-[#9c2516] font-semibold">+0.04 · 30d</span>
           </div>
           <svg viewBox="0 0 200 50" class="w-full h-12 mb-2"><polyline points="0,38 25,35 50,32 75,30 100,28 125,24 150,22 175,18 200,15" stroke="#9c2516" stroke-width="2" fill="none"/></svg>
-          <p class="text-[11px] text-[#6b5e52]">整个领域 accuracy 本周期稳步上升。@vance_research +9 个点。</p>
+          <p class="text-[11px] text-[#6b5e52]">整个领域准确性本周期稳步上升。@vance_research +9 个点。</p>
         </div>
         <div class="border border-subtle rounded-lg p-5 bg-[#ebe3d4]/40">
           <div class="flex items-baseline justify-between mb-2">
-            <p class="font-serif text-lg">🎯 Analytical Depth</p>
+            <p class="font-serif text-lg">🎯 分析深度</p>
             <span class="text-xs text-[#9c2516] font-semibold">+0.02 · 30d</span>
           </div>
           <svg viewBox="0 0 200 50" class="w-full h-12 mb-2"><polyline points="0,30 25,32 50,28 75,32 100,28 125,25 150,28 175,22 200,20" stroke="#9c2516" stroke-width="2" fill="none"/></svg>
@@ -455,7 +592,7 @@
         </div>
         <div class="border border-subtle rounded-lg p-5 bg-[#ebe3d4]/40">
           <div class="flex items-baseline justify-between mb-2">
-            <p class="font-serif text-lg">🪞 Intellectual Honesty</p>
+            <p class="font-serif text-lg">🪞 知识诚实度</p>
             <span class="text-xs text-[#6b5e52] font-semibold">flat · 30d</span>
           </div>
           <svg viewBox="0 0 200 50" class="w-full h-12 mb-2"><polyline points="0,28 25,30 50,28 75,29 100,28 125,28 150,29 175,28 200,28" stroke="#6b5e52" stroke-width="2" fill="none"/></svg>
@@ -464,7 +601,7 @@
       </div>
     </section>
 
-    <!-- TIER-AWARE: Pro — Trill Indices live -->
+    <!-- TIER-AWARE: Pro — Trill Indices -->
     <section data-only-tier="pro" class="mb-16">
       <div class="flex items-baseline justify-between mb-6 pb-3 border-b border-[#9c2516]/30">
         <div>
@@ -478,115 +615,41 @@
         <div class="border border-[#9c2516] rounded-lg p-5 bg-[#1a1611] text-[#f5efe7]">
           <p class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold mb-1">TRILL.RESTAKE</p>
           <h3 class="font-serif text-3xl mb-1">+4.2%</h3>
-          <p class="text-[11px] text-[#d6cfc4] mb-3">7d · 6 constituents · led by EIGEN, ETHFI</p>
+          <p class="text-[11px] text-[#d6cfc4] mb-3">7d · 6 个成分 · 由 EIGEN、ETHFI 带动</p>
           <svg viewBox="0 0 200 40" class="w-full h-10"><polyline points="0,30 25,25 50,28 75,22 100,18 125,20 150,15 175,12 200,8" stroke="#9c2516" stroke-width="2" fill="none"/></svg>
         </div>
         <div class="border border-[#9c2516] rounded-lg p-5 bg-[#1a1611] text-[#f5efe7]">
           <p class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold mb-1">TRILL.SOL_DEFI</p>
           <h3 class="font-serif text-3xl mb-1">−1.8%</h3>
-          <p class="text-[11px] text-[#d6cfc4] mb-3">7d · 8 constituents · drag from JTO, KMNO</p>
+          <p class="text-[11px] text-[#d6cfc4] mb-3">7d · 8 个成分 · 受 JTO、KMNO 拖累</p>
           <svg viewBox="0 0 200 40" class="w-full h-10"><polyline points="0,15 25,18 50,20 75,18 100,22 125,25 150,28 175,26 200,32" stroke="#9c2516" stroke-width="2" fill="none"/></svg>
         </div>
         <div class="border border-[#9c2516] rounded-lg p-5 bg-[#1a1611] text-[#f5efe7]">
           <p class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold mb-1">TRILL.AI_AGENTS</p>
           <h3 class="font-serif text-3xl mb-1">+12.4%</h3>
-          <p class="text-[11px] text-[#d6cfc4] mb-3">7d · 5 constituents · Three-Star conviction rising</p>
+          <p class="text-[11px] text-[#d6cfc4] mb-3">7d · 5 个成分 · 三星 conviction 上升</p>
           <svg viewBox="0 0 200 40" class="w-full h-10"><polyline points="0,32 25,30 50,28 75,22 100,18 125,12 150,10 175,8 200,5" stroke="#9c2516" stroke-width="2" fill="none"/></svg>
         </div>
       </div>
     </section>
 
-    <section class="mb-16">
-      <div class="flex items-baseline justify-between mb-6 pb-3 border-b border-subtle">
-        <h2 class="font-serif text-3xl tracking-tight">来自 Trill 指南</h2>
-        <a href="guides.html" class="text-xs text-[#9c2516] hover:underline">查看全部编辑内容与洞察 →</a>
-      </div>
-      <p class="text-sm text-[#6b5e52] italic mb-6">策划列表、编辑报道、只有 Trill 能 surface 的信号 — 基于每位被评估创作者的可溯行为。</p>
-      <div class="grid grid-cols-3 gap-6">
-
-        <a href="guide-wallet-voice-split.html" class="card block bg-[#1a1611] text-[#f5efe7] rounded-lg p-6 h-56 flex flex-col justify-between">
-          <span class="inline-block self-start text-[10px] uppercase tracking-widest bg-[#9c2516] text-[#f5efe7] px-2 py-1 rounded">Insight · 每周 anchor</span>
-          <div>
-            <h3 class="font-serif text-2xl tracking-tight mb-2 leading-snug">钱包 vs 声量 split: 4 Three-Stars Quietly Long $EIGEN</h3>
-            <p class="text-xs text-[#d6cfc4]">Trill 指南撰文 · 8 分钟阅读 · 2 days ago</p>
-          </div>
-        </a>
-
-        <a href="guide-best-calls-may.html" class="card block bg-[#6b5e52] text-[#f5efe7] rounded-lg p-6 h-56 flex flex-col justify-between">
-          <span class="inline-block self-start text-[10px] uppercase tracking-widest bg-[#9c2516] text-[#f5efe7] px-2 py-1 rounded">Insight · 每月</span>
-          <div>
-            <h3 class="font-serif text-2xl tracking-tight mb-2 leading-snug">2026 年 5 月最佳 Calls — Receipted, Ranked, Resolved</h3>
-            <p class="text-xs text-[#d6cfc4]">Trill 指南撰文 · 12 分钟阅读 · yesterday</p>
-          </div>
-        </a>
-
-        <a href="guide-coming-soon.html" class="card block bg-[#9c2516] text-[#f5efe7] rounded-lg p-6 h-56 flex flex-col justify-between">
-          <span class="inline-block self-start text-[10px] uppercase tracking-widest bg-[#1a1611] text-[#f5efe7] px-2 py-1 rounded">指南 · DeFi</span>
-          <div>
-            <h3 class="font-serif text-2xl tracking-tight mb-2 leading-snug">定义 Restaking 话题的 6 位声音</h3>
-            <p class="text-xs text-[#d6cfc4]">Trill 指南撰文 · 8 分钟阅读</p>
-          </div>
-        </a>
-
-        <a href="guide-coming-soon.html" class="card block border border-subtle rounded-lg p-6 bg-[#ebe3d4]">
-          <span class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold">Insight · 每周</span>
-          <h3 class="font-serif text-xl tracking-tight my-2">榜单变动 — Week of May 27</h3>
-          <p class="text-sm text-[#1a1611] leading-snug mb-3">"Biggest tier shifts this week — who jumped, who fell, with the reasons. 3 upgrades to ★★★, 1 demotion."</p>
-          <p class="text-[11px] text-[#6b5e52]">Updated weekly</p>
-        </a>
-
-        <a href="guide-coming-soon.html" class="card block border border-subtle rounded-lg p-6 bg-[#ebe3d4]">
-          <span class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold">指南 · 隐藏</span>
-          <h3 class="font-serif text-xl tracking-tight my-2">Undercover Authorities</h3>
-          <p class="text-sm text-[#1a1611] leading-snug mb-3">"12 low-follower, high-Trill voices worth surfacing — voices doing distinguished work without the audience yet."</p>
-          <p class="text-[11px] text-[#6b5e52]">Trill 指南撰文 · 6 分钟阅读</p>
-        </a>
-
-        <a href="guide-coming-soon.html" class="card block border border-subtle rounded-lg p-6 bg-[#ebe3d4]">
-          <span class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold">Insight · 逆袭追踪</span>
-          <h3 class="font-serif text-xl tracking-tight my-2">@tetranode 的安静平反</h3>
-          <p class="text-sm text-[#1a1611] leading-snug mb-3">"Got dunked on for the $SOL → $200 call in January. Resolved correct in April. The full timeline."</p>
-          <p class="text-[11px] text-[#6b5e52]">Trill 指南撰文 · 5 min read</p>
-        </a>
-
-      </div>
-    </section>
-
-    <section class="mb-16">
-      <div class="flex items-baseline justify-between mb-6 pb-3 border-b border-subtle">
-        <h2 class="font-serif text-3xl tracking-tight">关于 Trill 指南</h2>
-      </div>
-      <div class="grid grid-cols-3 gap-6">
-        <div class="border border-subtle rounded-lg p-6 bg-[#f5efe7]">
-          <div class="font-mono text-3xl text-[#9c2516] mb-3">★★★</div>
-          <h3 class="font-serif text-xl tracking-tight mb-2">什么是 Trill Star?</h3>
-          <p class="text-sm text-[#6b5e52] mb-4 leading-snug">一星、二星、三星由 Sentinel 在 6 个维度上评估后授予。标准是跨多个市场周期的稳定性。</p>
-          <a href="评估方法。html" class="px-4 py-2 bg-[#9c2516] text-[#f5efe7] text-xs font-semibold rounded inline-block">了解</a>
-        </div>
-        <div class="border border-subtle rounded-lg p-6 bg-[#f5efe7]">
-          <div class="text-3xl mb-3">🎯 🪞 📊</div>
-          <h3 class="font-serif text-xl tracking-tight mb-2">六个维度</h3>
-          <p class="text-sm text-[#6b5e52] mb-4 leading-snug">除了整体 Star 等级,每位创作者还能在 6 个独立维度上获得认可 — 找到你真正需要的声音。</p>
-          <a href="dimensions.html" class="px-4 py-2 bg-[#9c2516] text-[#f5efe7] text-xs font-semibold rounded inline-block">了解</a>
-        </div>
-        <div class="border border-subtle rounded-lg p-6 bg-[#f5efe7]">
-          <div class="text-3xl mb-3">🛡</div>
-          <h3 class="font-serif text-xl tracking-tight mb-2">Sentinel 是谁?</h3>
-          <p class="text-sm text-[#6b5e52] mb-4 leading-snug">匿名、经审核、已 stake 的评审员 — Trill 的 inspector 队伍。他们为每个评级贡献人工判断层。</p>
-          <a href="sentinel.html" class="px-4 py-2 bg-[#9c2516] text-[#f5efe7] text-xs font-semibold rounded inline-block">了解</a>
-        </div>
-      </div>
-    </section>
-
-    <section class="mb-8 bg-[#ebe3d4] rounded-lg p-10 text-center">
-      <h2 class="font-serif text-3xl tracking-tight mb-3">关于 Trill 指南</h2>
-      <p class="text-sm text-[#1a1611] leading-relaxed max-w-2xl mx-auto mb-6">
-        Crypto Twitter 是个信息消防水龙头。Bot、付费推广、自封专家把信噪比压到接近 0。Trill 走不同路径 — <strong>机构信任,而非个人排名</strong>。指南由 Sentinel 策划,每季度复评。你信的是机构,不是某个具体的声音。
-      </p>
+    <!-- 底部 CTA · 喜欢 Trill?加入指南。(anonymous 视角)-->
+    <section data-max-tier="anonymous" class="mb-8 bg-[#1a1611] text-[#f5efe7] rounded-lg p-14 text-center">
+      <p class="text-[10px] uppercase tracking-[0.3em] text-[#9c2516] mb-4">加入指南</p>
+      <h2 class="font-serif text-5xl tracking-tight mb-4 leading-tight">喜欢 Trill?<br><span class="italic text-[#d6cfc4]">注册一下。</span></h2>
+      <p class="text-sm text-[#d6cfc4] mb-8 max-w-xl mx-auto leading-relaxed">跨复评周期追踪创作者 · 运行 Crypto Feed 审计 · 累积 Sentinel 资格信号。免费账号 · 无需信用卡 · 30 秒。</p>
       <div class="flex items-center justify-center gap-3">
-        <a href="about.html" class="px-5 py-2.5 bg-[#1a1611] text-[#f5efe7] text-sm font-semibold rounded">阅读我们的故事</a>
-        <a href="评估方法。html" class="px-5 py-2.5 border border-[#1a1611] text-[#1a1611] text-sm font-semibold rounded">查看评估方法</a>
+        <a href="account.html" class="px-7 py-3 bg-[#9c2516] text-[#f5efe7] text-sm font-semibold rounded">创建我的免费账号 →</a>
+        <a href="trillclaw.html" class="px-5 py-3 border border-[#d6cfc4] text-[#d6cfc4] text-sm font-semibold rounded hover:text-[#f5efe7] hover:border-[#f5efe7]">做一下 TrillClaw 自评</a>
       </div>
+    </section>
+
+    <!-- 已注册/已连接 — 升级 CTA -->
+    <section data-min-tier="registered" data-max-tier="connected" class="mb-8 bg-[#1a1611] text-[#f5efe7] rounded-lg p-14 text-center">
+      <p class="text-[10px] uppercase tracking-[0.3em] text-[#9c2516] mb-4">看得更深</p>
+      <h2 class="font-serif text-5xl tracking-tight mb-4 leading-tight">想看完整 record?<br><span class="italic text-[#d6cfc4]">升级到 Pro Lite。</span></h2>
+      <p class="text-sm text-[#d6cfc4] mb-8 max-w-xl mx-auto leading-relaxed">完整 call 历史 · 多 KOL 实时提醒 · 30/90/365 天维度趋势 — 每月 $9。</p>
+      <a href="subscribe.html" class="inline-block px-7 py-3 bg-[#9c2516] text-[#f5efe7] text-sm font-semibold rounded">查看 Pro Lite →</a>
     </section>
 
   </main>
@@ -597,14 +660,14 @@
         <div>
           <div class="flex items-baseline gap-2 mb-4">
             <span class="font-serif text-2xl text-[#f5efe7] tracking-tight">Trill</span>
-            <span class="text-[10px] uppercase tracking-widest text-[#9c2516]">The Guide</span>
+            <span class="text-[10px] uppercase tracking-widest text-[#9c2516]">指南</span>
           </div>
           <p class="text-xs leading-relaxed">Crypto KOL 的米其林指南。Sentinel 策划。每季度复评。</p>
         </div>
         <div>
           <div class="text-[10px] uppercase tracking-widest text-[#9c2516] mb-3 font-semibold">指南</div>
           <ul class="text-xs space-y-2">
-            <li><a href="stars.html" class="hover:text-[#f5efe7]">Trill Stars</a></li>
+            <li><a href="stars.html" class="hover:text-[#f5efe7]">星级</a></li>
             <li><a href="dimensions.html" class="hover:text-[#f5efe7]">维度</a></li>
             <li><a href="guides.html" class="hover:text-[#f5efe7]">指南与杂志</a></li>
             <li><a href="feed-audit.html" class="hover:text-[#f5efe7]">Crypto Feed 审计</a></li>
@@ -613,10 +676,10 @@
         <div>
           <div class="text-[10px] uppercase tracking-widest text-[#9c2516] mb-3 font-semibold">关于</div>
           <ul class="text-xs space-y-2">
-            <li><a href="about.html" class="hover:text-[#f5efe7]">About Trill</a></li>
-            <li><a href="评估方法。html" class="hover:text-[#f5efe7]">Methodology</a></li>
+            <li><a href="about.html" class="hover:text-[#f5efe7]">关于 Trill</a></li>
+            <li><a href="评估方法。html" class="hover:text-[#f5efe7]">评估方法</a></li>
             <li><a href="sentinel.html" class="hover:text-[#f5efe7]">成为 Sentinel</a></li>
-            <li><a href="trillclaw.html" class="hover:text-[#f5efe7]">TrillClaw Quiz</a></li>
+            <li><a href="trillclaw.html" class="hover:text-[#f5efe7]">TrillClaw 自评</a></li>
           </ul>
         </div>
         <div>

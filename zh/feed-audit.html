@@ -400,94 +400,77 @@
 
       <div class="mb-10 bg-[#1a1611] text-[#f5efe7] rounded-lg p-8 text-center">
         <h3 class="font-serif text-3xl tracking-tight mb-3">9 位声音 · 一个名单。</h3>
-        <p class="text-sm text-[#d6cfc4] mb-6 max-w-xl mx-auto leading-relaxed">保存名单,或一键在 X 关注。每季度 Sentinel 复评时自动重跑。</p>
-        <div class="flex items-center justify-center gap-3">
+        <p class="text-sm text-[#d6cfc4] mb-6 max-w-xl mx-auto leading-relaxed">保存名单、一键在 X 关注、或者分享出去 — 每次分享让你向 Sentinel 候选名单更进一步。</p>
+
+        <!-- 主操作行 -->
+        <div class="flex items-center justify-center gap-3 mb-5">
           <button class="px-6 py-3 bg-[#9c2516] text-[#f5efe7] text-sm font-semibold rounded">在 X 一键关注全部 9 位 →</button>
           <button class="px-5 py-3 border border-[#d6cfc4] text-[#d6cfc4] text-sm font-semibold rounded hover:text-[#f5efe7] hover:border-[#f5efe7]">存到 Watchlist</button>
         </div>
+
+        <!-- 分享行 · 醒目按钮(Vincent: 更明显是分享按钮)-->
+        <div class="pt-5 border-t border-[#6b5e52]/30">
+          <p class="text-[10px] uppercase tracking-[0.3em] text-[#9c2516] font-semibold mb-3">分享你的名单</p>
+          <div class="flex items-center justify-center gap-2 flex-wrap">
+            <button class="px-4 py-2.5 bg-[#f5efe7] text-[#1a1611] text-sm font-semibold rounded flex items-center gap-2 hover:bg-white">
+              <span class="font-mono text-base">𝕏</span>
+              <span>分享到 X</span>
+              <span class="text-[10px] text-[#9c2516] font-normal">+1 Sentinel</span>
+            </button>
+            <button class="px-4 py-2.5 bg-[#229ED9] text-white text-sm font-semibold rounded flex items-center gap-2 hover:bg-[#1d8ec5]">
+              <span class="text-base">✈</span>
+              <span>发到 Telegram</span>
+              <span class="text-[10px] text-[#fef4e8] font-normal">+1 Sentinel</span>
+            </button>
+            <button class="px-4 py-2.5 border border-[#d6cfc4] text-[#d6cfc4] text-sm font-semibold rounded flex items-center gap-2 hover:text-[#f5efe7] hover:border-[#f5efe7]">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
+              <span>复制链接</span>
+            </button>
+            <button class="px-4 py-2.5 border border-[#d6cfc4] text-[#d6cfc4] text-sm font-semibold rounded flex items-center gap-2 hover:text-[#f5efe7] hover:border-[#f5efe7]">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+              <span>下载卡片</span>
+            </button>
+          </div>
+          <p class="text-[11px] text-[#d6cfc4] italic mt-4">实时 URL:<code class="font-mono text-[#f5efe7]">trill.xyz/r/vincent</code></p>
+        </div>
       </div>
 
-      <!-- 分享 · viral loop · "让朋友通过你发现这个机构" -->
-      <div class="mb-10">
-        <div class="flex items-baseline justify-between mb-5 pb-3 border-b border-subtle">
-          <div>
-            <p class="text-[10px] uppercase tracking-[0.3em] text-[#9c2516] font-semibold mb-1">分享你精挑的名单</p>
-            <h3 class="font-serif text-2xl tracking-tight">让朋友通过你发现这个机构。</h3>
-          </div>
-          <p class="text-xs text-[#6b5e52] italic">每次分享让你向 Sentinel 候选名单更进一步。</p>
-        </div>
+      <!-- 分享预览 + viral 数据 · "让朋友通过你发现机构" -->
+      <div class="mb-10 grid grid-cols-2 gap-5">
 
-        <div class="grid grid-cols-5 gap-5">
-
-          <!-- 预览卡(2 col · 朋友会看到什么)-->
-          <div class="col-span-2 bg-[#1a1611] text-[#f5efe7] rounded-lg p-6">
-            <p class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold mb-3">预览 · 他们会看到什么</p>
-            <div class="bg-[#f5efe7] text-[#1a1611] rounded-md p-4">
-              <p class="font-serif italic text-sm text-[#6b5e52] mb-1">由 Vincent 策划</p>
-              <p class="font-serif text-xl tracking-tight mb-2 leading-snug">9 位值得 follow 的 DeFi · 宏观 · Thesis-driven 声音。</p>
-              <p class="text-[11px] text-[#6b5e52]">来自 Trill 指南 · 每季度复评 · trill.xyz/r/vincent</p>
-              <div class="mt-3 pt-3 border-t border-subtle flex items-center gap-1">
-                <span class="font-mono text-[#9c2516] text-xs">★★★</span>
-                <span class="text-[11px] text-[#1a1611]">Hsaka · Cobie · Vance · Tetranode 等 9 位</span>
-              </div>
+        <!-- 预览卡 · 朋友分享后会看到什么 -->
+        <div class="bg-[#ebe3d4]/40 border border-subtle rounded-lg p-5">
+          <p class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold mb-3">分享预览 · 朋友看到什么</p>
+          <div class="bg-[#f5efe7] border border-subtle rounded-md p-4">
+            <p class="font-serif italic text-xs text-[#6b5e52] mb-1">由 Vincent 策划</p>
+            <p class="font-serif text-lg tracking-tight mb-2 leading-snug">9 位值得 follow 的 DeFi · 宏观 · Thesis-driven 声音。</p>
+            <p class="text-[11px] text-[#6b5e52]">来自 Trill 指南 · 每季度复评</p>
+            <div class="mt-3 pt-3 border-t border-subtle flex items-center gap-1">
+              <span class="font-mono text-[#9c2516] text-xs">★★★</span>
+              <span class="text-[11px] text-[#1a1611]">Hsaka · Cobie · Vance · Tetranode 等 9 位</span>
             </div>
-            <p class="text-[11px] text-[#d6cfc4] italic mt-3">实时 URL:<code class="font-mono text-[#f5efe7]">trill.xyz/r/vincent</code> · 你重跑时自动更新</p>
           </div>
-
-          <!-- 4 个分享动作(3 col · 2x2 网格)-->
-          <div class="col-span-3 grid grid-cols-2 gap-3">
-
-            <button class="card group flex items-start gap-4 bg-[#f5efe7] border border-subtle rounded-lg p-5 text-left hover:border-[#9c2516]">
-              <div class="w-10 h-10 rounded-full bg-[#1a1611] text-[#f5efe7] flex items-center justify-center text-base shrink-0">𝕏</div>
-              <div class="flex-1">
-                <p class="font-serif text-lg tracking-tight">分享到 X</p>
-                <p class="text-[11px] text-[#6b5e52] italic mt-0.5">预填 post · 带预览卡 · 自动 tag @TrillGuide</p>
-              </div>
-              <span class="text-[10px] text-[#9c2516] opacity-0 group-hover:opacity-100 transition-opacity">+1 Sentinel 积分</span>
-            </button>
-
-            <button class="card group flex items-start gap-4 bg-[#f5efe7] border border-subtle rounded-lg p-5 text-left hover:border-[#9c2516]">
-              <div class="w-10 h-10 rounded-full bg-[#229ED9] text-white flex items-center justify-center text-base shrink-0">✈</div>
-              <div class="flex-1">
-                <p class="font-serif text-lg tracking-tight">发到 Telegram</p>
-                <p class="text-[11px] text-[#6b5e52] italic mt-0.5">直接链接或分享到 channel · 内嵌预览</p>
-              </div>
-              <span class="text-[10px] text-[#9c2516] opacity-0 group-hover:opacity-100 transition-opacity">+1 Sentinel 积分</span>
-            </button>
-
-            <button class="card group flex items-start gap-4 bg-[#f5efe7] border border-subtle rounded-lg p-5 text-left hover:border-[#9c2516]">
-              <div class="w-10 h-10 rounded-full bg-[#ebe3d4] text-[#1a1611] flex items-center justify-center shrink-0">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
-              </div>
-              <div class="flex-1">
-                <p class="font-serif text-lg tracking-tight">复制链接</p>
-                <p class="text-[11px] text-[#6b5e52] italic mt-0.5"><code class="font-mono text-[10px]">trill.xyz/r/vincent</code></p>
-              </div>
-              <span class="text-[10px] text-[#9c2516] opacity-0 group-hover:opacity-100 transition-opacity">+0.5 Sentinel</span>
-            </button>
-
-            <button class="card group flex items-start gap-4 bg-[#f5efe7] border border-subtle rounded-lg p-5 text-left hover:border-[#9c2516]">
-              <div class="w-10 h-10 rounded-full bg-[#ebe3d4] text-[#1a1611] flex items-center justify-center shrink-0">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-              </div>
-              <div class="flex-1">
-                <p class="font-serif text-lg tracking-tight">下载卡片</p>
-                <p class="text-[11px] text-[#6b5e52] italic mt-0.5">PNG / 可分享图 · 1200×630</p>
-              </div>
-              <span class="text-[10px] text-[#9c2516] opacity-0 group-hover:opacity-100 transition-opacity">+0.5 Sentinel</span>
-            </button>
-
-          </div>
+          <p class="text-[11px] text-[#6b5e52] italic mt-3">实时 URL:<code class="font-mono text-[10px] text-[#1a1611]">trill.xyz/r/vincent</code></p>
         </div>
 
-        <!-- 分享统计 footer -->
-        <div class="mt-5 bg-[#ebe3d4]/40 border border-subtle rounded-md px-5 py-3 flex items-center justify-between">
-          <div class="flex items-center gap-6 text-xs">
-            <span><strong class="font-mono text-[#9c2516]">14</strong> 位朋友本月打开了你的名单</span>
-            <span><strong class="font-mono text-[#9c2516]">5</strong> 位通过你的链接注册</span>
-            <span><strong class="font-mono text-[#9c2516]">+2.5</strong> Sentinel 积分获得</span>
+        <!-- viral 数据 + share log 入口 -->
+        <div class="bg-[#fef4e8] border border-[#9c2516]/30 rounded-lg p-5">
+          <p class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold mb-3">你本月的 viral loop</p>
+          <div class="grid grid-cols-3 gap-3 text-center mb-4">
+            <div>
+              <p class="font-mono text-3xl text-[#1a1611] font-bold tabular-nums">14</p>
+              <p class="text-[10px] text-[#6b5e52] mt-1">朋友打开</p>
+            </div>
+            <div>
+              <p class="font-mono text-3xl text-emerald-700 font-bold tabular-nums">5</p>
+              <p class="text-[10px] text-[#6b5e52] mt-1">注册</p>
+            </div>
+            <div>
+              <p class="font-mono text-3xl text-[#9c2516] font-bold tabular-nums">+2.5</p>
+              <p class="text-[10px] text-[#6b5e52] mt-1">Sentinel 积分</p>
+            </div>
           </div>
-          <a href="account.html" class="text-[11px] text-[#9c2516] hover:underline font-semibold">查看你的分享日志 →</a>
+          <a href="account.html" class="block text-center text-xs text-[#9c2516] hover:underline font-semibold pt-3 border-t border-[#9c2516]/20">查看分享日志 → 爬 Sentinel 阶梯</a>
         </div>
       </div>
     </section>

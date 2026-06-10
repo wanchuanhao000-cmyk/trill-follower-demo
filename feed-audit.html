@@ -405,94 +405,77 @@
 
       <div class="mb-10 bg-[#1a1611] text-[#f5efe7] rounded-lg p-8 text-center">
         <h3 class="font-serif text-3xl tracking-tight mb-3">9 voices · one list.</h3>
-        <p class="text-sm text-[#d6cfc4] mb-6 max-w-xl mx-auto leading-relaxed">Save the list, or bulk-follow on X. Re-runs every quarter when the Sentinels re-rate.</p>
-        <div class="flex items-center justify-center gap-3">
+        <p class="text-sm text-[#d6cfc4] mb-6 max-w-xl mx-auto leading-relaxed">Save the list, bulk-follow on X, or share it — every share moves you up the Sentinel candidate ladder.</p>
+
+        <!-- Primary actions row -->
+        <div class="flex items-center justify-center gap-3 mb-5">
           <button class="px-6 py-3 bg-[#9c2516] text-[#f5efe7] text-sm font-semibold rounded">Follow all 9 on X →</button>
           <button class="px-5 py-3 border border-[#d6cfc4] text-[#d6cfc4] text-sm font-semibold rounded hover:text-[#f5efe7] hover:border-[#f5efe7]">Save list to Watchlist</button>
         </div>
+
+        <!-- Share row · prominent buttons (Vincent: more obviously share buttons) -->
+        <div class="pt-5 border-t border-[#6b5e52]/30">
+          <p class="text-[10px] uppercase tracking-[0.3em] text-[#9c2516] font-semibold mb-3">Share your list</p>
+          <div class="flex items-center justify-center gap-2 flex-wrap">
+            <button class="px-4 py-2.5 bg-[#f5efe7] text-[#1a1611] text-sm font-semibold rounded flex items-center gap-2 hover:bg-white">
+              <span class="font-mono text-base">𝕏</span>
+              <span>Share to X</span>
+              <span class="text-[10px] text-[#9c2516] font-normal">+1 Sentinel</span>
+            </button>
+            <button class="px-4 py-2.5 bg-[#229ED9] text-white text-sm font-semibold rounded flex items-center gap-2 hover:bg-[#1d8ec5]">
+              <span class="text-base">✈</span>
+              <span>Send via Telegram</span>
+              <span class="text-[10px] text-[#fef4e8] font-normal">+1 Sentinel</span>
+            </button>
+            <button class="px-4 py-2.5 border border-[#d6cfc4] text-[#d6cfc4] text-sm font-semibold rounded flex items-center gap-2 hover:text-[#f5efe7] hover:border-[#f5efe7]">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
+              <span>Copy link</span>
+            </button>
+            <button class="px-4 py-2.5 border border-[#d6cfc4] text-[#d6cfc4] text-sm font-semibold rounded flex items-center gap-2 hover:text-[#f5efe7] hover:border-[#f5efe7]">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+              <span>Download card</span>
+            </button>
+          </div>
+          <p class="text-[11px] text-[#d6cfc4] italic mt-4">Live URL: <code class="font-mono text-[#f5efe7]">trill.xyz/r/vincent</code></p>
+        </div>
       </div>
 
-      <!-- SHARE · viral loop · "let your friends find the institution through you" -->
-      <div class="mb-10">
-        <div class="flex items-baseline justify-between mb-5 pb-3 border-b border-subtle">
-          <div>
-            <p class="text-[10px] uppercase tracking-[0.3em] text-[#9c2516] font-semibold mb-1">Share your hand-picked list</p>
-            <h3 class="font-serif text-2xl tracking-tight">Friends find the institution through you.</h3>
-          </div>
-          <p class="text-xs text-[#6b5e52] italic">Every share moves you up the Sentinel candidate ladder.</p>
-        </div>
+      <!-- SHARE preview + viral metrics · "let your friends find the institution through you" -->
+      <div class="mb-10 grid grid-cols-2 gap-5">
 
-        <div class="grid grid-cols-5 gap-5">
-
-          <!-- Preview card (2 col · what gets shared) -->
-          <div class="col-span-2 bg-[#1a1611] text-[#f5efe7] rounded-lg p-6">
-            <p class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold mb-3">Preview · what they'll see</p>
-            <div class="bg-[#f5efe7] text-[#1a1611] rounded-md p-4">
-              <p class="font-serif italic text-sm text-[#6b5e52] mb-1">Curated by Vincent</p>
-              <p class="font-serif text-xl tracking-tight mb-2 leading-snug">9 DeFi · Macro · Thesis-driven voices worth following.</p>
-              <p class="text-[11px] text-[#6b5e52]">From The Trill Guide · re-rated quarterly · trill.xyz/r/vincent</p>
-              <div class="mt-3 pt-3 border-t border-subtle flex items-center gap-1">
-                <span class="font-mono text-[#9c2516] text-xs">★★★</span>
-                <span class="text-[11px] text-[#1a1611]">Hsaka · Cobie · Vance · Tetranode + 5 more</span>
-              </div>
+        <!-- Preview card · what your friends will see when shared -->
+        <div class="bg-[#ebe3d4]/40 border border-subtle rounded-lg p-5">
+          <p class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold mb-3">Share preview · what friends see</p>
+          <div class="bg-[#f5efe7] border border-subtle rounded-md p-4">
+            <p class="font-serif italic text-xs text-[#6b5e52] mb-1">Curated by Vincent</p>
+            <p class="font-serif text-lg tracking-tight mb-2 leading-snug">9 DeFi · Macro · Thesis-driven voices worth following.</p>
+            <p class="text-[11px] text-[#6b5e52]">From The Trill Guide · re-rated quarterly</p>
+            <div class="mt-3 pt-3 border-t border-subtle flex items-center gap-1">
+              <span class="font-mono text-[#9c2516] text-xs">★★★</span>
+              <span class="text-[11px] text-[#1a1611]">Hsaka · Cobie · Vance · Tetranode + 5 more</span>
             </div>
-            <p class="text-[11px] text-[#d6cfc4] italic mt-3">Live URL: <code class="font-mono text-[#f5efe7]">trill.xyz/r/vincent</code> · updates when you re-run</p>
           </div>
-
-          <!-- 4 share actions (3 col · 2x2 grid) -->
-          <div class="col-span-3 grid grid-cols-2 gap-3">
-
-            <button class="card group flex items-start gap-4 bg-[#f5efe7] border border-subtle rounded-lg p-5 text-left hover:border-[#9c2516]">
-              <div class="w-10 h-10 rounded-full bg-[#1a1611] text-[#f5efe7] flex items-center justify-center text-base shrink-0">𝕏</div>
-              <div class="flex-1">
-                <p class="font-serif text-lg tracking-tight">Share to X</p>
-                <p class="text-[11px] text-[#6b5e52] italic mt-0.5">Pre-filled post with preview card · auto-tagged @TrillGuide</p>
-              </div>
-              <span class="text-[10px] text-[#9c2516] opacity-0 group-hover:opacity-100 transition-opacity">+1 Sentinel point</span>
-            </button>
-
-            <button class="card group flex items-start gap-4 bg-[#f5efe7] border border-subtle rounded-lg p-5 text-left hover:border-[#9c2516]">
-              <div class="w-10 h-10 rounded-full bg-[#229ED9] text-white flex items-center justify-center text-base shrink-0">✈</div>
-              <div class="flex-1">
-                <p class="font-serif text-lg tracking-tight">Send to Telegram</p>
-                <p class="text-[11px] text-[#6b5e52] italic mt-0.5">Direct link or share to a channel · embed preview</p>
-              </div>
-              <span class="text-[10px] text-[#9c2516] opacity-0 group-hover:opacity-100 transition-opacity">+1 Sentinel point</span>
-            </button>
-
-            <button class="card group flex items-start gap-4 bg-[#f5efe7] border border-subtle rounded-lg p-5 text-left hover:border-[#9c2516]">
-              <div class="w-10 h-10 rounded-full bg-[#ebe3d4] text-[#1a1611] flex items-center justify-center shrink-0">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
-              </div>
-              <div class="flex-1">
-                <p class="font-serif text-lg tracking-tight">Copy link</p>
-                <p class="text-[11px] text-[#6b5e52] italic mt-0.5"><code class="font-mono text-[10px]">trill.xyz/r/vincent</code></p>
-              </div>
-              <span class="text-[10px] text-[#9c2516] opacity-0 group-hover:opacity-100 transition-opacity">+0.5 Sentinel</span>
-            </button>
-
-            <button class="card group flex items-start gap-4 bg-[#f5efe7] border border-subtle rounded-lg p-5 text-left hover:border-[#9c2516]">
-              <div class="w-10 h-10 rounded-full bg-[#ebe3d4] text-[#1a1611] flex items-center justify-center shrink-0">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-              </div>
-              <div class="flex-1">
-                <p class="font-serif text-lg tracking-tight">Download card</p>
-                <p class="text-[11px] text-[#6b5e52] italic mt-0.5">PNG / shareable image · 1200×630</p>
-              </div>
-              <span class="text-[10px] text-[#9c2516] opacity-0 group-hover:opacity-100 transition-opacity">+0.5 Sentinel</span>
-            </button>
-
-          </div>
+          <p class="text-[11px] text-[#6b5e52] italic mt-3">Live URL: <code class="font-mono text-[10px] text-[#1a1611]">trill.xyz/r/vincent</code></p>
         </div>
 
-        <!-- Share stats footer -->
-        <div class="mt-5 bg-[#ebe3d4]/40 border border-subtle rounded-md px-5 py-3 flex items-center justify-between">
-          <div class="flex items-center gap-6 text-xs">
-            <span><strong class="font-mono text-[#9c2516]">14</strong> friends opened your list this month</span>
-            <span><strong class="font-mono text-[#9c2516]">5</strong> signed up via your link</span>
-            <span><strong class="font-mono text-[#9c2516]">+2.5</strong> Sentinel points earned</span>
+        <!-- Viral metrics + share log link -->
+        <div class="bg-[#fef4e8] border border-[#9c2516]/30 rounded-lg p-5">
+          <p class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold mb-3">Your viral loop · this month</p>
+          <div class="grid grid-cols-3 gap-3 text-center mb-4">
+            <div>
+              <p class="font-mono text-3xl text-[#1a1611] font-bold tabular-nums">14</p>
+              <p class="text-[10px] text-[#6b5e52] mt-1">friends opened</p>
+            </div>
+            <div>
+              <p class="font-mono text-3xl text-emerald-700 font-bold tabular-nums">5</p>
+              <p class="text-[10px] text-[#6b5e52] mt-1">signed up</p>
+            </div>
+            <div>
+              <p class="font-mono text-3xl text-[#9c2516] font-bold tabular-nums">+2.5</p>
+              <p class="text-[10px] text-[#6b5e52] mt-1">Sentinel pts</p>
+            </div>
           </div>
-          <a href="account.html" class="text-[11px] text-[#9c2516] hover:underline font-semibold">View your share log →</a>
+          <a href="account.html" class="block text-center text-xs text-[#9c2516] hover:underline font-semibold pt-3 border-t border-[#9c2516]/20">View your share log → climb the Sentinel ladder</a>
         </div>
       </div>
     </section>

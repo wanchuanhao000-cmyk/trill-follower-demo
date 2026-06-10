@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About Trill · The Michelin Guide for crypto KOLs</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', system-ui, sans-serif; background: #f5efe7; color: #1a1611; }
+    .font-serif { font-family: 'Cormorant Garamond', Georgia, serif; }
+    .border-subtle { border-color: #d6cfc4; }
+  </style>
+</head>
+<body class="min-h-screen">
+
+<!-- TIER-SWITCHER — demo-mode tier switcher (inject right after <body>) -->
+<style>
+  #tier-demo-bar { font-family: 'Inter', system-ui, sans-serif; background:#1a1611; color:#f5efe7; padding:10px 16px; font-size:12px; display:flex; align-items:center; justify-content:space-between; gap:12px; position:relative; z-index:50; border-bottom:1px solid #6b5e52; }
+  #tier-demo-bar .tdb-left { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+  #tier-demo-bar .tdb-tag { font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:#9c2516; font-weight:700; background:#3a1f1a; padding:3px 8px; border-radius:3px; }
+  #tier-demo-bar .tdb-label { color:#d6cfc4; }
+  #tier-demo-bar .tdb-btn { background:#9c2516; color:#f5efe7; padding:5px 12px; border-radius:4px; display:inline-flex; align-items:center; gap:6px; cursor:pointer; border:none; font-size:12px; font-weight:600; }
+  #tier-demo-bar .tdb-btn:hover { background:#7a1d11; }
+  #tier-demo-bar .tdb-hint { font-size:10px; color:#d6cfc4; font-style:italic; }
+  #tier-demo-menu { position:absolute; left:0; top:100%; margin-top:1px; width:300px; background:#1a1611; border:1px solid #6b5e52; border-radius:4px; box-shadow:0 8px 24px rgba(0,0,0,0.4); padding:4px 0; z-index:100; }
+  #tier-demo-menu.hidden { display:none; }
+  #tier-demo-menu button { display:block; width:100%; text-align:left; padding:9px 14px; background:transparent; border:0; color:#f5efe7; cursor:pointer; }
+  #tier-demo-menu button:hover { background:#3a1f1a; }
+  #tier-demo-menu .tdm-title { font-size:12px; font-weight:600; }
+  #tier-demo-menu .tdm-desc { font-size:10px; color:#d6cfc4; margin-top:1px; }
+  #tier-demo-menu .tdm-active { background:#3a1f1a; }
+  #tier-demo-menu .tdm-active::after { content:"✓"; float:right; color:#9c2516; font-weight:700; }
+  /* Tier-locked content overlay */
+  .tier-locked-overlay { position:relative; }
+  .tier-locked-overlay::before { content:""; position:absolute; inset:0; background:linear-gradient(to bottom, rgba(245,239,231,0) 0%, rgba(245,239,231,0.95) 70%, rgba(245,239,231,1) 100%); z-index:5; pointer-events:none; border-radius:inherit; }
+  .tier-locked-cta { position:absolute; bottom:18px; left:50%; transform:translateX(-50%); z-index:6; background:#1a1611; color:#f5efe7; padding:10px 18px; border-radius:6px; font-size:12px; font-weight:600; display:inline-flex; align-items:center; gap:8px; box-shadow:0 4px 14px rgba(0,0,0,0.15); }
+  .tier-locked-cta a { color:#f5efe7; text-decoration:underline; }
+  @media (max-width: 720px) {
+    #tier-demo-bar .tdb-hint { display:none; }
+    #tier-demo-menu { width:260px; }
+  }
+</style>
+
+<div id="tier-demo-bar">
+  <div class="tdb-left">
+    <span class="tdb-tag" data-i18n="demo">Demo</span>
+    <span class="tdb-label" data-i18n="viewing-as">Viewing as:</span>
+    <div style="position:relative;">
+      <button type="button" class="tdb-btn" id="tier-demo-btn">
+        <span id="tier-demo-current">👤 Anonymous</span>
+        <span style="font-size:9px;">▼</span>
+      </button>
+      <div id="tier-demo-menu" class="hidden">
+        <button data-set-tier="anonymous"><div class="tdm-title">👤 <span data-i18n="t-anon">Anonymous</span></div><div class="tdm-desc" data-i18n="t-anon-desc">Not signed in · browsing freely</div></button>
+        <button data-set-tier="registered"><div class="tdm-title">🔓 <span data-i18n="t-reg">Registered</span> · <span data-i18n="free">Free</span></div><div class="tdm-desc" data-i18n="t-reg-desc">Email account · watchlist + basic alerts</div></button>
+        <button data-set-tier="connected"><div class="tdm-title">🔗 <span data-i18n="t-conn">Connected</span> · <span data-i18n="free">Free</span></div><div class="tdm-desc" data-i18n="t-conn-desc">X + wallet linked · Feed Audit unlocked</div></button>
+        <button data-set-tier="pro-lite"><div class="tdm-title">⭐ <span data-i18n="t-prolite">Pro Lite</span> · $9/mo</div><div class="tdm-desc" data-i18n="t-prolite-desc">Full call history · multi-KOL alerts · trends</div></button>
+        <button data-set-tier="pro"><div class="tdm-title">💎 <span data-i18n="t-pro">Pro</span> · $25/mo</div><div class="tdm-desc" data-i18n="t-pro-desc">Trill Indices · DD reports · holdings overlap</div></button>
+      </div>
+    </div>
+  </div>
+  <div class="tdb-hint" data-i18n="hint">Same URL — content visibility changes by tier</div>
+</div>
+
+<script>
+(function(){
+  var TIERS = ['anonymous','registered','connected','pro-lite','pro'];
+  var LABELS = {
+    en: { anonymous:'👤 Anonymous', registered:'🔓 Registered', connected:'🔗 Connected', 'pro-lite':'⭐ Pro Lite', pro:'💎 Pro' },
+    zh: { anonymous:'👤 未登录', registered:'🔓 已注册', connected:'🔗 已连接', 'pro-lite':'⭐ Pro Lite', pro:'💎 Pro' }
+  };
+  var I18N = {
+    en: { 'demo':'Demo', 'viewing-as':'Viewing as:', 't-anon':'Anonymous', 't-reg':'Registered', 't-conn':'Connected', 't-prolite':'Pro Lite', 't-pro':'Pro', 'free':'Free', 't-anon-desc':'Not signed in · browsing freely', 't-reg-desc':'Email account · watchlist + basic alerts', 't-conn-desc':'X + wallet linked · Feed Audit unlocked', 't-prolite-desc':'Full call history · multi-KOL alerts · trends', 't-pro-desc':'Trill Indices · DD reports · holdings overlap', 'hint':'Same URL — content visibility changes by tier' },
+    zh: { 'demo':'演示模式', 'viewing-as':'当前视角:', 't-anon':'未登录', 't-reg':'已注册', 't-conn':'已连接', 't-prolite':'Pro Lite', 't-pro':'Pro', 'free':'免费', 't-anon-desc':'未登录 · 自由浏览', 't-reg-desc':'邮箱账号 · watchlist + 基础提醒', 't-conn-desc':'X + 钱包已连接 · Feed Audit 解锁', 't-prolite-desc':'完整 call 历史 · 多 KOL 提醒 · 趋势线', 't-pro-desc':'Trill Indices · DD 报告 · 持仓 overlap', 'hint':'同一 URL — 不同 tier 看到不同内容' }
+  };
+  var lang = (document.documentElement.lang || 'en').toLowerCase().indexOf('zh') === 0 ? 'zh' : 'en';
+  var i18n = I18N[lang]; var labels = LABELS[lang];
+
+  // i18n labels
+  document.querySelectorAll('#tier-demo-bar [data-i18n], #tier-demo-menu [data-i18n]').forEach(function(el){
+    var k = el.getAttribute('data-i18n');
+    if (i18n[k] !== undefined) el.textContent = i18n[k];
+  });
+
+  function applyTier(tier) {
+    if (TIERS.indexOf(tier) < 0) tier = 'anonymous';
+    var cur = TIERS.indexOf(tier);
+    document.documentElement.setAttribute('data-tier', tier);
+    document.getElementById('tier-demo-current').textContent = labels[tier];
+    // min-tier
+    document.querySelectorAll('[data-min-tier]').forEach(function(el){
+      var v = el.getAttribute('data-min-tier');
+      var idx = TIERS.indexOf(v);
+      el.style.display = (cur >= idx) ? '' : 'none';
+    });
+    // max-tier
+    document.querySelectorAll('[data-max-tier]').forEach(function(el){
+      var v = el.getAttribute('data-max-tier');
+      var idx = TIERS.indexOf(v);
+      el.style.display = (cur <= idx) ? '' : 'none';
+    });
+    // only-tier (comma list)
+    document.querySelectorAll('[data-only-tier]').forEach(function(el){
+      var allowed = el.getAttribute('data-only-tier').split(',').map(function(s){return s.trim();});
+      el.style.display = (allowed.indexOf(tier) >= 0) ? '' : 'none';
+    });
+    // mark active
+    document.querySelectorAll('#tier-demo-menu button').forEach(function(b){
+      b.classList.toggle('tdm-active', b.getAttribute('data-set-tier') === tier);
+    });
+  }
+
+  var saved = (typeof localStorage !== 'undefined' && localStorage.getItem('trill-demo-tier')) || 'anonymous';
+  applyTier(saved);
+
+  var btn = document.getElementById('tier-demo-btn');
+  var menu = document.getElementById('tier-demo-menu');
+  btn.addEventListener('click', function(e){ e.stopPropagation(); menu.classList.toggle('hidden'); });
+  document.addEventListener('click', function(){ menu.classList.add('hidden'); });
+  menu.addEventListener('click', function(e){
+    var t = e.target.closest('[data-set-tier]');
+    if (!t) return;
+    var newTier = t.getAttribute('data-set-tier');
+    try { localStorage.setItem('trill-demo-tier', newTier); } catch(_) {}
+    applyTier(newTier);
+    menu.classList.add('hidden');
+  });
+})();
+</script>
+<!-- /TIER-SWITCHER -->
+
+
+  <nav class="border-b border-subtle bg-[#f5efe7]/95 backdrop-blur sticky top-0 z-10">
+    <div class="max-w-6xl mx-auto px-8 py-4 flex items-center justify-between">
+      <div class="flex items-baseline gap-2">
+        <a href="index.html" class="font-serif text-2xl text-[#9c2516] tracking-tight">Trill</a>
+        <span class="text-[10px] uppercase tracking-widest text-[#6b5e52]">The Guide</span>
+      </div>
+      <div class="flex items-center gap-1 text-sm">
+        <a href="index.html" class="px-3 py-1.5 text-[#6b5e52] hover:text-[#1a1611]">Home</a>
+        <a href="stars.html" class="px-3 py-1.5 text-[#6b5e52] hover:text-[#1a1611]">Trill Stars</a>
+        <a href="guides.html" class="px-3 py-1.5 text-[#6b5e52] hover:text-[#1a1611]">Trill Guide</a>
+        <a href="dimensions.html" class="px-3 py-1.5 text-[#6b5e52] hover:text-[#1a1611]">Dimensions</a>
+        <a href="feed-audit.html" class="px-3 py-1.5 text-[#6b5e52] hover:text-[#1a1611]">Recommend</a>
+        <a href="account.html" class="px-3 py-1.5 text-[#6b5e52] hover:text-[#1a1611]">Account</a>
+        <div class="relative" data-trill-dropdown>
+          <button type="button" data-trill-dropdown-btn class="px-3 py-1.5 text-[#1a1611] font-semibold border-b-2 border-[#9c2516] flex items-center gap-1">More <span class="text-[10px]">▼</span></button>
+          <div data-trill-dropdown-menu class="hidden absolute right-0 top-full mt-1 w-56 bg-[#f5efe7] border border-subtle rounded-lg shadow-lg z-20 py-1">
+            <a href="trillclaw.html" class="block px-4 py-2 text-sm text-[#1a1611] hover:bg-[#ebe3d4]">TrillClaw Quiz</a>
+            <a href="subscribe.html" class="block px-4 py-2 text-sm text-[#1a1611] hover:bg-[#ebe3d4]">Pricing</a>
+            <div class="border-t border-subtle my-1"></div>
+            <a href="methodology.html" class="block px-4 py-2 text-sm text-[#1a1611] hover:bg-[#ebe3d4]">Methodology</a>
+            <a href="about.html" class="block px-4 py-2 text-sm text-[#9c2516] font-semibold bg-[#fef4e8]">About Trill</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>(function(){var w=document.currentScript.parentElement.querySelector('[data-trill-dropdown]');if(!w)return;var b=w.querySelector('[data-trill-dropdown-btn]'),m=w.querySelector('[data-trill-dropdown-menu]');b.addEventListener('click',function(e){e.stopPropagation();m.classList.toggle('hidden')});document.addEventListener('click',function(e){if(!w.contains(e.target))m.classList.add('hidden')});})();</script>
+  </nav>
+
+  <main class="max-w-3xl mx-auto px-8 py-12">
+
+    <header class="mb-12 pb-10 border-b border-subtle text-center">
+      <p class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold mb-3">About Trill</p>
+      <h1 class="font-serif text-6xl tracking-tight mb-4">The Michelin Guide<br>for crypto KOLs.</h1>
+      <p class="font-serif italic text-xl text-[#6b5e52] max-w-xl mx-auto">A curated directory of the voices in crypto worth following — the ones who build communities worth belonging to. Evaluated by an anonymous inspectorate, re-rated quarterly, accountable to the institution behind it.</p>
+    </header>
+
+    <!-- Why we exist -->
+    <section class="mb-12">
+      <h2 class="font-serif text-3xl tracking-tight mb-4">Why we exist</h2>
+      <p class="text-sm leading-relaxed text-[#1a1611] mb-4">
+        Crypto Twitter is a firehose. Bots, paid promotion, and self-declared experts make the signal-to-noise ratio close to zero. Existing solutions — mindshare-based leaderboards, popularity scores — reward the wrong thing: <em>volume</em>, not <em>substance</em>. The result is a market where loud voices crowd out careful ones.
+      </p>
+      <p class="text-sm leading-relaxed text-[#1a1611]">
+        Trill takes a different approach: <strong>institutional trust instead of personal ranking</strong>. Like the Michelin Guide, what readers trust is not any single critic but the institution itself — its standards, its inspectors, its accountability over time.
+      </p>
+    </section>
+
+    <!-- Three principles -->
+    <section class="mb-12">
+      <h2 class="font-serif text-3xl tracking-tight mb-6">Three principles that shape everything</h2>
+
+      <div class="space-y-6">
+        <div class="border-l-4 border-[#9c2516] pl-6 py-2">
+          <div class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold mb-2">① Designation, not score</div>
+          <h3 class="font-serif text-xl tracking-tight mb-2">No numbers. Only Stars and Distinctions.</h3>
+          <p class="text-sm text-[#6b5e52] leading-relaxed">
+            We never show 0.65 or 75% or "Trust Score 87". Numeric scores create false precision and trap users in meaningless "I'm 3 points higher than him" comparisons. We publish 1-5 Stars + Distinguished badges. Same as Michelin.
+          </p>
+        </div>
+
+        <div class="border-l-4 border-[#9c2516] pl-6 py-2">
+          <div class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold mb-2">② Guide, not Leaderboard</div>
+          <h3 class="font-serif text-xl tracking-tight mb-2">We curate. We don't rank.</h3>
+          <p class="text-sm text-[#6b5e52] leading-relaxed">
+            There is no "#1 Trill creator" — just as there is no "#1 Michelin restaurant in Paris". Mindshare data exists in our backend, but it never gets published. Public visibility is reserved for what's been evaluated and earned.
+          </p>
+        </div>
+
+        <div class="border-l-4 border-[#9c2516] pl-6 py-2">
+          <div class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold mb-2">③ Institution as trust unit</div>
+          <h3 class="font-serif text-xl tracking-tight mb-2">Trust the Guide, not the individual.</h3>
+          <p class="text-sm text-[#6b5e52] leading-relaxed">
+            A creator's rating moves over time. A bad call doesn't break trust in the Guide — the institution's standards, inspectors, and quarterly re-rating cycle are what's trusted. No single voice is a permanent authority.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- The Michelin analogy -->
+    <section class="mb-12 bg-[#ebe3d4] rounded-lg p-8">
+      <h2 class="font-serif text-3xl tracking-tight mb-5">The Michelin analogy, made literal</h2>
+
+      <div class="grid grid-cols-2 gap-x-8 gap-y-3 text-sm">
+        <div class="border-b border-subtle pb-2">
+          <div class="text-[10px] uppercase tracking-widest text-[#6b5e52]">Michelin</div>
+          <div class="font-semibold">Restaurant</div>
+        </div>
+        <div class="border-b border-subtle pb-2">
+          <div class="text-[10px] uppercase tracking-widest text-[#9c2516]">Trill</div>
+          <div class="font-semibold">Creator</div>
+        </div>
+
+        <div class="border-b border-subtle pb-2">
+          <div class="text-[10px] uppercase tracking-widest text-[#6b5e52]">Cuisine</div>
+          <div class="font-semibold">Vertical (DeFi / Macro / AI...)</div>
+        </div>
+        <div class="border-b border-subtle pb-2">
+          <div class="text-[10px] uppercase tracking-widest text-[#9c2516]">Star designation (1-3)</div>
+          <div class="font-semibold">Star designation (1-5)</div>
+        </div>
+
+        <div class="border-b border-subtle pb-2">
+          <div class="text-[10px] uppercase tracking-widest text-[#6b5e52]">Special Awards</div>
+          <div class="font-semibold">Dimension Distinctions</div>
+        </div>
+        <div class="border-b border-subtle pb-2">
+          <div class="text-[10px] uppercase tracking-widest text-[#9c2516]">Anonymous Inspectors</div>
+          <div class="font-semibold">Sentinels (anonymous + staked)</div>
+        </div>
+
+        <div>
+          <div class="text-[10px] uppercase tracking-widest text-[#6b5e52]">Annual Guide release</div>
+          <div class="font-semibold">Trill 100 annual reveal</div>
+        </div>
+        <div>
+          <div class="text-[10px] uppercase tracking-widest text-[#9c2516]">Re-rating cycle</div>
+          <div class="font-semibold">Quarterly</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- How to engage -->
+    <section class="mb-12">
+      <h2 class="font-serif text-3xl tracking-tight mb-5">How to engage with Trill</h2>
+
+      <div class="space-y-4">
+        <div class="border border-subtle rounded-lg p-5">
+          <div class="font-semibold text-sm mb-1">📖 Read the Guide</div>
+          <p class="text-xs text-[#6b5e52] mb-2">Browse evaluated creators, see who's Distinguished in dimensions that matter to you.</p>
+          <a href="index.html" class="text-xs text-[#9c2516] underline">Open The Guide →</a>
+        </div>
+
+        <div class="border border-subtle rounded-lg p-5">
+          <div class="font-semibold text-sm mb-1">🔍 Audit your feed</div>
+          <p class="text-xs text-[#6b5e52] mb-2">Connect X to see how much of your crypto follow graph is in the Guide, and what's missing.</p>
+          <a href="feed-audit.html" class="text-xs text-[#9c2516] underline">Open Audit →</a>
+        </div>
+
+        <div class="border border-subtle rounded-lg p-5">
+          <div class="font-semibold text-sm mb-1">🎯 Take the TrillClaw quiz</div>
+          <p class="text-xs text-[#6b5e52] mb-2">Discover your crypto archetype in 3 minutes. No signup required.</p>
+          <a href="trillclaw.html" class="text-xs text-[#9c2516] underline">Take quiz →</a>
+        </div>
+
+        <div class="border border-subtle rounded-lg p-5">
+          <div class="font-semibold text-sm mb-1">🛡 Become a Sentinel</div>
+          <p class="text-xs text-[#6b5e52] mb-2">For the small minority who want to evaluate creators themselves — vetted, staked, anonymous.</p>
+          <a href="sentinel.html" class="text-xs text-[#9c2516] underline">See the path →</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Bottom -->
+    <section class="pt-10 border-t border-subtle text-center">
+      <p class="text-sm text-[#6b5e52] italic mb-4">Want to understand how the evaluation works?</p>
+      <a href="methodology.html" class="px-5 py-2.5 bg-[#9c2516] text-[#f5efe7] text-sm font-semibold rounded">Read the methodology →</a>
+    </section>
+
+  </main>
+
+  <footer class="border-t border-subtle py-8 mt-12">
+    <div class="max-w-5xl mx-auto px-8 text-xs text-[#6b5e52] text-center">
+      The Trill Guide · Curated by Sentinels · Re-rated quarterly
+    </div>
+  </footer>
+
+</body>
+</html>

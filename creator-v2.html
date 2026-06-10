@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Creator · @hsakatrades · Trill v2</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', system-ui, sans-serif; background: #f5efe7; color: #1a1611; }
+    .font-serif { font-family: 'Cormorant Garamond', Georgia, serif; }
+    .star-filled { color: #9c2516; }
+    .star-empty { color: #d6cfc4; }
+    .coach { cursor: help; color: #9c2516; opacity: 0.6; font-weight: 600; }
+    .coach:hover { opacity: 1; }
+    .border-subtle { border-color: #d6cfc4; }
+  </style>
+</head>
+<body class="min-h-screen">
+
+<!-- TIER-SWITCHER — demo-mode tier switcher (inject right after <body>) -->
+<style>
+  #tier-demo-bar { font-family: 'Inter', system-ui, sans-serif; background:#1a1611; color:#f5efe7; padding:10px 16px; font-size:12px; display:flex; align-items:center; justify-content:space-between; gap:12px; position:relative; z-index:50; border-bottom:1px solid #6b5e52; }
+  #tier-demo-bar .tdb-left { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+  #tier-demo-bar .tdb-tag { font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:#9c2516; font-weight:700; background:#3a1f1a; padding:3px 8px; border-radius:3px; }
+  #tier-demo-bar .tdb-label { color:#d6cfc4; }
+  #tier-demo-bar .tdb-btn { background:#9c2516; color:#f5efe7; padding:5px 12px; border-radius:4px; display:inline-flex; align-items:center; gap:6px; cursor:pointer; border:none; font-size:12px; font-weight:600; }
+  #tier-demo-bar .tdb-btn:hover { background:#7a1d11; }
+  #tier-demo-bar .tdb-hint { font-size:10px; color:#d6cfc4; font-style:italic; }
+  #tier-demo-menu { position:absolute; left:0; top:100%; margin-top:1px; width:300px; background:#1a1611; border:1px solid #6b5e52; border-radius:4px; box-shadow:0 8px 24px rgba(0,0,0,0.4); padding:4px 0; z-index:100; }
+  #tier-demo-menu.hidden { display:none; }
+  #tier-demo-menu button { display:block; width:100%; text-align:left; padding:9px 14px; background:transparent; border:0; color:#f5efe7; cursor:pointer; }
+  #tier-demo-menu button:hover { background:#3a1f1a; }
+  #tier-demo-menu .tdm-title { font-size:12px; font-weight:600; }
+  #tier-demo-menu .tdm-desc { font-size:10px; color:#d6cfc4; margin-top:1px; }
+  #tier-demo-menu .tdm-active { background:#3a1f1a; }
+  #tier-demo-menu .tdm-active::after { content:"✓"; float:right; color:#9c2516; font-weight:700; }
+  /* Tier-locked content overlay */
+  .tier-locked-overlay { position:relative; }
+  .tier-locked-overlay::before { content:""; position:absolute; inset:0; background:linear-gradient(to bottom, rgba(245,239,231,0) 0%, rgba(245,239,231,0.95) 70%, rgba(245,239,231,1) 100%); z-index:5; pointer-events:none; border-radius:inherit; }
+  .tier-locked-cta { position:absolute; bottom:18px; left:50%; transform:translateX(-50%); z-index:6; background:#1a1611; color:#f5efe7; padding:10px 18px; border-radius:6px; font-size:12px; font-weight:600; display:inline-flex; align-items:center; gap:8px; box-shadow:0 4px 14px rgba(0,0,0,0.15); }
+  .tier-locked-cta a { color:#f5efe7; text-decoration:underline; }
+  @media (max-width: 720px) {
+    #tier-demo-bar .tdb-hint { display:none; }
+    #tier-demo-menu { width:260px; }
+  }
+</style>
+
+<div id="tier-demo-bar">
+  <div class="tdb-left">
+    <span class="tdb-tag" data-i18n="demo">Demo</span>
+    <span class="tdb-label" data-i18n="viewing-as">Viewing as:</span>
+    <div style="position:relative;">
+      <button type="button" class="tdb-btn" id="tier-demo-btn">
+        <span id="tier-demo-current">👤 Anonymous</span>
+        <span style="font-size:9px;">▼</span>
+      </button>
+      <div id="tier-demo-menu" class="hidden">
+        <button data-set-tier="anonymous"><div class="tdm-title">👤 <span data-i18n="t-anon">Anonymous</span></div><div class="tdm-desc" data-i18n="t-anon-desc">Not signed in · browsing freely</div></button>
+        <button data-set-tier="registered"><div class="tdm-title">🔓 <span data-i18n="t-reg">Registered</span> · <span data-i18n="free">Free</span></div><div class="tdm-desc" data-i18n="t-reg-desc">Email account · watchlist + basic alerts</div></button>
+        <button data-set-tier="connected"><div class="tdm-title">🔗 <span data-i18n="t-conn">Connected</span> · <span data-i18n="free">Free</span></div><div class="tdm-desc" data-i18n="t-conn-desc">X + wallet linked · Feed Audit unlocked</div></button>
+        <button data-set-tier="pro-lite"><div class="tdm-title">⭐ <span data-i18n="t-prolite">Pro Lite</span> · $9/mo</div><div class="tdm-desc" data-i18n="t-prolite-desc">Full call history · multi-KOL alerts · trends</div></button>
+        <button data-set-tier="pro"><div class="tdm-title">💎 <span data-i18n="t-pro">Pro</span> · $25/mo</div><div class="tdm-desc" data-i18n="t-pro-desc">Trill Indices · DD reports · holdings overlap</div></button>
+      </div>
+    </div>
+  </div>
+  <div class="tdb-hint" data-i18n="hint">Same URL — content visibility changes by tier</div>
+</div>
+
+<script>
+(function(){
+  var TIERS = ['anonymous','registered','connected','pro-lite','pro'];
+  var LABELS = {
+    en: { anonymous:'👤 Anonymous', registered:'🔓 Registered', connected:'🔗 Connected', 'pro-lite':'⭐ Pro Lite', pro:'💎 Pro' },
+    zh: { anonymous:'👤 未登录', registered:'🔓 已注册', connected:'🔗 已连接', 'pro-lite':'⭐ Pro Lite', pro:'💎 Pro' }
+  };
+  var I18N = {
+    en: { 'demo':'Demo', 'viewing-as':'Viewing as:', 't-anon':'Anonymous', 't-reg':'Registered', 't-conn':'Connected', 't-prolite':'Pro Lite', 't-pro':'Pro', 'free':'Free', 't-anon-desc':'Not signed in · browsing freely', 't-reg-desc':'Email account · watchlist + basic alerts', 't-conn-desc':'X + wallet linked · Feed Audit unlocked', 't-prolite-desc':'Full call history · multi-KOL alerts · trends', 't-pro-desc':'Trill Indices · DD reports · holdings overlap', 'hint':'Same URL — content visibility changes by tier' },
+    zh: { 'demo':'演示模式', 'viewing-as':'当前视角:', 't-anon':'未登录', 't-reg':'已注册', 't-conn':'已连接', 't-prolite':'Pro Lite', 't-pro':'Pro', 'free':'免费', 't-anon-desc':'未登录 · 自由浏览', 't-reg-desc':'邮箱账号 · watchlist + 基础提醒', 't-conn-desc':'X + 钱包已连接 · Feed Audit 解锁', 't-prolite-desc':'完整 call 历史 · 多 KOL 提醒 · 趋势线', 't-pro-desc':'Trill Indices · DD 报告 · 持仓 overlap', 'hint':'同一 URL — 不同 tier 看到不同内容' }
+  };
+  var lang = (document.documentElement.lang || 'en').toLowerCase().indexOf('zh') === 0 ? 'zh' : 'en';
+  var i18n = I18N[lang]; var labels = LABELS[lang];
+
+  // i18n labels
+  document.querySelectorAll('#tier-demo-bar [data-i18n], #tier-demo-menu [data-i18n]').forEach(function(el){
+    var k = el.getAttribute('data-i18n');
+    if (i18n[k] !== undefined) el.textContent = i18n[k];
+  });
+
+  function applyTier(tier) {
+    if (TIERS.indexOf(tier) < 0) tier = 'anonymous';
+    var cur = TIERS.indexOf(tier);
+    document.documentElement.setAttribute('data-tier', tier);
+    document.getElementById('tier-demo-current').textContent = labels[tier];
+    // min-tier
+    document.querySelectorAll('[data-min-tier]').forEach(function(el){
+      var v = el.getAttribute('data-min-tier');
+      var idx = TIERS.indexOf(v);
+      el.style.display = (cur >= idx) ? '' : 'none';
+    });
+    // max-tier
+    document.querySelectorAll('[data-max-tier]').forEach(function(el){
+      var v = el.getAttribute('data-max-tier');
+      var idx = TIERS.indexOf(v);
+      el.style.display = (cur <= idx) ? '' : 'none';
+    });
+    // only-tier (comma list)
+    document.querySelectorAll('[data-only-tier]').forEach(function(el){
+      var allowed = el.getAttribute('data-only-tier').split(',').map(function(s){return s.trim();});
+      el.style.display = (allowed.indexOf(tier) >= 0) ? '' : 'none';
+    });
+    // mark active
+    document.querySelectorAll('#tier-demo-menu button').forEach(function(b){
+      b.classList.toggle('tdm-active', b.getAttribute('data-set-tier') === tier);
+    });
+  }
+
+  var saved = (typeof localStorage !== 'undefined' && localStorage.getItem('trill-demo-tier')) || 'anonymous';
+  applyTier(saved);
+
+  var btn = document.getElementById('tier-demo-btn');
+  var menu = document.getElementById('tier-demo-menu');
+  btn.addEventListener('click', function(e){ e.stopPropagation(); menu.classList.toggle('hidden'); });
+  document.addEventListener('click', function(){ menu.classList.add('hidden'); });
+  menu.addEventListener('click', function(e){
+    var t = e.target.closest('[data-set-tier]');
+    if (!t) return;
+    var newTier = t.getAttribute('data-set-tier');
+    try { localStorage.setItem('trill-demo-tier', newTier); } catch(_) {}
+    applyTier(newTier);
+    menu.classList.add('hidden');
+  });
+})();
+</script>
+<!-- /TIER-SWITCHER -->
+
+
+  <!-- Top nav -->
+  <nav class="border-b border-subtle bg-[#f5efe7]/95 backdrop-blur sticky top-0 z-10">
+    <div class="max-w-6xl mx-auto px-8 py-4 flex items-center justify-between">
+      <div class="flex items-baseline gap-2">
+        <a href="index.html" class="font-serif text-2xl text-[#9c2516] tracking-tight">Trill</a>
+        <span class="text-[10px] uppercase tracking-widest text-[#6b5e52]">The Guide</span>
+      </div>
+      <div class="flex items-center gap-1 text-sm">
+        <a href="index.html" class="px-3 py-1.5 text-[#6b5e52] hover:text-[#1a1611]">Home</a>
+        <a href="stars.html" class="px-3 py-1.5 text-[#1a1611] font-semibold border-b-2 border-[#9c2516]">Trill Stars</a>
+        <a href="guides.html" class="px-3 py-1.5 text-[#6b5e52] hover:text-[#1a1611]">Trill Guide</a>
+        <a href="dimensions.html" class="px-3 py-1.5 text-[#6b5e52] hover:text-[#1a1611]">Dimensions</a>
+        <a href="feed-audit.html" class="px-3 py-1.5 text-[#6b5e52] hover:text-[#1a1611]">Recommend</a>
+        <a href="account.html" class="px-3 py-1.5 text-[#6b5e52] hover:text-[#1a1611]">Account</a>
+        <div class="relative" data-trill-dropdown>
+          <button type="button" data-trill-dropdown-btn class="px-3 py-1.5 text-[#6b5e52] hover:text-[#1a1611] flex items-center gap-1">More <span class="text-[10px]">▼</span></button>
+          <div data-trill-dropdown-menu class="hidden absolute right-0 top-full mt-1 w-56 bg-[#f5efe7] border border-subtle rounded-lg shadow-lg z-20 py-1">
+            <a href="trillclaw.html" class="block px-4 py-2 text-sm text-[#1a1611] hover:bg-[#ebe3d4]">TrillClaw Quiz</a>
+            <a href="subscribe.html" class="block px-4 py-2 text-sm text-[#1a1611] hover:bg-[#ebe3d4]">Pricing</a>
+            <div class="border-t border-subtle my-1"></div>
+            <a href="methodology.html" class="block px-4 py-2 text-sm text-[#1a1611] hover:bg-[#ebe3d4]">Methodology</a>
+            <a href="about.html" class="block px-4 py-2 text-sm text-[#1a1611] hover:bg-[#ebe3d4]">About Trill</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>(function(){var w=document.currentScript.parentElement.querySelector('[data-trill-dropdown]');if(!w)return;var b=w.querySelector('[data-trill-dropdown-btn]'),m=w.querySelector('[data-trill-dropdown-menu]');b.addEventListener('click',function(e){e.stopPropagation();m.classList.toggle('hidden')});document.addEventListener('click',function(e){if(!w.contains(e.target))m.classList.add('hidden')});})();</script>
+  </nav>
+
+  <!-- Compare options bar (for demo purposes) -->
+  <div class="bg-[#ebe3d4] border-b border-subtle">
+    <div class="max-w-5xl mx-auto px-8 py-2 flex items-center justify-between text-xs">
+      <span class="text-[#6b5e52]">Demo · Trill starred KOL · Dimensions Option <strong class="text-[#9c2516]">A</strong> (visible)</span>
+      <div class="flex items-center gap-3">
+        <a href="creator-v2.html" class="text-[#9c2516] underline">Option A</a>
+        <span class="text-[#d6cfc4]">/</span>
+        <a href="creator-v2-option-b.html" class="text-[#6b5e52] hover:text-[#1a1611]">Option B (hidden)</a>
+        <span class="text-[#d6cfc4]">/</span>
+        <a href="creator-unstarred.html" class="text-[#6b5e52] hover:text-[#1a1611]">Non-Trill starred</a>
+      </div>
+    </div>
+  </div>
+
+  <main class="max-w-5xl mx-auto px-8 py-12">
+
+    <!-- Breadcrumb -->
+    <div class="text-xs text-[#6b5e52] mb-6">
+      <a href="index.html" class="hover:text-[#9c2516]">The Guide</a>
+      <span class="mx-2">›</span>
+      <a href="#" class="hover:text-[#9c2516]">DeFi</a>
+      <span class="mx-2">›</span>
+      <span>@hsakatrades</span>
+    </div>
+
+    <!-- Hero: avatar + name + bio (literary) -->
+    <header class="mb-10 pb-10 border-b border-subtle">
+      <div class="flex items-start gap-6 mb-6">
+        <div class="w-20 h-20 rounded-full bg-[#9c2516] flex items-center justify-center text-3xl font-serif font-bold text-[#f5efe7] flex-shrink-0">H</div>
+        <div class="flex-1">
+          <div class="flex items-baseline gap-3 mb-1">
+            <h1 class="font-serif text-5xl tracking-tight">Hsaka</h1>
+            <span class="text-lg text-[#6b5e52]">@hsakatrades</span>
+          </div>
+          <p class="text-sm text-[#6b5e52] italic font-serif">Trades the macro, hates the cope.</p>
+          <div class="flex items-center gap-4 mt-3 text-xs text-[#6b5e52]">
+            <span>DeFi · Thesis-driven</span>
+            <span>·</span>
+            <span>142.8K on X</span>
+            <span>·</span>
+            <span>Listed since 2024 Q3 · Re-rated 2026 Q1 <span class="text-[#9c2516]">(↑ from Two-Star)</span></span>
+          </div>
+        </div>
+        <div class="text-right flex-shrink-0">
+          <div class="font-mono text-3xl tracking-tight text-[#9c2516]">★★★</div>
+          <div class="text-[10px] uppercase tracking-widest text-[#6b5e52] mt-1">Trill Verified · Three-Star</div>
+        </div>
+      </div>
+
+      <!-- Literary bio paragraph -->
+      <div class="bg-[#ebe3d4] rounded-lg p-6 mb-5">
+        <p class="font-serif text-lg leading-relaxed text-[#1a1611]">
+          An independent macro analyst best known for calling the <strong>EigenLayer slashing risk concentration thesis</strong> in late 2025, well before the broader market caught on. Comfortable with multi-quarter holding periods, with a particular focus on liquidity inflection points and restaking risk frameworks. His public ledger of calls — including the ones he got wrong — has earned him distinction on Analytical Depth and Intellectual Honesty.
+        </p>
+      </div>
+
+      <!-- Why follow callout -->
+      <div class="border-l-4 border-[#9c2516] pl-5 py-2 mb-6">
+        <div class="text-[10px] uppercase tracking-widest text-[#9c2516] mb-1.5">Why follow @hsakatrades</div>
+        <p class="font-serif text-base leading-relaxed text-[#1a1611] italic">
+          If you want a counter-narrative voice in DeFi who calls out hype and stays calibrated even when wrong, Hsaka is one of the most consistent and intellectually honest voices in the space.
+        </p>
+      </div>
+
+      <!-- Actions — Anonymous variant -->
+      <div data-max-tier="anonymous" class="flex items-center gap-3">
+        <a href="account.html" class="px-5 py-2.5 bg-[#9c2516] text-[#f5efe7] text-sm font-semibold rounded">Sign in to follow</a>
+        <a href="account.html" class="px-5 py-2.5 border border-[#9c2516] text-[#9c2516] text-sm font-semibold rounded">Sign in to save</a>
+        <span class="text-xs text-[#6b5e52] italic">Watchlist & alerts unlock with a free account</span>
+        <span class="ml-auto text-xs text-[#6b5e52]">📤 Share</span>
+      </div>
+
+      <!-- Actions — Registered / Connected -->
+      <div data-only-tier="registered,connected" class="flex items-center gap-3">
+        <button class="px-5 py-2.5 bg-[#9c2516] text-[#f5efe7] text-sm font-semibold rounded">+ Follow</button>
+        <button class="px-5 py-2.5 border border-[#9c2516] text-[#9c2516] text-sm font-semibold rounded">♡ Save to my list</button>
+        <button class="px-5 py-2.5 border border-subtle text-[#1a1611] text-sm rounded">🔔 Basic alert (daily digest)</button>
+        <span class="ml-auto text-xs text-[#6b5e52]">📤 Share</span>
+      </div>
+
+      <!-- Actions — Pro Lite / Pro -->
+      <div data-min-tier="pro-lite" class="flex items-center gap-3 flex-wrap">
+        <button class="px-5 py-2.5 bg-[#9c2516] text-[#f5efe7] text-sm font-semibold rounded">✓ Following</button>
+        <button class="px-5 py-2.5 border border-[#9c2516] text-[#9c2516] text-sm font-semibold rounded">♡ Saved</button>
+        <button class="px-5 py-2.5 border border-[#9c2516] text-[#9c2516] text-sm rounded">🔔 Real-time alert (Pro)</button>
+        <button data-min-tier="pro" class="px-5 py-2.5 border border-[#9c2516] text-[#9c2516] text-sm rounded">⇄ Compare</button>
+        <span class="ml-auto text-xs text-[#6b5e52]">📤 Share</span>
+      </div>
+    </header>
+
+    <!-- Dimension breakdown (Option A: visible radar + tier list) -->
+    <section class="mb-10 pb-10 border-b border-subtle">
+      <div class="flex items-baseline justify-between mb-2">
+        <h2 class="font-serif text-3xl tracking-tight">Dimension breakdown</h2>
+        <span class="text-[10px] uppercase tracking-widest text-[#6b5e52]">qualitative tiers · no numeric scores</span>
+      </div>
+      <p class="text-sm text-[#6b5e52] mb-8">
+        How Hsaka shapes up across Trill's 6 evaluation dimensions. Each dimension is rated qualitatively — Distinguished, Strong, Standard, or Developing. <a href="methodology.html" class="text-[#9c2516] underline">How are these derived?</a>
+      </p>
+
+      <div class="grid grid-cols-5 gap-8">
+
+        <!-- Radar (2/5) · 6-axis hexagon -->
+        <div class="col-span-2 flex items-center justify-center">
+          <svg viewBox="-140 -140 280 280" class="w-full max-w-[280px]">
+            <!-- 4 concentric hexagons (vertices at top, top-right, bottom-right, bottom, bottom-left, top-left) -->
+            <polygon points="0,-100 86.6,-50 86.6,50 0,100 -86.6,50 -86.6,-50" fill="none" stroke="#d6cfc4" stroke-width="0.8"/>
+            <polygon points="0,-75 64.95,-37.5 64.95,37.5 0,75 -64.95,37.5 -64.95,-37.5" fill="none" stroke="#d6cfc4" stroke-width="0.6"/>
+            <polygon points="0,-50 43.3,-25 43.3,25 0,50 -43.3,25 -43.3,-25" fill="none" stroke="#d6cfc4" stroke-width="0.6"/>
+            <polygon points="0,-25 21.65,-12.5 21.65,12.5 0,25 -21.65,12.5 -21.65,-12.5" fill="none" stroke="#d6cfc4" stroke-width="0.6"/>
+
+            <!-- 6 axes -->
+            <line x1="0" y1="0" x2="0" y2="-100" stroke="#d6cfc4" stroke-width="0.5"/>
+            <line x1="0" y1="0" x2="86.6" y2="-50" stroke="#d6cfc4" stroke-width="0.5"/>
+            <line x1="0" y1="0" x2="86.6" y2="50" stroke="#d6cfc4" stroke-width="0.5"/>
+            <line x1="0" y1="0" x2="0" y2="100" stroke="#d6cfc4" stroke-width="0.5"/>
+            <line x1="0" y1="0" x2="-86.6" y2="50" stroke="#d6cfc4" stroke-width="0.5"/>
+            <line x1="0" y1="0" x2="-86.6" y2="-50" stroke="#d6cfc4" stroke-width="0.5"/>
+
+            <!-- KOL shape · Hsaka values: AD=4 (top), IH=4 (top-right), Acc=3 (bottom-right), EV=3 (bottom), Care=2 (bottom-left), EE=2 (top-left) -->
+            <polygon points="0,-100 86.6,-50 64.95,37.5 0,75 -43.3,25 -43.3,-25"
+              fill="#9c2516" fill-opacity="0.25" stroke="#9c2516" stroke-width="2"/>
+
+            <circle cx="0" cy="-100" r="3.5" fill="#9c2516"/>
+            <circle cx="86.6" cy="-50" r="3.5" fill="#9c2516"/>
+            <circle cx="64.95" cy="37.5" r="3.5" fill="#9c2516"/>
+            <circle cx="0" cy="75" r="3.5" fill="#9c2516"/>
+            <circle cx="-43.3" cy="25" r="3.5" fill="#9c2516"/>
+            <circle cx="-43.3" cy="-25" r="3.5" fill="#9c2516"/>
+
+            <!-- Axis labels (6 dimensions) -->
+            <text x="0" y="-115" text-anchor="middle" fill="#1a1611" font-size="11" font-family="Inter">Analytical</text>
+            <text x="0" y="-104" text-anchor="middle" fill="#1a1611" font-size="11" font-family="Inter">Depth</text>
+            <text x="103" y="-58" text-anchor="middle" fill="#1a1611" font-size="11" font-family="Inter">Honesty</text>
+            <text x="103" y="58" text-anchor="middle" fill="#1a1611" font-size="11" font-family="Inter">Accuracy</text>
+            <text x="0" y="118" text-anchor="middle" fill="#1a1611" font-size="11" font-family="Inter">Educational</text>
+            <text x="-103" y="58" text-anchor="middle" fill="#1a1611" font-size="11" font-family="Inter">Care</text>
+            <text x="-103" y="-58" text-anchor="middle" fill="#1a1611" font-size="11" font-family="Inter">Entertainment</text>
+          </svg>
+        </div>
+
+        <!-- Tier list (3/5) with coach marks · 6 dimensions -->
+        <div class="col-span-3 space-y-3">
+
+          <div class="flex items-center justify-between border-b border-subtle pb-2">
+            <div class="flex items-center gap-2">
+              <span class="text-sm">Analytical Depth</span>
+              <span class="coach text-xs" title="The depth and substance of a creator's analysis. Multi-framework reasoning, evidence-based, not surface-level takes.">(?)</span>
+            </div>
+            <span class="text-sm font-semibold text-[#9c2516]">Distinguished 🎯</span>
+          </div>
+
+          <div class="flex items-center justify-between border-b border-subtle pb-2">
+            <div class="flex items-center gap-2">
+              <span class="text-sm">Intellectual Honesty</span>
+              <span class="coach text-xs" title="Willingness to self-correct, acknowledge mistakes, and update views based on new evidence. The opposite of double-down behavior.">(?)</span>
+            </div>
+            <span class="text-sm font-semibold text-[#9c2516]">Distinguished 🪞</span>
+          </div>
+
+          <div class="flex items-center justify-between border-b border-subtle pb-2">
+            <div class="flex items-center gap-2">
+              <span class="text-sm">Accuracy Discipline</span>
+              <span class="coach text-xs" title="How calibrated the creator's calls are over time. Measured via resolved-call accuracy, volume, and cross-cycle consistency.">(?)</span>
+            </div>
+            <span class="text-sm text-[#1a1611]">Strong</span>
+          </div>
+
+          <div class="flex items-center justify-between border-b border-subtle pb-2">
+            <div class="flex items-center gap-2">
+              <span class="text-sm">Educational Value</span>
+              <span class="coach text-xs" title="How well the creator helps others learn. Explainers, primers, pedagogical depth.">(?)</span>
+            </div>
+            <span class="text-sm text-[#1a1611]">Strong</span>
+          </div>
+
+          <div class="flex items-center justify-between border-b border-subtle pb-2">
+            <div class="flex items-center gap-2">
+              <span class="text-sm">Community Care</span>
+              <span class="coach text-xs" title="How responsibly the creator treats their audience. Watches for shilling, exit-pumping, and exploitative behavior.">(?)</span>
+            </div>
+            <span class="text-sm text-[#6b5e52]">Standard</span>
+          </div>
+
+          <div class="flex items-center justify-between pb-2">
+            <div class="flex items-center gap-2">
+              <span class="text-sm">Entertainment & Engagement</span>
+              <span class="coach text-xs" title="Engagement quality — does the creator hold attention without resorting to noise? Substance with personality.">(?)</span>
+            </div>
+            <span class="text-sm text-[#6b5e52]">Standard</span>
+          </div>
+
+          <div class="mt-4 pt-3 border-t border-subtle">
+            <p class="text-[11px] text-[#6b5e52] italic">
+              <strong class="text-[#9c2516]">Distinguished</strong> dimensions = Michelin Special Awards equivalent. Hover any (?) icon to learn what each dimension measures.
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Current narrative + asset + summary -->
+    <section class="grid grid-cols-3 gap-8 mb-10 pb-10 border-b border-subtle">
+
+      <div>
+        <div class="flex items-center gap-2 mb-3">
+          <h3 class="text-[10px] uppercase tracking-widest text-[#6b5e52]">Current narratives</h3>
+          <span class="coach text-xs" title="Narratives this KOL is actively writing about, ranked by their personal call frequency.">(?)</span>
+        </div>
+        <div class="space-y-2 text-sm">
+          <div class="flex justify-between"><span>Restaking risk</span><span class="text-[#9c2516] text-xs">+42% heat</span></div>
+          <div class="flex justify-between"><span>Stablecoin yield</span><span class="text-[#6b5e52] text-xs">stable</span></div>
+          <div class="flex justify-between"><span>MEV-Burn</span><span class="text-[#6b5e52] text-xs">cooling</span></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="flex items-center gap-2 mb-3">
+          <h3 class="text-[10px] uppercase tracking-widest text-[#6b5e52]">Active asset calls</h3>
+          <span class="coach text-xs" title="Open positions or stated conviction on specific tokens. Each call has a conviction level + timeframe.">(?)</span>
+        </div>
+        <div class="space-y-2 text-sm">
+          <div class="flex justify-between"><span>$EIGEN</span><span class="text-[#9c2516] text-xs">SHORT · High</span></div>
+          <div class="flex justify-between"><span>$ETH</span><span class="text-[#6b5e52] text-xs">LONG · Med</span></div>
+          <div class="flex justify-between"><span>$USDC</span><span class="text-[#6b5e52] text-xs">HOLD</span></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="flex items-center gap-2 mb-3">
+          <h3 class="text-[10px] uppercase tracking-widest text-[#6b5e52]">Call record summary</h3>
+          <span class="coach text-xs" title="Public ledger of resolved + open calls. Trill does NOT show accuracy %. Read the receipts to judge for yourself.">(?)</span>
+        </div>
+        <div class="space-y-2 text-sm">
+          <div class="flex justify-between"><span class="text-[#6b5e52]">Total (YTD)</span><span>22</span></div>
+          <div class="flex justify-between"><span class="text-[#6b5e52]">Resolved</span><span>19</span></div>
+          <div class="flex justify-between"><span class="text-[#6b5e52]">Open</span><span>3</span></div>
+          <p class="text-[10px] text-[#6b5e52] italic pt-2">No accuracy %. Read the receipts ↓</p>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Gate — Anonymous: create account -->
+    <section data-max-tier="anonymous" class="mb-10">
+      <div class="bg-[#ebe3d4] border border-subtle rounded-lg p-8 text-center">
+        <div class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold mb-3">The Trill Guide</div>
+        <h3 class="font-serif text-2xl tracking-tight mb-3">Discover Hsaka's complete call record in one account.</h3>
+        <p class="text-sm text-[#6b5e52] mb-6 max-w-xl mx-auto leading-relaxed">Sign in to view the past 30 days of calls. Pro Lite ($9/mo) unlocks the full 90-day record + multi-timeframe trends.</p>
+        <div class="flex items-center justify-center gap-3">
+          <a href="account.html" class="px-6 py-3 bg-[#1a1611] text-[#f5efe7] text-sm font-semibold rounded">Create a free account</a>
+          <a href="account.html" class="text-xs text-[#6b5e52] hover:text-[#9c2516] underline">Already registered? Sign in</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Gate — Registered / Connected: upgrade to Pro Lite -->
+    <section data-only-tier="registered,connected" class="mb-10">
+      <div class="bg-[#fef4e8] border border-[#9c2516] rounded-lg p-8 text-center">
+        <div class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold mb-3">⭐ Pro Lite · $9/mo</div>
+        <h3 class="font-serif text-2xl tracking-tight mb-3">Unlock Hsaka's full call record + multi-timeframe trends.</h3>
+        <p class="text-sm text-[#6b5e52] mb-6 max-w-xl mx-auto leading-relaxed">You're viewing the past 30 days as a free member. Upgrade for the complete 90-day history, narrative-level trend lines, and multi-KOL real-time alerts via Telegram.</p>
+        <div class="flex items-center justify-center gap-3">
+          <a href="subscribe.html" class="px-6 py-3 bg-[#9c2516] text-[#f5efe7] text-sm font-semibold rounded">Upgrade to Pro Lite</a>
+          <a href="subscribe.html" class="text-xs text-[#6b5e52] hover:text-[#9c2516] underline">Or stake $TRILL for the same perks</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Receipts — anonymous teaser: shows just 2 calls with blur -->
+    <section data-max-tier="anonymous" class="mb-10">
+      <div class="flex items-baseline justify-between mb-6">
+        <h2 class="font-serif text-3xl tracking-tight">The receipts <span class="text-xs text-[#6b5e52] font-sans font-normal">· preview</span></h2>
+        <span class="text-[10px] uppercase tracking-widest text-[#6b5e52]">2 of 22 shown · sign in for 30 days</span>
+      </div>
+      <div class="space-y-6 mb-6">
+        <article class="border-l-2 border-[#9c2516] pl-5">
+          <div class="flex items-center gap-3 mb-2 text-xs">
+            <span class="text-[#6b5e52]">2026-05-12</span>
+            <span class="px-2 py-0.5 bg-[#fef3c7] text-[#92400e] font-semibold rounded text-[10px]">OPEN · 9 DAYS</span>
+            <span class="px-2 py-0.5 bg-[#fee2e2] text-[#9c2516] font-semibold rounded text-[10px]">HIGH CONVICTION</span>
+          </div>
+          <h4 class="font-serif text-lg mb-1">EigenLayer slashing risk thesis</h4>
+          <p class="text-sm italic text-[#1a1611]">"EigenLayer's restaking concentration is the next systemic risk. Three liquidity layers stacked, no slashing infra for the bottom two..."</p>
+        </article>
+        <article class="border-l-2 border-[#10b981] pl-5">
+          <div class="flex items-center gap-3 mb-2 text-xs">
+            <span class="text-[#6b5e52]">2026-04-28</span>
+            <span class="px-2 py-0.5 bg-[#d1fae5] text-[#065f46] font-semibold rounded text-[10px]">RESOLVED · CORRECT</span>
+          </div>
+          <h4 class="font-serif text-lg mb-1">$USDC backing review</h4>
+          <p class="text-sm italic text-[#1a1611]">"Cantor T-bill custody adds reserve transparency. USDC's commercial paper exposure is now under 8%."</p>
+        </article>
+      </div>
+      <div class="bg-[#1a1611] text-[#f5efe7] rounded-lg p-6 text-center">
+        <p class="font-serif text-xl mb-2">20 more calls — including 3 fraud callouts and 1 self-corrected miss — are in the full record.</p>
+        <p class="text-xs text-[#d6cfc4] mb-4">Sign in to view the past 30 days · Pro Lite unlocks all 90 days.</p>
+        <a href="account.html" class="inline-block px-6 py-3 bg-[#9c2516] text-[#f5efe7] text-sm font-semibold rounded">Create a free account</a>
+      </div>
+    </section>
+
+    <!-- Receipts — Registered / Connected / Pro Lite / Pro: full content -->
+    <section data-min-tier="registered" class="mb-10">
+      <div class="flex items-baseline justify-between mb-6">
+        <h2 class="font-serif text-3xl tracking-tight">The receipts</h2>
+        <span class="text-[10px] uppercase tracking-widest text-[#6b5e52]"><span data-only-tier="registered,connected">past 30 days · upgrade for 90</span><span data-min-tier="pro-lite">past 90 days · longitudinal</span></span>
+      </div>
+
+      <div class="space-y-6">
+
+        <article class="border-l-2 border-[#9c2516] pl-5">
+          <div class="flex items-center gap-3 mb-2 text-xs">
+            <span class="text-[#6b5e52]">2026-05-12</span>
+            <span class="px-2 py-0.5 bg-[#fef3c7] text-[#92400e] font-semibold rounded text-[10px]">OPEN · 9 DAYS</span>
+            <span class="px-2 py-0.5 bg-[#fee2e2] text-[#9c2516] font-semibold rounded text-[10px]">HIGH CONVICTION</span>
+          </div>
+          <h4 class="font-serif text-lg mb-1">EigenLayer slashing risk thesis</h4>
+          <p class="text-sm italic text-[#1a1611]">"EigenLayer's restaking concentration is the next systemic risk. Three liquidity layers stacked, no slashing infra for the bottom two..."</p>
+          <a href="#" class="text-xs text-[#9c2516] hover:underline mt-1 inline-block">→ Read full thread on X</a>
+        </article>
+
+        <article class="border-l-2 border-[#10b981] pl-5">
+          <div class="flex items-center gap-3 mb-2 text-xs">
+            <span class="text-[#6b5e52]">2026-04-28</span>
+            <span class="px-2 py-0.5 bg-[#d1fae5] text-[#065f46] font-semibold rounded text-[10px]">RESOLVED · CORRECT</span>
+            <span class="px-2 py-0.5 bg-[#ebe3d4] text-[#6b5e52] font-semibold rounded text-[10px]">MED CONVICTION</span>
+          </div>
+          <h4 class="font-serif text-lg mb-1">$USDC backing review</h4>
+          <p class="text-sm italic text-[#1a1611]">"Cantor T-bill custody adds reserve transparency. USDC's commercial paper exposure is now under 8%."</p>
+        </article>
+
+        <article class="border-l-2 border-[#f97316] pl-5">
+          <div class="flex items-center gap-3 mb-2 text-xs">
+            <span class="text-[#6b5e52]">2026-04-10</span>
+            <span class="px-2 py-0.5 bg-[#ffedd5] text-[#9a3412] font-semibold rounded text-[10px]">RESOLVED · SELF-CORRECTED</span>
+            <span class="px-2 py-0.5 bg-[#ebe3d4] text-[#6b5e52] font-semibold rounded text-[10px]">MED CONVICTION</span>
+          </div>
+          <h4 class="font-serif text-lg mb-1">MEV-Burn timeline mis-call</h4>
+          <p class="text-sm italic text-[#1a1611]">"I called MEV-Burn EIP merge for Q2. Wrong. The validator coordination problem is deeper than I gave it credit for. Updating thesis."</p>
+          <p class="text-[11px] text-[#9c2516] italic mt-1">↑ This kind of self-correction is what earns the "Intellectual Honesty" distinction.</p>
+        </article>
+
+        <article class="border-l-2 border-[#10b981] pl-5">
+          <div class="flex items-center gap-3 mb-2 text-xs">
+            <span class="text-[#6b5e52]">2026-03-22</span>
+            <span class="px-2 py-0.5 bg-[#d1fae5] text-[#065f46] font-semibold rounded text-[10px]">RESOLVED · CORRECT</span>
+            <span class="px-2 py-0.5 bg-[#fee2e2] text-[#9c2516] font-semibold rounded text-[10px]">HIGH CONVICTION</span>
+          </div>
+          <h4 class="font-serif text-lg mb-1">Solana DEX volume thesis</h4>
+          <p class="text-sm italic text-[#1a1611]">"Solana DEX share to surpass Ethereum L1 by Q2. Pump.fun retention + Jupiter routing depth is the engine."</p>
+        </article>
+
+        <article class="border-l-2 border-[#1a1611] pl-5">
+          <div class="flex items-center gap-3 mb-2 text-xs">
+            <span class="text-[#6b5e52]">2026-03-04</span>
+            <span class="px-2 py-0.5 bg-[#1a1611] text-[#f5efe7] font-semibold rounded text-[10px]">FRAUD CALLOUT · CONFIRMED</span>
+            <span class="px-2 py-0.5 bg-[#ebe3d4] text-[#6b5e52] font-semibold rounded text-[10px]">PUBLIC SERVICE</span>
+          </div>
+          <h4 class="font-serif text-lg mb-1">$XYZ protocol rugpull warning</h4>
+          <p class="text-sm italic text-[#1a1611]">"Onchain analysis of $XYZ shows team wallet draining LP. Multi-sig 2/3 controlled by single entity. Thread w/ tx receipts ↓ — avoid this protocol."</p>
+          <p class="text-[11px] text-[#9c2516] italic mt-1">↑ Fraud callouts (Type C) count toward Accuracy Discipline — judged on whether the exposed behavior was real, not on price action.</p>
+        </article>
+
+      </div>
+
+      <div class="mt-8 pt-5 border-t border-subtle flex items-center justify-between">
+        <span data-only-tier="registered,connected" class="text-xs text-[#6b5e52]">Showing past 30 days · 4 of 22 resolved calls</span>
+        <span data-min-tier="pro-lite" class="text-xs text-[#6b5e52]">Showing past 90 days · 4 of 22 resolved calls · full archive available</span>
+        <a data-only-tier="registered,connected" href="subscribe.html" class="text-sm text-[#9c2516] hover:underline">🔒 Unlock full 90-day history (Pro Lite)</a>
+        <a data-min-tier="pro-lite" href="#" class="text-sm text-[#9c2516] hover:underline">Load all 22 receipts →</a>
+      </div>
+    </section>
+
+    <!-- Pro Lite: Multi-timeframe trends -->
+    <section data-min-tier="pro-lite" class="mb-10 pt-10 border-t border-[#9c2516]/30">
+      <div class="flex items-baseline justify-between mb-6">
+        <div>
+          <p class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold">⭐ Pro Lite · Multi-timeframe trends</p>
+          <h2 class="font-serif text-3xl tracking-tight">Hsaka's dimension trajectory</h2>
+        </div>
+        <span class="text-[10px] uppercase tracking-widest text-[#6b5e52]">vs field median · last 4 quarters</span>
+      </div>
+      <div class="grid grid-cols-3 gap-6">
+        <div class="border border-subtle rounded-lg p-5 bg-[#ebe3d4]/40">
+          <div class="flex items-baseline justify-between mb-2"><p class="font-serif text-lg">🎯 Analytical Depth</p><span class="text-xs text-[#9c2516] font-semibold">+0.08 · 90d</span></div>
+          <svg viewBox="0 0 200 60" class="w-full h-14 mb-2"><polyline points="0,40 30,38 60,32 90,28 120,22 150,18 180,12 200,8" stroke="#9c2516" stroke-width="2.5" fill="none"/><polyline points="0,42 30,40 60,40 90,38 120,38 150,36 180,36 200,35" stroke="#6b5e52" stroke-width="1" stroke-dasharray="3,3" fill="none"/></svg>
+          <p class="text-[11px] text-[#6b5e52]">Distinguished tier confirmed. Restaking-thesis cycle drove the climb.</p>
+        </div>
+        <div class="border border-subtle rounded-lg p-5 bg-[#ebe3d4]/40">
+          <div class="flex items-baseline justify-between mb-2"><p class="font-serif text-lg">🪞 Intellectual Honesty</p><span class="text-xs text-[#9c2516] font-semibold">+0.05 · 90d</span></div>
+          <svg viewBox="0 0 200 60" class="w-full h-14 mb-2"><polyline points="0,35 30,32 60,30 90,28 120,30 150,22 180,18 200,15" stroke="#9c2516" stroke-width="2.5" fill="none"/><polyline points="0,42 30,40 60,40 90,38 120,38 150,36 180,36 200,35" stroke="#6b5e52" stroke-width="1" stroke-dasharray="3,3" fill="none"/></svg>
+          <p class="text-[11px] text-[#6b5e52]">MEV-Burn public retraction in April lifted the score.</p>
+        </div>
+        <div class="border border-subtle rounded-lg p-5 bg-[#ebe3d4]/40">
+          <div class="flex items-baseline justify-between mb-2"><p class="font-serif text-lg">📊 Accuracy Discipline</p><span class="text-xs text-[#6b5e52] font-semibold">flat · 90d</span></div>
+          <svg viewBox="0 0 200 60" class="w-full h-14 mb-2"><polyline points="0,28 30,30 60,28 90,30 120,28 150,30 180,28 200,28" stroke="#9c2516" stroke-width="2.5" fill="none"/><polyline points="0,42 30,40 60,40 90,38 120,38 150,36 180,36 200,35" stroke="#6b5e52" stroke-width="1" stroke-dasharray="3,3" fill="none"/></svg>
+          <p class="text-[11px] text-[#6b5e52]">Above field median consistently. 14/22 calls resolved correct.</p>
+        </div>
+      </div>
+      <p class="text-[11px] text-[#6b5e52] italic mt-3"><span class="inline-block w-3 h-px bg-[#9c2516] align-middle mr-1"></span>Hsaka · <span class="inline-block w-3 h-px bg-[#6b5e52] align-middle ml-3 mr-1" style="border-top:1px dashed #6b5e52"></span>Field median (Distinguished tier)</p>
+    </section>
+
+    <!-- Pro: Wallet/Voice overlay + DD Report -->
+    <section data-only-tier="pro" class="mb-10 pt-10 border-t border-[#9c2516]/30">
+      <div class="flex items-baseline justify-between mb-6">
+        <div>
+          <p class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold">💎 Pro · Wallet × Voice overlay</p>
+          <h2 class="font-serif text-3xl tracking-tight">What Hsaka holds vs what Hsaka says</h2>
+        </div>
+        <span class="text-[10px] uppercase tracking-widest text-[#6b5e52]">disclosed wallets · last refresh 4h ago</span>
+      </div>
+      <div class="grid grid-cols-2 gap-6 mb-6">
+        <div class="border border-subtle rounded-lg p-5">
+          <p class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold mb-3">Public position vs wallet</p>
+          <div class="space-y-3">
+            <div class="flex items-center justify-between border-b border-subtle pb-2">
+              <span class="text-sm font-semibold">$EIGEN</span>
+              <span class="text-xs text-[#6b5e52]">Voice: cautious · Wallet: <span class="text-[#9c2516] font-semibold">long 142k</span></span>
+            </div>
+            <div class="flex items-center justify-between border-b border-subtle pb-2">
+              <span class="text-sm font-semibold">$SOL</span>
+              <span class="text-xs text-[#6b5e52]">Voice: long · Wallet: <span class="text-[#1a1611] font-semibold">long (aligned)</span></span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-sm font-semibold">$ETHFI</span>
+              <span class="text-xs text-[#6b5e52]">Voice: silent · Wallet: <span class="text-[#9c2516] font-semibold">accumulating</span></span>
+            </div>
+          </div>
+        </div>
+        <div class="border border-subtle rounded-lg p-5 bg-[#fef4e8]">
+          <p class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold mb-2">Mismatches flagged</p>
+          <p class="font-serif text-3xl tracking-tight mb-2">2</p>
+          <p class="text-xs text-[#6b5e52] leading-relaxed">$EIGEN and $ETHFI positions don't match public voice. Both read as Pattern A (quiet accumulation) per the Guide's weekly Wallet/Voice Split.</p>
+          <a href="guide-wallet-voice-split.html" class="text-[11px] text-[#9c2516] hover:underline mt-3 inline-block">Read this week's Wallet/Voice Split →</a>
+        </div>
+      </div>
+      <div class="bg-[#1a1611] text-[#f5efe7] rounded-lg p-6 flex items-center justify-between">
+        <div>
+          <p class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold mb-1">Pro · DD Report</p>
+          <h4 class="font-serif text-xl tracking-tight mb-1">Hsaka · Deep Dive Report · Q2 2026</h4>
+          <p class="text-xs text-[#d6cfc4]">22-page PDF · methodology section · all 22 resolved calls · counter-take analysis · wallet history · Sentinel notes</p>
+        </div>
+        <a href="#" class="px-5 py-3 bg-[#9c2516] text-[#f5efe7] text-sm font-semibold rounded whitespace-nowrap">Download PDF</a>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="border-t border-subtle py-8">
+    <div class="max-w-5xl mx-auto px-8 text-xs text-[#6b5e52]">
+      The Trill Guide · Curated by Sentinels · Re-rated quarterly
+    </div>
+  </footer>
+
+</body>
+</html>

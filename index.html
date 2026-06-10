@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Trill Follower Demo · Choose Language</title>
+  <title>The Trill Guide — Find the voices in crypto worth following</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -11,60 +11,612 @@
     body { font-family: 'Inter', system-ui, sans-serif; background: #f5efe7; color: #1a1611; }
     .font-serif { font-family: 'Cormorant Garamond', Georgia, serif; }
     .border-subtle { border-color: #d6cfc4; }
+    .coach { cursor: help; color: #9c2516; opacity: 0.6; font-weight: 600; font-size: 0.75rem; }
+    .coach:hover { opacity: 1; }
+    .star-filled { color: #9c2516; }
+    .star-empty { color: #d6cfc4; }
+    .card { transition: transform 0.18s ease, box-shadow 0.18s ease; }
+    .card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(156, 37, 22, 0.08); }
   </style>
 </head>
-<body class="min-h-screen flex items-center justify-center px-6">
+<body class="min-h-screen">
 
-  <main class="max-w-2xl w-full py-16">
+<!-- TIER-SWITCHER — demo-mode tier switcher (inject right after <body>) -->
+<style>
+  #tier-demo-bar { font-family: 'Inter', system-ui, sans-serif; background:#1a1611; color:#f5efe7; padding:10px 16px; font-size:12px; display:flex; align-items:center; justify-content:space-between; gap:12px; position:relative; z-index:50; border-bottom:1px solid #6b5e52; }
+  #tier-demo-bar .tdb-left { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+  #tier-demo-bar .tdb-tag { font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:#9c2516; font-weight:700; background:#3a1f1a; padding:3px 8px; border-radius:3px; }
+  #tier-demo-bar .tdb-label { color:#d6cfc4; }
+  #tier-demo-bar .tdb-btn { background:#9c2516; color:#f5efe7; padding:5px 12px; border-radius:4px; display:inline-flex; align-items:center; gap:6px; cursor:pointer; border:none; font-size:12px; font-weight:600; }
+  #tier-demo-bar .tdb-btn:hover { background:#7a1d11; }
+  #tier-demo-bar .tdb-hint { font-size:10px; color:#d6cfc4; font-style:italic; }
+  #tier-demo-menu { position:absolute; left:0; top:100%; margin-top:1px; width:300px; background:#1a1611; border:1px solid #6b5e52; border-radius:4px; box-shadow:0 8px 24px rgba(0,0,0,0.4); padding:4px 0; z-index:100; }
+  #tier-demo-menu.hidden { display:none; }
+  #tier-demo-menu button { display:block; width:100%; text-align:left; padding:9px 14px; background:transparent; border:0; color:#f5efe7; cursor:pointer; }
+  #tier-demo-menu button:hover { background:#3a1f1a; }
+  #tier-demo-menu .tdm-title { font-size:12px; font-weight:600; }
+  #tier-demo-menu .tdm-desc { font-size:10px; color:#d6cfc4; margin-top:1px; }
+  #tier-demo-menu .tdm-active { background:#3a1f1a; }
+  #tier-demo-menu .tdm-active::after { content:"✓"; float:right; color:#9c2516; font-weight:700; }
+  /* Tier-locked content overlay */
+  .tier-locked-overlay { position:relative; }
+  .tier-locked-overlay::before { content:""; position:absolute; inset:0; background:linear-gradient(to bottom, rgba(245,239,231,0) 0%, rgba(245,239,231,0.95) 70%, rgba(245,239,231,1) 100%); z-index:5; pointer-events:none; border-radius:inherit; }
+  .tier-locked-cta { position:absolute; bottom:18px; left:50%; transform:translateX(-50%); z-index:6; background:#1a1611; color:#f5efe7; padding:10px 18px; border-radius:6px; font-size:12px; font-weight:600; display:inline-flex; align-items:center; gap:8px; box-shadow:0 4px 14px rgba(0,0,0,0.15); }
+  .tier-locked-cta a { color:#f5efe7; text-decoration:underline; }
+  @media (max-width: 720px) {
+    #tier-demo-bar .tdb-hint { display:none; }
+    #tier-demo-menu { width:260px; }
+  }
+</style>
 
-    <header class="text-center mb-12">
-      <div class="flex items-baseline justify-center gap-2 mb-6">
-        <span class="font-serif text-3xl text-[#9c2516] tracking-tight">Trill</span>
+<div id="tier-demo-bar">
+  <div class="tdb-left">
+    <span class="tdb-tag" data-i18n="demo">Demo</span>
+    <span class="tdb-label" data-i18n="viewing-as">Viewing as:</span>
+    <div style="position:relative;">
+      <button type="button" class="tdb-btn" id="tier-demo-btn">
+        <span id="tier-demo-current">👤 Anonymous</span>
+        <span style="font-size:9px;">▼</span>
+      </button>
+      <div id="tier-demo-menu" class="hidden">
+        <button data-set-tier="anonymous"><div class="tdm-title">👤 <span data-i18n="t-anon">Anonymous</span></div><div class="tdm-desc" data-i18n="t-anon-desc">Not signed in · browsing freely</div></button>
+        <button data-set-tier="registered"><div class="tdm-title">🔓 <span data-i18n="t-reg">Registered</span> · <span data-i18n="free">Free</span></div><div class="tdm-desc" data-i18n="t-reg-desc">Email account · watchlist + basic alerts</div></button>
+        <button data-set-tier="connected"><div class="tdm-title">🔗 <span data-i18n="t-conn">Connected</span> · <span data-i18n="free">Free</span></div><div class="tdm-desc" data-i18n="t-conn-desc">X + wallet linked · Feed Audit unlocked</div></button>
+        <button data-set-tier="pro-lite"><div class="tdm-title">⭐ <span data-i18n="t-prolite">Pro Lite</span> · $9/mo</div><div class="tdm-desc" data-i18n="t-prolite-desc">Full call history · multi-KOL alerts · trends</div></button>
+        <button data-set-tier="pro"><div class="tdm-title">💎 <span data-i18n="t-pro">Pro</span> · $25/mo</div><div class="tdm-desc" data-i18n="t-pro-desc">Trill Indices · DD reports · holdings overlap</div></button>
+      </div>
+    </div>
+  </div>
+  <div class="tdb-hint" data-i18n="hint">Same URL — content visibility changes by tier</div>
+</div>
+
+<script>
+(function(){
+  var TIERS = ['anonymous','registered','connected','pro-lite','pro'];
+  var LABELS = {
+    en: { anonymous:'👤 Anonymous', registered:'🔓 Registered', connected:'🔗 Connected', 'pro-lite':'⭐ Pro Lite', pro:'💎 Pro' },
+    zh: { anonymous:'👤 未登录', registered:'🔓 已注册', connected:'🔗 已连接', 'pro-lite':'⭐ Pro Lite', pro:'💎 Pro' }
+  };
+  var I18N = {
+    en: { 'demo':'Demo', 'viewing-as':'Viewing as:', 't-anon':'Anonymous', 't-reg':'Registered', 't-conn':'Connected', 't-prolite':'Pro Lite', 't-pro':'Pro', 'free':'Free', 't-anon-desc':'Not signed in · browsing freely', 't-reg-desc':'Email account · watchlist + basic alerts', 't-conn-desc':'X + wallet linked · Feed Audit unlocked', 't-prolite-desc':'Full call history · multi-KOL alerts · trends', 't-pro-desc':'Trill Indices · DD reports · holdings overlap', 'hint':'Same URL — content visibility changes by tier' },
+    zh: { 'demo':'演示模式', 'viewing-as':'当前视角:', 't-anon':'未登录', 't-reg':'已注册', 't-conn':'已连接', 't-prolite':'Pro Lite', 't-pro':'Pro', 'free':'免费', 't-anon-desc':'未登录 · 自由浏览', 't-reg-desc':'邮箱账号 · watchlist + 基础提醒', 't-conn-desc':'X + 钱包已连接 · Feed Audit 解锁', 't-prolite-desc':'完整 call 历史 · 多 KOL 提醒 · 趋势线', 't-pro-desc':'Trill Indices · DD 报告 · 持仓 overlap', 'hint':'同一 URL — 不同 tier 看到不同内容' }
+  };
+  var lang = (document.documentElement.lang || 'en').toLowerCase().indexOf('zh') === 0 ? 'zh' : 'en';
+  var i18n = I18N[lang]; var labels = LABELS[lang];
+
+  // i18n labels
+  document.querySelectorAll('#tier-demo-bar [data-i18n], #tier-demo-menu [data-i18n]').forEach(function(el){
+    var k = el.getAttribute('data-i18n');
+    if (i18n[k] !== undefined) el.textContent = i18n[k];
+  });
+
+  function applyTier(tier) {
+    if (TIERS.indexOf(tier) < 0) tier = 'anonymous';
+    var cur = TIERS.indexOf(tier);
+    document.documentElement.setAttribute('data-tier', tier);
+    document.getElementById('tier-demo-current').textContent = labels[tier];
+    // min-tier
+    document.querySelectorAll('[data-min-tier]').forEach(function(el){
+      var v = el.getAttribute('data-min-tier');
+      var idx = TIERS.indexOf(v);
+      el.style.display = (cur >= idx) ? '' : 'none';
+    });
+    // max-tier
+    document.querySelectorAll('[data-max-tier]').forEach(function(el){
+      var v = el.getAttribute('data-max-tier');
+      var idx = TIERS.indexOf(v);
+      el.style.display = (cur <= idx) ? '' : 'none';
+    });
+    // only-tier (comma list)
+    document.querySelectorAll('[data-only-tier]').forEach(function(el){
+      var allowed = el.getAttribute('data-only-tier').split(',').map(function(s){return s.trim();});
+      el.style.display = (allowed.indexOf(tier) >= 0) ? '' : 'none';
+    });
+    // mark active
+    document.querySelectorAll('#tier-demo-menu button').forEach(function(b){
+      b.classList.toggle('tdm-active', b.getAttribute('data-set-tier') === tier);
+    });
+  }
+
+  var saved = (typeof localStorage !== 'undefined' && localStorage.getItem('trill-demo-tier')) || 'anonymous';
+  applyTier(saved);
+
+  var btn = document.getElementById('tier-demo-btn');
+  var menu = document.getElementById('tier-demo-menu');
+  btn.addEventListener('click', function(e){ e.stopPropagation(); menu.classList.toggle('hidden'); });
+  document.addEventListener('click', function(){ menu.classList.add('hidden'); });
+  menu.addEventListener('click', function(e){
+    var t = e.target.closest('[data-set-tier]');
+    if (!t) return;
+    var newTier = t.getAttribute('data-set-tier');
+    try { localStorage.setItem('trill-demo-tier', newTier); } catch(_) {}
+    applyTier(newTier);
+    menu.classList.add('hidden');
+  });
+})();
+</script>
+<!-- /TIER-SWITCHER -->
+
+
+  <nav class="border-b border-subtle bg-[#f5efe7]/95 backdrop-blur sticky top-0 z-10">
+    <div class="max-w-6xl mx-auto px-8 py-3 flex items-center justify-between gap-6">
+      <div class="flex items-baseline gap-2 shrink-0">
+        <a href="index.html" class="font-serif text-2xl text-[#9c2516] tracking-tight">Trill</a>
         <span class="text-[10px] uppercase tracking-widest text-[#6b5e52]">The Guide</span>
       </div>
-      <h1 class="font-serif text-5xl tracking-tight mb-3">Follower Product Demo</h1>
-      <p class="font-serif italic text-lg text-[#6b5e52] max-w-md mx-auto">The Michelin Guide for crypto KOLs · 18 pages, two languages.</p>
-    </header>
-
-    <section class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-10">
-
-      <a href="en/index.html" class="group block border border-subtle rounded-lg p-8 bg-[#ebe3d4] hover:bg-[#fef4e8] hover:border-[#9c2516] transition">
-        <div class="flex items-baseline justify-between mb-3">
-          <span class="text-3xl">🇬🇧</span>
-          <span class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold opacity-0 group-hover:opacity-100 transition">Enter →</span>
+      <div class="flex items-center gap-1 text-sm shrink-0">
+        <a href="index.html" class="px-2.5 py-1.5 text-[#1a1611] font-semibold border-b-2 border-[#9c2516]">Home</a>
+        <a href="stars.html" class="px-2.5 py-1.5 text-[#6b5e52] hover:text-[#1a1611]">Stars</a>
+        <a href="dimensions.html" class="px-2.5 py-1.5 text-[#6b5e52] hover:text-[#1a1611]">Dimensions</a>
+        <a href="guides.html" class="px-2.5 py-1.5 text-[#6b5e52] hover:text-[#1a1611]">Guide</a>
+        <a href="feed-audit.html" class="px-2.5 py-1.5 text-[#6b5e52] hover:text-[#1a1611]">Recommend</a>
+        <a href="about.html" class="px-2.5 py-1.5 text-[#6b5e52] hover:text-[#1a1611]">About</a>
+      </div>
+      <div class="flex items-center gap-2 flex-1 max-w-xs">
+        <div class="relative flex items-center bg-[#ebe3d4] rounded-md px-3 py-1.5 flex-1">
+          <svg class="w-4 h-4 text-[#6b5e52] mr-2 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          <input type="text" placeholder="Search creator, dimension, narrative…" class="flex-1 bg-transparent text-xs text-[#1a1611] focus:outline-none placeholder-[#6b5e52] min-w-0">
         </div>
-        <h2 class="font-serif text-3xl tracking-tight mb-2">English</h2>
-        <p class="text-sm text-[#6b5e52] leading-relaxed">For Max / Charles / international team. Recommended for review and roadshow use.</p>
-      </a>
-
-      <a href="zh/index.html" class="group block border border-subtle rounded-lg p-8 bg-[#ebe3d4] hover:bg-[#fef4e8] hover:border-[#9c2516] transition">
-        <div class="flex items-baseline justify-between mb-3">
-          <span class="text-3xl">🇨🇳</span>
-          <span class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold opacity-0 group-hover:opacity-100 transition">进入 →</span>
+      </div>
+      <div class="flex items-center gap-2 shrink-0">
+        <a data-max-tier="anonymous" href="account.html" class="px-2.5 py-1.5 text-sm text-[#6b5e52] hover:text-[#1a1611]">Sign in</a>
+        <a data-max-tier="anonymous" href="account.html" class="px-3 py-1.5 bg-[#9c2516] text-[#f5efe7] text-xs font-semibold rounded">Sign up</a>
+        <a data-min-tier="registered" href="account.html" class="px-2.5 py-1.5 text-sm text-[#1a1611] font-semibold border border-[#1a1611] rounded">Account</a>
+        <div class="relative" data-trill-dropdown>
+          <button type="button" data-trill-dropdown-btn class="px-2.5 py-1.5 text-[#6b5e52] hover:text-[#1a1611] flex items-center gap-1 text-sm">More <span class="text-[10px]">▼</span></button>
+          <div data-trill-dropdown-menu class="hidden absolute right-0 top-full mt-1 w-56 bg-[#f5efe7] border border-subtle rounded-lg shadow-lg z-20 py-1">
+            <a href="trillclaw.html" class="block px-4 py-2 text-sm text-[#1a1611] hover:bg-[#ebe3d4]">TrillClaw Quiz</a>
+            <a href="subscribe.html" class="block px-4 py-2 text-sm text-[#1a1611] hover:bg-[#ebe3d4]">Pricing</a>
+            <div class="border-t border-subtle my-1"></div>
+            <a href="methodology.html" class="block px-4 py-2 text-sm text-[#1a1611] hover:bg-[#ebe3d4]">Methodology</a>
+          </div>
         </div>
-        <h2 class="font-serif text-3xl tracking-tight mb-2">中文</h2>
-        <p class="text-sm text-[#6b5e52] leading-relaxed">给 Noah / 算法团队 / 国内审阅 · 主要术语保留英文(KOL / narrative / call 等)。</p>
-      </a>
+      </div>
+    </div>
+    <script>(function(){var w=document.currentScript.parentElement.querySelector('[data-trill-dropdown]');if(!w)return;var b=w.querySelector('[data-trill-dropdown-btn]'),m=w.querySelector('[data-trill-dropdown-menu]');b.addEventListener('click',function(e){e.stopPropagation();m.classList.toggle('hidden')});document.addEventListener('click',function(e){if(!w.contains(e.target))m.classList.add('hidden')});})();</script>
+  </nav>
 
+  <header class="bg-[#1a1611] text-[#f5efe7]">
+    <div class="max-w-4xl mx-auto px-8 py-20 text-center">
+      <p class="text-[10px] uppercase tracking-widest text-[#d6cfc4] mb-5">The Michelin Guide for Crypto KOLs</p>
+      <h1 class="font-serif text-6xl tracking-tight mb-5 leading-tight">Find the voices in crypto<br>actually worth listening to.</h1>
+      <p class="font-serif italic text-xl text-[#d6cfc4] mb-10">An independent, anonymous, periodically re-rated evaluation of crypto KOLs.</p>
+      <div class="relative bg-[#f5efe7] rounded-lg px-5 py-4 flex items-center gap-3 shadow-lg max-w-2xl mx-auto">
+        <svg class="w-5 h-5 text-[#6b5e52]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+        <input type="text" placeholder="Search for a creator, dimension, or narrative…" class="flex-1 bg-transparent text-[#1a1611] focus:outline-none text-sm placeholder-[#6b5e52]">
+        <button class="px-5 py-1.5 bg-[#9c2516] text-[#f5efe7] text-xs font-semibold rounded">Search</button>
+      </div>
+      <p class="text-[11px] text-[#d6cfc4] mt-3 italic">Try <a href="creator-v2.html" class="underline">@hsakatrades</a> · <a href="dimensions.html" class="underline">Analytical Depth</a> · <a href="dimensions.html" class="underline">Most Accurate</a></p>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-8 py-16">
+
+    <!-- THE RECEIPTS — viral stat block (visible to all tiers) -->
+    <section class="mb-20">
+      <div class="border-t-2 border-b-2 border-[#1a1611] py-14 text-center">
+        <p class="text-[10px] uppercase tracking-[0.3em] text-[#6b5e52] mb-5">The receipts</p>
+        <p class="font-mono text-7xl md:text-8xl text-[#1a1611] mb-2 font-bold" style="font-feature-settings:'tnum' 1;letter-spacing:-0.02em;">47,284</p>
+        <p class="font-serif italic text-xl text-[#6b5e52] mb-10">market calls on record</p>
+        <div class="grid grid-cols-3 max-w-3xl mx-auto border-t border-subtle pt-10 gap-8">
+          <div>
+            <p class="font-mono text-5xl text-[#1a1611] mb-2 font-bold" style="font-feature-settings:'tnum' 1;">31<span class="text-3xl text-[#6b5e52]">%</span></p>
+            <p class="text-xs uppercase tracking-widest text-[#6b5e52]">Hit</p>
+          </div>
+          <div>
+            <p class="font-mono text-5xl text-[#1a1611] mb-2 font-bold" style="font-feature-settings:'tnum' 1;">28<span class="text-3xl text-[#6b5e52]">%</span></p>
+            <p class="text-xs uppercase tracking-widest text-[#6b5e52]">Missed</p>
+          </div>
+          <div>
+            <p class="font-mono text-5xl text-[#9c2516] mb-2 font-bold" style="font-feature-settings:'tnum' 1;">11<span class="text-3xl text-[#9c2516]/70">%</span></p>
+            <p class="text-xs uppercase tracking-widest text-[#9c2516]">Quietly deleted</p>
+          </div>
+        </div>
+        <p class="font-serif text-2xl text-[#1a1611] mt-12 leading-snug max-w-2xl mx-auto">
+          Crypto has never had a scoreboard.
+          <span class="block italic text-[#9c2516] mt-1">Until now.</span>
+        </p>
+      </div>
+
+      <!-- Second beat: the killer angle Charles raised -->
+      <div class="mt-12 pt-12 border-t border-[#1a1611]/20 grid grid-cols-5 gap-10 items-center">
+        <div class="col-span-2 text-center">
+          <p class="font-mono text-7xl md:text-8xl text-[#9c2516] mb-2 font-bold" style="font-feature-settings:'tnum' 1;letter-spacing:-0.02em;">9 in 10</p>
+          <p class="font-serif italic text-base text-[#6b5e52] leading-snug">crypto KOL whales we evaluated are at <strong class="text-[#1a1611] not-italic">under 40%</strong> verified accuracy.</p>
+        </div>
+        <div class="col-span-3 pl-10 border-l border-[#1a1611]/20">
+          <p class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold mb-3">Then who actually gets it right?</p>
+          <h3 class="font-serif text-3xl tracking-tight mb-4 leading-tight">The other <span class="text-[#9c2516]">10%</span> — we've named them.</h3>
+          <a data-max-tier="anonymous" href="account.html" class="inline-block px-6 py-3 bg-[#1a1611] text-[#f5efe7] text-sm font-semibold rounded">Sign up to see them →</a>
+          <a data-min-tier="registered" href="stars.html" class="inline-block px-6 py-3 bg-[#1a1611] text-[#f5efe7] text-sm font-semibold rounded">See who got Three Stars →</a>
+          <p data-max-tier="anonymous" class="text-[11px] text-[#6b5e52] italic mt-3">Free account · no credit card · 30 seconds</p>
+        </div>
+      </div>
     </section>
 
-    <section class="border-t border-subtle pt-8 text-sm text-[#6b5e52]">
-      <h3 class="font-serif text-xl text-[#1a1611] tracking-tight mb-3">How to use</h3>
-      <ul class="space-y-2 leading-relaxed">
-        <li>· Primary nav (6 items): <strong>Guide · Narrative · Market · Audit · Watchlist · Account</strong> — daily information lenses</li>
-        <li>· <strong>More ▼</strong> dropdown (top right): Sentinel Path / TrillClaw Quiz / Pricing / Sample Creator / Methodology / About</li>
-        <li>· Two full user-journey loops are wired up:<br>
-            &nbsp;&nbsp;① <em>Guide → Creator (unrated) → Nominate → Confirmation → Account "My nominations"</em><br>
-            &nbsp;&nbsp;② <em>TrillClaw Quiz → Result page → Account</em></li>
-        <li>· This is a static design demo — all numbers / handles / activity are illustrative</li>
-      </ul>
+    <!-- FROM THE TRILL GUIDE — editorial moved up to second screen -->
+    <section class="mb-20">
+      <div class="flex items-baseline justify-between mb-6 pb-3 border-b border-subtle">
+        <div>
+          <h2 class="font-serif text-3xl tracking-tight">From The Trill Guide</h2>
+          <p class="text-sm text-[#6b5e52] italic mt-1">Curated lists and editorial coverage — signals only Trill can surface, drawn from the on-record behaviour of every evaluated creator.</p>
+        </div>
+        <a href="guides.html" class="text-xs text-[#9c2516] hover:underline whitespace-nowrap ml-4">See all editorial →</a>
+      </div>
+      <div class="grid grid-cols-3 gap-6">
+        <a href="guide-wallet-voice-split.html" class="card block bg-[#1a1611] text-[#f5efe7] rounded-lg p-6 h-56 flex flex-col justify-between">
+          <span class="inline-block self-start text-[10px] uppercase tracking-widest bg-[#9c2516] text-[#f5efe7] px-2 py-1 rounded">Insight · Weekly anchor</span>
+          <div>
+            <h3 class="font-serif text-2xl tracking-tight mb-2 leading-snug">The Wallet/Voice Split: 4 Three-Stars Quietly Long $EIGEN</h3>
+            <p class="text-xs text-[#d6cfc4]">By The Trill Guide · 8 min read · 2 days ago</p>
+          </div>
+        </a>
+        <a href="guide-best-calls-may.html" class="card block bg-[#6b5e52] text-[#f5efe7] rounded-lg p-6 h-56 flex flex-col justify-between">
+          <span class="inline-block self-start text-[10px] uppercase tracking-widest bg-[#9c2516] text-[#f5efe7] px-2 py-1 rounded">Insight · Monthly</span>
+          <div>
+            <h3 class="font-serif text-2xl tracking-tight mb-2 leading-snug">Best Calls of May 2026 — Receipted, Ranked, Resolved</h3>
+            <p class="text-xs text-[#d6cfc4]">By The Trill Guide · 12 min read · yesterday</p>
+          </div>
+        </a>
+        <a href="guide-coming-soon.html" class="card block bg-[#9c2516] text-[#f5efe7] rounded-lg p-6 h-56 flex flex-col justify-between">
+          <span class="inline-block self-start text-[10px] uppercase tracking-widest bg-[#1a1611] text-[#f5efe7] px-2 py-1 rounded">Guide · DeFi</span>
+          <div>
+            <h3 class="font-serif text-2xl tracking-tight mb-2 leading-snug">The 6 Voices Defining the Restaking Conversation</h3>
+            <p class="text-xs text-[#d6cfc4]">By The Trill Guide · 8 min read</p>
+          </div>
+        </a>
+        <a href="guide-coming-soon.html" class="card block border border-subtle rounded-lg p-6 bg-[#ebe3d4]">
+          <span class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold">Insight · Weekly</span>
+          <h3 class="font-serif text-xl tracking-tight my-2">The Movers — Week of May 27</h3>
+          <p class="text-sm text-[#1a1611] leading-snug mb-3">"Biggest tier shifts this week — who jumped, who fell, with the reasons. 3 upgrades to ★★★, 1 demotion."</p>
+          <p class="text-[11px] text-[#6b5e52]">Updated weekly</p>
+        </a>
+        <a href="guide-coming-soon.html" class="card block border border-subtle rounded-lg p-6 bg-[#ebe3d4]">
+          <span class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold">Guide · Hidden</span>
+          <h3 class="font-serif text-xl tracking-tight my-2">Undercover Authorities</h3>
+          <p class="text-sm text-[#1a1611] leading-snug mb-3">"12 low-follower, high-Trill voices worth surfacing — voices doing distinguished work without the audience yet."</p>
+          <p class="text-[11px] text-[#6b5e52]">By The Trill Guide · 6 min read</p>
+        </a>
+        <a href="guide-coming-soon.html" class="card block border border-subtle rounded-lg p-6 bg-[#ebe3d4]">
+          <span class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold">Insight · Comeback Watch</span>
+          <h3 class="font-serif text-xl tracking-tight my-2">@tetranode's Quiet Vindication</h3>
+          <p class="text-sm text-[#1a1611] leading-snug mb-3">"Got dunked on for the $SOL → $200 call in January. Resolved correct in April. The full timeline."</p>
+          <p class="text-[11px] text-[#6b5e52]">By The Trill Guide · 5 min read</p>
+        </a>
+      </div>
     </section>
 
-    <footer class="mt-12 pt-6 border-t border-subtle text-xs text-[#6b5e52] text-center italic">
-      The Trill Guide · Internal review demo · Not for external distribution
-    </footer>
+    <!-- TIER-AWARE: Pro Lite / Pro welcome with live activity -->
+    <section data-min-tier="pro-lite" class="mb-10 bg-[#1a1611] text-[#f5efe7] rounded-lg p-6">
+      <div class="flex items-start justify-between gap-6">
+        <div class="flex items-start gap-4 flex-1">
+          <span class="text-3xl">⭐</span>
+          <div class="flex-1">
+            <p class="text-sm mb-2"><strong>Welcome back, Vincent.</strong> <span class="text-[#d6cfc4]">Your Pro Lite digest is ready.</span></p>
+            <div class="grid grid-cols-3 gap-4 mt-3">
+              <div class="border-l-2 border-[#9c2516] pl-3">
+                <p class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold mb-1">Multi-KOL alert</p>
+                <p class="text-xs">@hsakatrades + @vance_research posted on restaking in last 4h · <a href="creator-v2.html" class="underline">view both</a></p>
+              </div>
+              <div class="border-l-2 border-[#9c2516] pl-3">
+                <p class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold mb-1">Trend shift</p>
+                <p class="text-xs">Analytical Depth · 30-day trendline turning up on @cobie (+0.08) · <a href="dimension-analytical-depth.html" class="underline">see trend</a></p>
+              </div>
+              <div class="border-l-2 border-[#9c2516] pl-3">
+                <p class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold mb-1">Call history update</p>
+                <p class="text-xs">3 of your watched creators resolved a call · <a href="account.html" class="underline">view receipts</a></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TIER-AWARE: Audit CTA — Anonymous / Registered (X not connected) -->
+    <section data-max-tier="registered" class="mb-16">
+      <div class="bg-[#1a1611] text-[#f5efe7] rounded-lg p-10 grid grid-cols-2 gap-10 items-center">
+        <div>
+          <p class="text-[10px] uppercase tracking-widest text-[#d6cfc4] mb-3">Personalised audit</p>
+          <h2 class="font-serif text-3xl tracking-tight mb-4 leading-snug">Connect your X account. We'll tell you who you should be following.</h2>
+          <p class="text-sm text-[#d6cfc4] mb-6 leading-relaxed">Trill scans your crypto follow graph, surfaces how it stacks up against the Guide, and recommends specific voices to add — and to drop — based on the dimensions and goals you care about.</p>
+          <a href="feed-audit.html" class="inline-block px-6 py-3 bg-[#9c2516] text-[#f5efe7] text-sm font-semibold rounded">Run my Crypto Feed Audit →</a>
+          <p class="text-[11px] text-[#d6cfc4] italic mt-3">Read-only · we don't post on your behalf · takes 30 seconds</p>
+        </div>
+        <div class="text-center">
+          <div class="font-serif text-6xl mb-3">"</div>
+          <p class="font-serif italic text-xl text-[#f5efe7] leading-snug max-w-xs mx-auto">12 of your 23 crypto follows are in The Guide.<br>Here are 5 more worth adding.</p>
+          <p class="text-[10px] uppercase tracking-widest text-[#d6cfc4] mt-4">sample audit result</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- TIER-AWARE: Audit CTA — Connected (X linked) -->
+    <section data-min-tier="connected" class="mb-16">
+      <div class="bg-[#1a1611] text-[#f5efe7] rounded-lg p-10 grid grid-cols-2 gap-10 items-center">
+        <div>
+          <p class="text-[10px] uppercase tracking-widest text-[#9c2516] mb-3 font-semibold">Your latest audit · 6 days ago</p>
+          <h2 class="font-serif text-3xl tracking-tight mb-4 leading-snug">12 of your 23 crypto follows are in The Guide. 5 more worth adding.</h2>
+          <div class="grid grid-cols-3 gap-3 mb-5">
+            <div class="bg-[#3a1f1a] rounded p-3"><p class="text-[10px] text-[#d6cfc4]">Coverage</p><p class="font-serif text-2xl">52%</p></div>
+            <div class="bg-[#3a1f1a] rounded p-3"><p class="text-[10px] text-[#d6cfc4]">Avg Star</p><p class="font-serif text-2xl">★★</p></div>
+            <div class="bg-[#3a1f1a] rounded p-3"><p class="text-[10px] text-[#d6cfc4]">To add</p><p class="font-serif text-2xl text-[#9c2516]">5</p></div>
+          </div>
+          <a href="feed-audit.html" class="inline-block px-6 py-3 bg-[#9c2516] text-[#f5efe7] text-sm font-semibold rounded">Open my audit →</a>
+          <a href="feed-audit.html" class="inline-block px-4 py-3 text-[#d6cfc4] text-sm ml-2 hover:text-[#f5efe7]">Re-run audit</a>
+        </div>
+        <div class="space-y-2">
+          <p class="text-[10px] uppercase tracking-widest text-[#9c2516] mb-2 font-semibold">5 recommended for your DeFi + Macro goals</p>
+          <div class="bg-[#3a1f1a] rounded p-3 flex items-center gap-3">
+            <div class="w-8 h-8 rounded-full bg-[#9c2516] flex items-center justify-center text-xs font-serif font-bold">H</div>
+            <div class="flex-1"><p class="text-xs">@hsakatrades · ★★★ · DeFi</p></div>
+          </div>
+          <div class="bg-[#3a1f1a] rounded p-3 flex items-center gap-3">
+            <div class="w-8 h-8 rounded-full bg-[#9c2516] flex items-center justify-center text-xs font-serif font-bold">V</div>
+            <div class="flex-1"><p class="text-xs">@vance_research · ★★★ · DeFi · Educational Value</p></div>
+          </div>
+          <div class="bg-[#3a1f1a] rounded p-3 flex items-center gap-3 opacity-60">
+            <div class="text-xs text-[#d6cfc4]">+ 3 more</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="mb-20">
+      <div class="flex items-baseline justify-between mb-3 pb-3 border-b border-subtle">
+        <div>
+          <h2 class="font-serif text-3xl tracking-tight">The Newest Three-Stars</h2>
+          <p class="text-sm text-[#6b5e52] italic mt-1">Only <strong class="text-[#1a1611] not-italic">42 of 1,247</strong> evaluated creators currently hold ★★★. Two were just promoted this quarter.</p>
+        </div>
+        <a href="stars.html" class="text-xs text-[#9c2516] hover:underline whitespace-nowrap ml-4">See all 42 →</a>
+      </div>
+      <div class="grid grid-cols-3 gap-6 mt-6">
+        <a href="creator-v2.html" class="card block border border-subtle bg-[#ebe3d4] rounded-lg p-6">
+          <div class="flex items-start justify-between mb-4">
+            <div class="w-16 h-16 rounded-full bg-[#9c2516] flex items-center justify-center text-2xl font-serif font-bold text-[#f5efe7]">C</div>
+            <span class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold">New · Q2 2026</span>
+          </div>
+          <div class="font-mono text-[#9c2516] mb-2">★★★</div>
+          <h3 class="font-serif text-2xl tracking-tight mb-1">Cobie</h3>
+          <p class="text-xs text-[#6b5e52] mb-3">@cobie · Macro · Thesis-driven</p>
+          <p class="font-serif italic text-sm text-[#1a1611] leading-snug">"A macro thinker for those who read crypto in the language of liquidity cycles, not memes."</p>
+        </a>
+        <a href="creator-v2.html" class="card block border border-subtle bg-[#ebe3d4] rounded-lg p-6">
+          <div class="flex items-start justify-between mb-4">
+            <div class="w-16 h-16 rounded-full bg-[#9c2516] flex items-center justify-center text-2xl font-serif font-bold text-[#f5efe7]">V</div>
+            <span class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold">New · Q2 2026</span>
+          </div>
+          <div class="font-mono text-[#9c2516] mb-2">★★★</div>
+          <h3 class="font-serif text-2xl tracking-tight mb-1">Vance</h3>
+          <p class="text-xs text-[#6b5e52] mb-3">@vance_research · DeFi · Researcher</p>
+          <p class="font-serif italic text-sm text-[#1a1611] leading-snug">"The patient teacher of DeFi mechanics. Explains complex protocols without condescension."</p>
+        </a>
+        <a href="creator-v2.html" class="card block border border-subtle bg-[#ebe3d4] rounded-lg p-6">
+          <div class="flex items-start justify-between mb-4">
+            <div class="w-16 h-16 rounded-full bg-[#9c2516] flex items-center justify-center text-2xl font-serif font-bold text-[#f5efe7]">T</div>
+            <span class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold">Upgraded · Q2 2026</span>
+          </div>
+          <div class="font-mono text-[#9c2516] mb-2">★★★</div>
+          <h3 class="font-serif text-2xl tracking-tight mb-1">Tetranode</h3>
+          <p class="text-xs text-[#6b5e52] mb-3">@tetranode · Onchain · Analyst</p>
+          <p class="font-serif italic text-sm text-[#1a1611] leading-snug">"Reads wallets like literature. Catches flows the market misses."</p>
+        </a>
+      </div>
+    </section>
+
+    <section class="mb-20">
+      <div class="flex items-baseline justify-between mb-3 pb-3 border-b border-subtle">
+        <div>
+          <h2 class="font-serif text-3xl tracking-tight">Just Recognised</h2>
+          <p class="text-sm text-[#6b5e52] italic mt-1">Creators the Sentinels just admitted to the Guide this cycle — fresh on record, audience still small, time-stamped before the rest of crypto catches on.</p>
+        </div>
+        <a href="stars.html" class="text-xs text-[#9c2516] hover:underline whitespace-nowrap ml-4">See all recent additions →</a>
+      </div>
+      <div class="grid grid-cols-3 gap-6 mt-6">
+        <a href="creator-v2.html" class="card block border border-subtle rounded-lg p-6 bg-[#f5efe7]">
+          <div class="relative h-32 -mx-6 -mt-6 mb-5 rounded-t-lg overflow-hidden bg-gradient-to-br from-[#9c2516] via-[#7a1d11] to-[#1a1611]">
+            <div class="absolute inset-0 flex items-center justify-center">
+              <div class="w-20 h-20 rounded-full bg-[#f5efe7] flex items-center justify-center text-3xl font-serif font-bold text-[#9c2516] shadow-lg">H</div>
+            </div>
+            <span class="absolute top-3 right-3 inline-flex items-center px-2 py-0.5 bg-[#f5efe7]/95 text-[#9c2516] text-[10px] uppercase tracking-widest font-semibold rounded">Just Recognised</span>
+          </div>
+          <div class="font-mono mb-2"><span class="star-filled">★★</span><span class="star-empty">★</span></div>
+          <h3 class="font-serif text-2xl tracking-tight mb-1">Hsaka</h3>
+          <p class="text-xs text-[#6b5e52] mb-3">@hsakatrades · DeFi · Thesis-driven</p>
+          <p class="font-serif italic text-sm text-[#1a1611] leading-snug">"Trades the macro, hates the cope. The counter-narrative voice DeFi has lacked."</p>
+        </a>
+        <a href="creator-v2.html" class="card block border border-subtle rounded-lg p-6 bg-[#f5efe7]">
+          <div class="relative h-32 -mx-6 -mt-6 mb-5 rounded-t-lg overflow-hidden bg-gradient-to-br from-[#1a1611] via-[#3a1f1a] to-[#6b5e52]">
+            <div class="absolute inset-0 flex items-center justify-center">
+              <div class="w-20 h-20 rounded-full bg-[#f5efe7] flex items-center justify-center text-3xl font-serif font-bold text-[#9c2516] shadow-lg">R</div>
+            </div>
+            <span class="absolute top-3 right-3 inline-flex items-center px-2 py-0.5 bg-[#f5efe7]/95 text-[#9c2516] text-[10px] uppercase tracking-widest font-semibold rounded">Just Recognised</span>
+          </div>
+          <div class="font-mono mb-2"><span class="star-filled">★★</span><span class="star-empty">★</span></div>
+          <h3 class="font-serif text-2xl tracking-tight mb-1">Ren</h3>
+          <p class="text-xs text-[#6b5e52] mb-3">@ren · DeFi · Contrarian</p>
+          <p class="font-serif italic text-sm text-[#1a1611] leading-snug">"The contrarian's contrarian — willing to publicly walk back a wrong call before anyone notices."</p>
+        </a>
+        <a href="creator-v2.html" class="card block border border-subtle rounded-lg p-6 bg-[#f5efe7]">
+          <div class="relative h-32 -mx-6 -mt-6 mb-5 rounded-t-lg overflow-hidden bg-gradient-to-br from-[#6b5e52] via-[#9c2516] to-[#3a1f1a]">
+            <div class="absolute inset-0 flex items-center justify-center">
+              <div class="w-20 h-20 rounded-full bg-[#f5efe7] flex items-center justify-center text-3xl font-serif font-bold text-[#9c2516] shadow-lg">N</div>
+            </div>
+            <span class="absolute top-3 right-3 inline-flex items-center px-2 py-0.5 bg-[#f5efe7]/95 text-[#9c2516] text-[10px] uppercase tracking-widest font-semibold rounded">Just Recognised</span>
+          </div>
+          <div class="font-mono mb-2"><span class="star-filled">★</span><span class="star-empty">★★</span></div>
+          <h3 class="font-serif text-2xl tracking-tight mb-1">Noah</h3>
+          <p class="text-xs text-[#6b5e52] mb-3">@noah_kol · AI · Educator</p>
+          <p class="font-serif italic text-sm text-[#1a1611] leading-snug">"A pedagogically gifted writer on AI agent economics — underrated relative to the depth."</p>
+        </a>
+      </div>
+    </section>
+
+    <section class="mb-20">
+      <div class="flex items-baseline justify-between mb-3 pb-3 border-b border-subtle">
+        <div>
+          <h2 class="font-serif text-3xl tracking-tight">Distinguished for…</h2>
+          <p class="text-sm text-[#6b5e52] italic mt-1">Beyond the star tier, every creator earns recognition across six dimensions. Three of them carry more weight than the rest — these are the people who do them best.</p>
+        </div>
+        <a href="dimensions.html" class="text-xs text-[#9c2516] hover:underline whitespace-nowrap ml-4">See all 6 dimensions →</a>
+      </div>
+      <div class="grid grid-cols-3 gap-6 mt-6">
+        <a href="dimension-accuracy-discipline.html" class="card block border border-[#9c2516] bg-[#fef4e8] rounded-lg p-8">
+          <p class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold mb-3">15 Distinguished</p>
+          <h3 class="font-serif text-3xl tracking-tight mb-3">Accuracy Discipline</h3>
+          <p class="text-xs text-[#6b5e52] mb-4">Average verified hit rate · <strong class="text-[#1a1611]">31%</strong></p>
+          <p class="text-sm text-[#1a1611] leading-snug italic mb-4">"Most calls don't come true. These 15 are the ones whose calls actually do."</p>
+          <p class="text-[11px] text-[#9c2516] font-semibold">Top: @vance_research · 73% accuracy →</p>
+        </a>
+        <a href="dimension-analytical-depth.html" class="card block border border-[#9c2516] bg-[#fef4e8] rounded-lg p-8">
+          <p class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold mb-3">12 Distinguished</p>
+          <h3 class="font-serif text-3xl tracking-tight mb-3">Analytical Depth</h3>
+          <p class="text-xs text-[#6b5e52] mb-4">Of 1,247 evaluated — only <strong class="text-[#1a1611]">12</strong></p>
+          <p class="text-sm text-[#1a1611] leading-snug italic mb-4">"Demonstrated original thinking not found elsewhere. Most analysis is recycled. These 12 aren't."</p>
+          <p class="text-[11px] text-[#9c2516] font-semibold">Top: @hsakatrades · macro thesis →</p>
+        </a>
+        <a href="dimension-educational-value.html" class="card block border border-[#9c2516] bg-[#fef4e8] rounded-lg p-8">
+          <p class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold mb-3">11 Distinguished</p>
+          <h3 class="font-serif text-3xl tracking-tight mb-3">Educational Value</h3>
+          <p class="text-xs text-[#6b5e52] mb-4">Reader-comprehension rate · <strong class="text-[#1a1611]">88%</strong> avg</p>
+          <p class="text-sm text-[#1a1611] leading-snug italic mb-4">"The teachers crypto newcomers should bookmark. The patience to explain without condescension."</p>
+          <p class="text-[11px] text-[#9c2516] font-semibold">Top: CryptoCred · DeFi mechanics →</p>
+        </a>
+      </div>
+    </section>
+
+    <!-- TIER-AWARE: Pro Lite — your tracked dimension trends -->
+    <section data-only-tier="pro-lite" class="mb-16">
+      <div class="flex items-baseline justify-between mb-6 pb-3 border-b border-[#9c2516]/30">
+        <div>
+          <p class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold">⭐ Pro Lite</p>
+          <h2 class="font-serif text-3xl tracking-tight">Your tracked dimension trends</h2>
+        </div>
+        <a href="dimensions.html" class="text-xs text-[#9c2516] hover:underline">All dimensions →</a>
+      </div>
+      <p class="text-sm text-[#6b5e52] italic mb-6">Multi-timeframe trends for the dimensions you watch. Updated daily.</p>
+      <div class="grid grid-cols-3 gap-6">
+        <div class="border border-subtle rounded-lg p-5 bg-[#ebe3d4]/40">
+          <div class="flex items-baseline justify-between mb-2">
+            <p class="font-serif text-lg">📊 Accuracy Discipline</p>
+            <span class="text-xs text-[#9c2516] font-semibold">+0.04 · 30d</span>
+          </div>
+          <svg viewBox="0 0 200 50" class="w-full h-12 mb-2"><polyline points="0,38 25,35 50,32 75,30 100,28 125,24 150,22 175,18 200,15" stroke="#9c2516" stroke-width="2" fill="none"/></svg>
+          <p class="text-[11px] text-[#6b5e52]">Field-wide accuracy climbed steadily this cycle. @vance_research +9pts.</p>
+        </div>
+        <div class="border border-subtle rounded-lg p-5 bg-[#ebe3d4]/40">
+          <div class="flex items-baseline justify-between mb-2">
+            <p class="font-serif text-lg">🎯 Analytical Depth</p>
+            <span class="text-xs text-[#9c2516] font-semibold">+0.02 · 30d</span>
+          </div>
+          <svg viewBox="0 0 200 50" class="w-full h-12 mb-2"><polyline points="0,30 25,32 50,28 75,32 100,28 125,25 150,28 175,22 200,20" stroke="#9c2516" stroke-width="2" fill="none"/></svg>
+          <p class="text-[11px] text-[#6b5e52]">@hsakatrades up +0.08, @cobie up +0.05.</p>
+        </div>
+        <div class="border border-subtle rounded-lg p-5 bg-[#ebe3d4]/40">
+          <div class="flex items-baseline justify-between mb-2">
+            <p class="font-serif text-lg">🪞 Intellectual Honesty</p>
+            <span class="text-xs text-[#6b5e52] font-semibold">flat · 30d</span>
+          </div>
+          <svg viewBox="0 0 200 50" class="w-full h-12 mb-2"><polyline points="0,28 25,30 50,28 75,29 100,28 125,28 150,29 175,28 200,28" stroke="#6b5e52" stroke-width="2" fill="none"/></svg>
+          <p class="text-[11px] text-[#6b5e52]">No tier moves on this dimension this month.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- TIER-AWARE: Pro — Trill Indices live -->
+    <section data-only-tier="pro" class="mb-16">
+      <div class="flex items-baseline justify-between mb-6 pb-3 border-b border-[#9c2516]/30">
+        <div>
+          <p class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold">💎 Pro · Trill Indices</p>
+          <h2 class="font-serif text-3xl tracking-tight">Live indices · derived from Three-Star conviction</h2>
+        </div>
+        <a href="#" class="text-xs text-[#9c2516] hover:underline">Index methodology →</a>
+      </div>
+      <p class="text-sm text-[#6b5e52] italic mb-6">Trill Indices weight assets by the active conviction of Three-Star creators — disclosed positions, dated public calls, on-chain wallets. Updated hourly.</p>
+      <div class="grid grid-cols-3 gap-6">
+        <div class="border border-[#9c2516] rounded-lg p-5 bg-[#1a1611] text-[#f5efe7]">
+          <p class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold mb-1">TRILL.RESTAKE</p>
+          <h3 class="font-serif text-3xl mb-1">+4.2%</h3>
+          <p class="text-[11px] text-[#d6cfc4] mb-3">7d · 6 constituents · led by EIGEN, ETHFI</p>
+          <svg viewBox="0 0 200 40" class="w-full h-10"><polyline points="0,30 25,25 50,28 75,22 100,18 125,20 150,15 175,12 200,8" stroke="#9c2516" stroke-width="2" fill="none"/></svg>
+        </div>
+        <div class="border border-[#9c2516] rounded-lg p-5 bg-[#1a1611] text-[#f5efe7]">
+          <p class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold mb-1">TRILL.SOL_DEFI</p>
+          <h3 class="font-serif text-3xl mb-1">−1.8%</h3>
+          <p class="text-[11px] text-[#d6cfc4] mb-3">7d · 8 constituents · drag from JTO, KMNO</p>
+          <svg viewBox="0 0 200 40" class="w-full h-10"><polyline points="0,15 25,18 50,20 75,18 100,22 125,25 150,28 175,26 200,32" stroke="#9c2516" stroke-width="2" fill="none"/></svg>
+        </div>
+        <div class="border border-[#9c2516] rounded-lg p-5 bg-[#1a1611] text-[#f5efe7]">
+          <p class="text-[10px] uppercase tracking-widest text-[#9c2516] font-semibold mb-1">TRILL.AI_AGENTS</p>
+          <h3 class="font-serif text-3xl mb-1">+12.4%</h3>
+          <p class="text-[11px] text-[#d6cfc4] mb-3">7d · 5 constituents · Three-Star conviction rising</p>
+          <svg viewBox="0 0 200 40" class="w-full h-10"><polyline points="0,32 25,30 50,28 75,22 100,18 125,12 150,10 175,8 200,5" stroke="#9c2516" stroke-width="2" fill="none"/></svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- BOTTOM CTA — Love Trill? Sign up. (for anonymous only) -->
+    <section data-max-tier="anonymous" class="mb-8 bg-[#1a1611] text-[#f5efe7] rounded-lg p-14 text-center">
+      <p class="text-[10px] uppercase tracking-[0.3em] text-[#9c2516] mb-4">Join The Guide</p>
+      <h2 class="font-serif text-5xl tracking-tight mb-4 leading-tight">Love Trill?<br><span class="italic text-[#d6cfc4]">Sign up.</span></h2>
+      <p class="text-sm text-[#d6cfc4] mb-8 max-w-xl mx-auto leading-relaxed">Track creators across re-rating cycles · run a Crypto Feed Audit · earn Sentinel candidacy. Free account · no credit card · 30 seconds.</p>
+      <div class="flex items-center justify-center gap-3">
+        <a href="account.html" class="px-7 py-3 bg-[#9c2516] text-[#f5efe7] text-sm font-semibold rounded">Create my free account →</a>
+        <a href="trillclaw.html" class="px-5 py-3 border border-[#d6cfc4] text-[#d6cfc4] text-sm font-semibold rounded hover:text-[#f5efe7] hover:border-[#f5efe7]">Take the TrillClaw Quiz</a>
+      </div>
+    </section>
+
+    <!-- Registered+ bottom CTA — different prompt -->
+    <section data-min-tier="registered" data-max-tier="connected" class="mb-8 bg-[#1a1611] text-[#f5efe7] rounded-lg p-14 text-center">
+      <p class="text-[10px] uppercase tracking-[0.3em] text-[#9c2516] mb-4">Go deeper</p>
+      <h2 class="font-serif text-5xl tracking-tight mb-4 leading-tight">Want the full record?<br><span class="italic text-[#d6cfc4]">Upgrade to Pro Lite.</span></h2>
+      <p class="text-sm text-[#d6cfc4] mb-8 max-w-xl mx-auto leading-relaxed">Complete call history · multi-KOL real-time alerts · 30/90/365-day dimension trends — for $9/mo.</p>
+      <a href="subscribe.html" class="inline-block px-7 py-3 bg-[#9c2516] text-[#f5efe7] text-sm font-semibold rounded">See Pro Lite →</a>
+    </section>
 
   </main>
+
+  <footer class="border-t border-subtle py-10 mt-4 bg-[#1a1611] text-[#d6cfc4]">
+    <div class="max-w-6xl mx-auto px-8">
+      <div class="grid grid-cols-4 gap-8 mb-8">
+        <div>
+          <div class="flex items-baseline gap-2 mb-4">
+            <span class="font-serif text-2xl text-[#f5efe7] tracking-tight">Trill</span>
+            <span class="text-[10px] uppercase tracking-widest text-[#9c2516]">The Guide</span>
+          </div>
+          <p class="text-xs leading-relaxed">The Michelin Guide for crypto KOLs. Curated by Sentinels. Re-rated quarterly.</p>
+        </div>
+        <div>
+          <div class="text-[10px] uppercase tracking-widest text-[#9c2516] mb-3 font-semibold">The Guide</div>
+          <ul class="text-xs space-y-2">
+            <li><a href="stars.html" class="hover:text-[#f5efe7]">Trill Stars</a></li>
+            <li><a href="dimensions.html" class="hover:text-[#f5efe7]">Dimensions</a></li>
+            <li><a href="guides.html" class="hover:text-[#f5efe7]">Guides & Magazine</a></li>
+            <li><a href="feed-audit.html" class="hover:text-[#f5efe7]">Crypto Feed Audit</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="text-[10px] uppercase tracking-widest text-[#9c2516] mb-3 font-semibold">About</div>
+          <ul class="text-xs space-y-2">
+            <li><a href="about.html" class="hover:text-[#f5efe7]">About Trill</a></li>
+            <li><a href="methodology.html" class="hover:text-[#f5efe7]">Methodology</a></li>
+            <li><a href="sentinel.html" class="hover:text-[#f5efe7]">Become a Sentinel</a></li>
+            <li><a href="trillclaw.html" class="hover:text-[#f5efe7]">TrillClaw Quiz</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="text-[10px] uppercase tracking-widest text-[#9c2516] mb-3 font-semibold">Account</div>
+          <ul class="text-xs space-y-2">
+            <li><a href="account.html" class="hover:text-[#f5efe7]">Sign in / Sign up</a></li>
+            <li><a href="subscribe.html" class="hover:text-[#f5efe7]">Pricing & subscribe</a></li>
+            <li><a href="account.html" class="hover:text-[#f5efe7]">My nominations</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="pt-6 border-t border-[#6b5e52]/30 text-[11px] italic">
+        © 2026 The Trill Guide · Curated by Sentinels · Re-rated quarterly · An institution, not a leaderboard.
+      </div>
+    </div>
+  </footer>
 
 </body>
 </html>
